@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Wikipedia</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
   <style>
     .search-autocomplete-container {
       position: relative;
@@ -398,6 +397,7 @@
     .toc-level-h3 { margin-left: 16px; }
     .toc-level-h4 { margin-left: 32px; }
   </style>
+  <link rel="stylesheet" href="styles.css?v=1.0.1">
 </head>
 <body>
   <nav class="main-nav">
@@ -444,20 +444,21 @@
 
   <div class="main-container">
     <main class="content">
+      <div class="debug-info" style="position:fixed;top:0;right:0;background:rgba(0,0,0,0.8);color:white;padding:10px;z-index:9999;">
+        <div id="debug-status">Loading...</div>
+      </div>
+      
       <div class="card featured-section-grid">
         <section class="main-featured featured-card">
           <h2>From today's featured article</h2>
-          <div class="featured-content">
+          <div class="featured-content" style="min-height:200px;">
             <!-- Featured article content will be dynamically loaded -->
           </div>
         </section>
         <section class="onthisday-featured featured-card">
           <h2>On this day</h2>
-          <div class="onthisday-content">
-            <ul>
-              <li>Year: <span>Historical event that happened on this day.</span></li>
-              <li>Year: <span>Another notable event from history.</span></li>
-            </ul>
+          <div class="onthisday-content" style="min-height:200px;">
+            <!-- On this day content will be dynamically loaded -->
           </div>
         </section>
         <section class="news-featured featured-card">
@@ -492,6 +493,32 @@
         <div id="tableOfContents"></div>
         <div id="articleContent"></div>
       </div>
+
+      <!-- Quiz Section -->
+      <div class="card">
+        <h2>Quiz Generator</h2>
+        <div class="quiz-controls">
+          <button onclick="generateQuiz(currentArticleTitle)" class="generate-quiz-btn" style="display:none;">
+            Generate Quiz
+          </button>
+        </div>
+        <div id="quizContent">
+          <!-- Quiz content will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Q&A Section -->
+      <div class="card">
+        <h2>Ask Questions</h2>
+        <div class="qa-container">
+          <input type="text" id="questionInput" class="qa-input" placeholder="Ask a question about the article...">
+          <button onclick="handleQuestion()" class="qa-button">Ask</button>
+          <div id="qaAnswer" class="qa-answer">
+            <!-- Answers will be displayed here -->
+          </div>
+        </div>
+      </div>
+
       <div class="section-divider"></div>
       <div class="card">
         <div id="articleModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
@@ -592,6 +619,16 @@
   </div>
 
   <script>
+    // Add debug logging
+    const debugStatus = document.getElementById('debug-status');
+    function updateDebugStatus(message) {
+      debugStatus.textContent = message;
+      console.log(message);
+    }
+
+    // Initialize debug status
+    updateDebugStatus('Page loaded, initializing...');
+
     async function getSearchSuggestions() {
       const query = document.getElementById('searchInput').value.trim();
       const list = document.getElementById('searchSuggestions');
@@ -844,6 +881,91 @@
       });
       tocHtml += '</ul></div>';
       toc.innerHTML = tocHtml;
+    }
+
+    async function handleQuestion() {
+      const question = document.getElementById('questionInput').value.trim();
+      if (!question) return;
+
+      const qaAnswer = document.getElementById('qaAnswer');
+      qaAnswer.innerHTML = '<div class="loading">Processing your question...</div>';
+
+      try {
+        // Get the current article content
+        const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(currentArticleTitle)}`);
+        if (!response.ok) throw new Error('Failed to fetch article');
+        
+        const data = await response.json();
+        const context = data.extract;
+        
+        // Get the answer
+        const answer = await askQuestion(question, context);
+        
+        // Display the answer
+        qaAnswer.innerHTML = `
+          <div class="answer-content">
+            <h4>Question:</h4>
+            <p>${question}</p>
+            <h4>Answer:</h4>
+            <p>${answer}</p>
+          </div>
+        `;
+      } catch (error) {
+        console.error('Error processing question:', error);
+        qaAnswer.innerHTML = `
+          <div class="error-message">
+            ❌ Failed to process your question. Please try again.
+          </div>
+        `;
+      }
+    }
+
+    // Modify the searchWikipedia function to update currentArticleTitle
+    async function searchWikipedia() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return;
+
+      try {
+        updateDebugStatus('Searching Wikipedia...');
+        const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+        if (!response.ok) throw new Error('Article not found');
+        
+        const data = await response.json();
+        currentArticleTitle = data.title; // Store the current article title
+        
+        const resultsDiv = document.getElementById('results');
+        
+        resultsDiv.innerHTML = `
+          <h2>${data.title}</h2>
+          ${data.thumbnail ? `<img src="${data.thumbnail.source}" alt="${data.title}" style="max-width:200px;float:right;margin-left:20px;">` : ''}
+          <p>${data.extract}</p>
+          <div class="article-meta">
+            <button onclick="handleArticleSummarization('${data.title}')" class="summarize-button">
+              Generate AI Summary
+            </button>
+            <button onclick="generateQuiz('${data.title}')" class="generate-quiz-btn">
+              Generate Quiz
+            </button>
+            <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(data.title)}" target="_blank">
+              Read full article
+            </a>
+          </div>
+        `;
+        
+        // Show the quiz button
+        document.querySelector('.generate-quiz-btn').style.display = 'inline-block';
+        
+        resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        updateDebugStatus('Search completed');
+      } catch (error) {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = `
+          <div class="error-message">
+            ❌ No results found for "${query}". Try a different search term.
+          </div>
+        `;
+        updateDebugStatus('Search failed');
+      }
     }
   </script>
   <script src="script.js"></script>

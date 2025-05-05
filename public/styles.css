@@ -111,9 +111,10 @@
   .main-container {
     display: flex;
     max-width: 1200px;
-    margin: 60px auto 0;
+    margin: 0 auto;
     padding: 20px;
     gap: 20px;
+    min-height: calc(100vh - 60px);
   }
   
   /* Sidebar */
@@ -159,6 +160,10 @@
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px var(--shadow-color);
+    position: relative;
+    z-index: 1;
+    opacity: 1;
+    visibility: visible;
   }
   
   .welcome-section {
@@ -194,6 +199,8 @@
     grid-template-rows: auto auto;
     gap: 12px 24px;
     margin-bottom: 32px;
+    opacity: 1;
+    visibility: visible;
   }
   
   @media (max-width: 900px) {
@@ -215,6 +222,8 @@
     flex-direction: column;
     justify-content: flex-start;
     transition: box-shadow 0.2s;
+    opacity: 1;
+    visibility: visible;
   }
   
   /* Search Results */
