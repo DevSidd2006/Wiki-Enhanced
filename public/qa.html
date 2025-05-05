@@ -306,45 +306,37 @@
     }
 
     async function askQuestion() {
-      const questionInput = document.getElementById("questionInput");
-      const question = questionInput.value.trim();
-      
-      if (!question) {
-        showMessage("Please enter a question.", "bot");
-        return;
-      }
+  const question = document.getElementById("question").value;
+  const answerDiv = document.getElementById("answer");
 
-      if (!articleText) {
-        showMessage("Please search for an article first.", "bot");
-        return;
-      }
+  answerDiv.innerText = "Thinking...";
 
-      showMessage(question, "user");
-      questionInput.value = "";
-      showMessage("Thinking...", "bot", true);
+  try {
+    const res = await fetch("/api/qa", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    });
 
-      try {
-        const prompt = `Based on this Wikipedia article about "${currentArticleTitle}":\n\n${articleText}\n\nAnswer this question: ${question}\n\nProvide a detailed answer with relevant information from the article.`;
-        
-        const response = await fetch("/api/qa", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ articleTitle: currentArticleTitle, articleText, question })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Q&A API error: ${response.status}`);
-        }
-        const data = await response.json();
-        showMessage(data.answer, "bot");
-        generateSuggestedQuestions();
-      } catch (error) {
-        console.error('Error:', error);
-        showMessage("Sorry, I encountered an error while processing your question. Please try again.", "bot");
-      }
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error(`Server Error: ${res.status} - ${err}`);
     }
+
+    const data = await res.json();
+    answerDiv.innerText = data.answer || "No answer received.";
+  } catch (error) {
+    answerDiv.innerText = `Error: ${error.message}`;
+    console.error(error);
+  }
+}
+
+document.getElementById("question").addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    askQuestion();
+  }
+});
+
 
     function showMessage(text, sender, isLoading = false) {
       const chatContainer = document.getElementById("chatContainer");
@@ -356,7 +348,14 @@
         loadingDiv.className = "loading";
         messageDiv.appendChild(loadingDiv);
       } else {
-        messageDiv.textContent = text;
+        // Format the text with line breaks and preserve formatting
+        const formattedText = text
+          .split('\n')
+          .map(line => line.trim())
+          .filter(line => line.length > 0)
+          .map(line => `<p>${line}</p>`)
+          .join('');
+        messageDiv.innerHTML = formattedText;
       }
       
       chatContainer.appendChild(messageDiv);
@@ -506,3 +505,4 @@
   </script>
 </body>
 </html>
+
