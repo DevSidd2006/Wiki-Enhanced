@@ -1,59 +1,144 @@
 // Initialize the page when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing...');
-    // Load initial content
-    loadFeaturedArticle();
-    loadOnThisDay();
-    showFact();
+    updateDebugStatus('Initializing page...');
     
-    // Initialize event listeners
-    initializeEventListeners();
+    try {
+        // Make sure content is visible first
+        const content = document.querySelector('.content');
+        const mainContainer = document.querySelector('.main-container');
+        const featuredGrid = document.querySelector('.featured-section-grid');
+        
+        if (content) {
+            console.log('Setting content visibility...');
+            content.style.display = 'block';
+            content.style.opacity = '1';
+            content.style.visibility = 'visible';
+            content.style.position = 'relative';
+            content.style.zIndex = '1';
+            content.style.width = '100%';
+        } else {
+            console.error('Content element not found');
+        }
+        
+        if (mainContainer) {
+            console.log('Setting main container visibility...');
+            mainContainer.style.display = 'block';
+            mainContainer.style.opacity = '1';
+            mainContainer.style.visibility = 'visible';
+            mainContainer.style.position = 'relative';
+            mainContainer.style.zIndex = '1';
+        } else {
+            console.error('Main container element not found');
+        }
+        
+        if (featuredGrid) {
+            console.log('Setting featured grid visibility...');
+            featuredGrid.style.display = 'grid';
+            featuredGrid.style.opacity = '1';
+            featuredGrid.style.visibility = 'visible';
+        } else {
+            console.error('Featured grid element not found');
+        }
+        
+        // Load initial content
+        console.log('Loading initial content...');
+        loadFeaturedArticle();
+        loadOnThisDay();
+        showFact();
+        
+        // Initialize event listeners
+        console.log('Initializing event listeners...');
+        initializeEventListeners();
+        
+        // Double check visibility after content loads
+        setTimeout(() => {
+            console.log('Verifying content visibility...');
+            if (content) {
+                content.style.display = 'block';
+                content.style.opacity = '1';
+                content.style.visibility = 'visible';
+            }
+            if (mainContainer) {
+                mainContainer.style.display = 'block';
+                mainContainer.style.opacity = '1';
+                mainContainer.style.visibility = 'visible';
+            }
+            if (featuredGrid) {
+                featuredGrid.style.display = 'grid';
+                featuredGrid.style.opacity = '1';
+                featuredGrid.style.visibility = 'visible';
+            }
+            updateDebugStatus('Content visibility verified');
+        }, 1000);
+        
+        updateDebugStatus('Page initialized successfully');
+    } catch (error) {
+        console.error('Initialization error:', error);
+        updateDebugStatus('Error during initialization: ' + error.message);
+    }
 });
 
 // Initialize all event listeners
 function initializeEventListeners() {
     console.log('Initializing event listeners...');
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', getSearchSuggestions);
-        searchInput.addEventListener('keydown', handleSearchKeydown);
-    }
-
-    // Navigation menu
-    const navMenuBtn = document.getElementById('navMenuBtn');
-    if (navMenuBtn) {
-        navMenuBtn.addEventListener('click', () => {
-            document.getElementById('navOverlay').classList.add('open');
-        });
-    }
-
-    const closeNavOverlay = document.getElementById('closeNavOverlay');
-    if (closeNavOverlay) {
-        closeNavOverlay.addEventListener('click', () => {
-            document.getElementById('navOverlay').classList.remove('open');
-        });
-    }
-
-    // Next fact button
-    const nextFactBtn = document.getElementById('next-fact-btn');
-    if (nextFactBtn) {
-        nextFactBtn.addEventListener('click', nextFact);
-    }
-
-    // Close modals when clicking outside
-    document.addEventListener('click', (e) => {
-        const navOverlay = document.getElementById('navOverlay');
-        if (navOverlay && e.target === navOverlay) {
-            navOverlay.classList.remove('open');
-        }
-
-        const searchSuggestions = document.getElementById('searchSuggestions');
+    try {
+        // Search functionality
         const searchInput = document.getElementById('searchInput');
-        if (searchSuggestions && e.target !== searchInput && e.target !== searchSuggestions) {
-            searchSuggestions.style.display = 'none';
+        if (searchInput) {
+            searchInput.addEventListener('input', getSearchSuggestions);
+            searchInput.addEventListener('keydown', handleSearchKeydown);
         }
-    });
+
+        // Navigation menu
+        const navMenuBtn = document.getElementById('navMenuBtn');
+        if (navMenuBtn) {
+            navMenuBtn.addEventListener('click', () => {
+                document.getElementById('navOverlay').classList.add('open');
+            });
+        }
+
+        const closeNavOverlay = document.getElementById('closeNavOverlay');
+        if (closeNavOverlay) {
+            closeNavOverlay.addEventListener('click', () => {
+                document.getElementById('navOverlay').classList.remove('open');
+            });
+        }
+
+        // Next fact button
+        const nextFactBtn = document.getElementById('next-fact-btn');
+        if (nextFactBtn) {
+            nextFactBtn.addEventListener('click', nextFact);
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            const navOverlay = document.getElementById('navOverlay');
+            if (navOverlay && e.target === navOverlay) {
+                navOverlay.classList.remove('open');
+            }
+
+            const searchSuggestions = document.getElementById('searchSuggestions');
+            const searchInput = document.getElementById('searchInput');
+            if (searchSuggestions && e.target !== searchInput && e.target !== searchSuggestions) {
+                searchSuggestions.style.display = 'none';
+            }
+        });
+        
+        console.log('Event listeners initialized successfully');
+    } catch (error) {
+        console.error('Error initializing event listeners:', error);
+        updateDebugStatus('Error initializing event listeners: ' + error.message);
+    }
+}
+
+// Add debug logging
+const debugStatus = document.getElementById('debug-status');
+function updateDebugStatus(message) {
+    if (debugStatus) {
+        debugStatus.textContent = message;
+    }
+    console.log(message);
 }
 
 // Search functionality
