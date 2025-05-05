@@ -502,6 +502,29 @@ document.getElementById("question").addEventListener("keypress", (e) => {
         }
       }
     });
+    document.getElementById("sendBtn").addEventListener("click", async () => {
+      const question = document.getElementById("questionInput").value.trim();
+      if (!question) return alert("Please enter a question.");
+
+      try {
+        const response = await fetch('/api/qa', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ question }),
+        });
+
+        const text = await response.text();
+        console.log("Raw response:", text);
+
+        const data = JSON.parse(text);
+        document.getElementById("answer").innerText = data.answer || "No answer returned.";
+      } catch (error) {
+        console.error("Error:", error);
+        document.getElementById("answer").innerText = "Error: " + error.message;
+      }
+    });
   </script>
 </body>
 </html>
