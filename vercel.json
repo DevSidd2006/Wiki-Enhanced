@@ -1,7 +1,9 @@
 {
-  "builds": [{ "src": "api/*.js", "use": "@vercel/node" }],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1.js" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/quiz", "destination": "/quiz.html" },
+    { "source": "/qa", "destination": "/qa.html" },
+    { "source": "/summarizer", "destination": "/summarizer.html" },
+    { "source": "/random", "destination": "/random.html" }
   ]
 }
