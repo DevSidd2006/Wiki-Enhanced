@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wikipedia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .search-autocomplete-container {
+      position: relative;
+      width: 100%;
+    }
+    #searchSuggestions {
+      list-style: none;
+      padding: 0;
+      margin-top: 0;
+      width: 100%;
+      border: 1px solid var(--border-color);
+      background: var(--card-bg);
+      position: absolute;
+      z-index: 1000;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px var(--shadow-color);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    #searchSuggestions li {
+      padding: 12px 15px;
+      cursor: pointer;
+      color: var(--text-color);
+      transition: background-color 0.2s ease;
+    }
+    #searchSuggestions li:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    #searchSuggestions li:not(:last-child) {
+      border-bottom: 1px solid var(--border-color);
+    }
+    .random-article-button {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+    .random-article-button:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    .random-article-button::before {
+      content: '🎲';
+    }
+    .nav-links {
+      display: flex;
+      gap: 10px;
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .nav-link:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .logo-globe {
+      height: 40px;
+      width: 40px;
+      min-width: 40px;
+      object-fit: contain;
+    }
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.1;
+    }
+    .logo-wordmark {
+      height: 28px;
+      width: auto;
+      margin-bottom: 2px;
+    }
+    .logo-tagline {
+      height: 16px;
+      width: auto;
+      opacity: 0.8;
+      margin-left: 2px;
+    }
+    .featured-section-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 900px) {
+      .featured-section-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+    }
+    .featured-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      padding: 24px 20px 18px 20px;
+      margin-bottom: 0;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      transition: box-shadow 0.2s;
+    }
+    .featured-card h2 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      color: var(--primary-color);
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .featured-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--text-color);
+    }
+    .featured-card li {
+      margin-bottom: 8px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .featured-card span {
+      color: var(--text-color);
+      opacity: 0.85;
+    }
+    .did-you-know {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-left: 5px solid #2196F3;
+      margin: 20px auto;
+      max-width: 600px;
+      font-family: Arial, sans-serif;
+    }
+    .did-you-know h3 {
+      margin-top: 0;
+      color: #2196F3;
+    }
+    .did-you-know p {
+      margin: 10px 0 0 0;
+      font-size: 1.1em;
+    }
+    .wiki-sisters-languages {
+      background: #f8f9fa;
+      border: 1px solid #a2a9b1;
+      border-radius: 6px;
+      margin: 40px auto 0 auto;
+      max-width: 1100px;
+      padding: 24px 18px 32px 18px;
+      font-family: Arial, sans-serif;
+      font-size: 1em;
+    }
+    .sister-projects-panel h3,
+    .languages-panel h3 {
+      margin-top: 0;
+      font-size: 1.2em;
+      background: #eaecf0;
+      border-bottom: 1px solid #a2a9b1;
+      padding: 8px 12px;
+      border-radius: 4px 4px 0 0;
+    }
+    .sister-projects-panel p,
+    .languages-panel p {
+      margin-bottom: 18px;
+      margin-top: 8px;
+    }
+    .sister-projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px 24px;
+      margin-top: 12px;
+      margin-bottom: 18px;
+    }
+    .sister-project {
+      background: #fff;
+      border: 1px solid #c8ccd1;
+      border-radius: 6px;
+      padding: 12px 10px 10px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-height: 70px;
+      font-size: 1em;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .sister-project .icon {
+      font-size: 1.5em;
+      margin-bottom: 2px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .sister-project a {
+      color: #3366cc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .sister-project a:hover {
+      text-decoration: underline;
+    }
+    .sister-project span {
+      color: #222;
+      font-size: 0.97em;
+      font-weight: normal;
+    }
+    .languages-panel {
+      margin-top: 32px;
+    }
+    .languages-group {
+      margin-bottom: 18px;
+    }
+    .lang-group-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #222;
+    }
+    .lang-list {
+      color: #0645ad;
+      font-size: 1em;
+      margin-bottom: 6px;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+    @media (max-width: 900px) {
+      .wiki-sisters-languages {
+        padding: 10px 2vw 18px 2vw;
+      }
+      .sister-projects-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 600px) {
+      .sister-projects-grid {
+        grid-template-columns: 1fr;
+      }
+      .wiki-sisters-languages {
+        font-size: 0.97em;
+      }
+    }
+    .nav-menu-btn {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: var(--text-color);
+      cursor: pointer;
+      margin-right: 10px;
+      padding: 0 8px 0 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+    }
+    .nav-menu-btn:hover {
+      color: var(--primary-color);
+    }
+    .nav-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.6);
+      z-index: 20000;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    .nav-overlay.open {
+      display: flex;
+    }
+    .nav-overlay-content {
+      background: var(--card-bg, #fff);
+      width: 320px;
+      max-width: 90vw;
+      min-height: 100vh;
+      box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+      padding: 32px 24px 24px 24px;
+      border-radius: 0 12px 12px 0;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: slideInNav 0.25s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes slideInNav {
+      from { transform: translateX(-100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .close-nav-overlay {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .close-nav-overlay:hover {
+      background: #b52a37;
+    }
+    .nav-overlay-content h3 {
+      margin: 0 0 8px 0;
+      color: var(--primary-color);
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+    .nav-overlay-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px 0;
+    }
+    .nav-overlay-list li {
+      margin-bottom: 10px;
+    }
+    .nav-overlay-list a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 1.05em;
+      transition: color 0.2s;
+    }
+    .nav-overlay-list a:hover {
+      color: var(--primary-color);
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .nav-overlay-content {
+        width: 90vw;
+        padding: 20px 10px 18px 10px;
+      }
+    }
+    .toc-panel {
+      background: #f8f9fa;
+      border: 1px solid #a2a9b1;
+      border-radius: 6px;
+      padding: 12px 18px;
+      margin-bottom: 18px;
+      max-width: 600px;
+    }
+    .toc-panel ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    .toc-panel li {
+      margin-bottom: 4px;
+    }
+    .toc-panel a {
+      color: #3366cc;
+      text-decoration: none;
+    }
+    .toc-panel a:hover {
+      text-decoration: underline;
+    }
+    .toc-level-h3 { margin-left: 16px; }
+    .toc-level-h4 { margin-left: 32px; }
+  </style>
+</head>
+<body>
+  <nav class="main-nav">
+    <div class="nav-container">
+      <div class="nav-left">
+        <button id="navMenuBtn" class="nav-menu-btn" aria-label="Open menu">☰</button>
+        <a href="#" class="logo">
+          <img src="https://en.wikipedia.org/static/images/icons/wikipedia.png" alt="Wikipedia globe" class="logo-globe">
+          <span class="logo-text">
+            <img src="https://en.wikipedia.org/static/images/mobile/copyright/wikipedia-wordmark-en.svg" alt="Wikipedia" class="logo-wordmark">
+            <img src="https://en.wikipedia.org/static/images/mobile/copyright/wikipedia-tagline-en.svg" alt="The Free Encyclopedia" class="logo-tagline">
+          </span>
+        </a>
+        <div class="search-container">
+          <div class="search-autocomplete-container">
+            <input type="text" id="searchInput" placeholder="Search Wikipedia..." oninput="getSearchSuggestions()">
+            <ul id="searchSuggestions"></ul>
+          </div>
+          <button onclick="searchWikipedia()" class="search-button">Search</button>
+        </div>
+      </div>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="random.html" class="nav-link">
+            <span>🎲</span>
+            Random Articles
+          </a>
+          <a href="summarizer.html" class="nav-link">
+            <span>📝</span>
+            Summarizer
+          </a>
+          <a href="qa.html" class="nav-link">
+            <span>❓</span>
+            Q&A Bot
+          </a>
+          <a href="quiz.html" class="nav-link">
+            <span>📚</span>
+            Quiz Generator
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <main class="content">
+      <div class="card featured-section-grid">
+        <section class="main-featured featured-card">
+          <h2>From today's featured article</h2>
+          <div class="featured-content">
+            <!-- Featured article content will be dynamically loaded -->
+          </div>
+        </section>
+        <section class="onthisday-featured featured-card">
+          <h2>On this day</h2>
+          <div class="onthisday-content">
+            <ul>
+              <li>Year: <span>Historical event that happened on this day.</span></li>
+              <li>Year: <span>Another notable event from history.</span></li>
+            </ul>
+          </div>
+        </section>
+        <section class="news-featured featured-card">
+          <h2>In the news</h2>
+          <div class="news-content">
+            <ul>
+              <li><strong>U.S. Seeks Fair Trade Deal with China:</strong> President Donald Trump announced that the U.S. is engaging with multiple countries, including China, to secure fair trade agreements. He emphasized the importance of achieving a balanced deal with China.</li>
+              <li><strong>World Happiness Report 2025 Released:</strong> Finland has been ranked as the happiest country for the eighth consecutive year. Other countries like Mexico, Norway, Sweden, Denmark, and Costa Rica have also achieved record-high rankings. Conversely, the United States has experienced a significant decline in its global happiness ranking.</li>
+              <li><strong>Met Gala 2025 Celebrates Black Designers:</strong> The Met Gala, held in New York, is focusing exclusively on Black designers for the first time. The event, hosted by Pharrell Williams, aims to highlight and celebrate the contributions of Black creatives in the fashion industry.</li>
+              <li><strong>India Among Top Five Military Spenders:</strong> According to recent data from the Stockholm International Peace Research Institute, India has become one of the world's top five military spenders. This reflects a broader trend of increasing global defense budgets.</li>
+              <li><strong>China Zorrilla: World's Largest Electric Ferry Launched:</strong> Uruguay has introduced the "China Zorrilla," the world's largest electric ferry, equipped with a groundbreaking 40 MWh battery. This development marks a significant advancement in maritime electrification and sustainable transportation.</li>
+              <li><strong>USA Luge Announces 2025 National Team:</strong> USA Luge has unveiled its 2025 National Team, featuring seven Olympic athletes. The team is preparing for upcoming international competitions, aiming to build on past successes and achieve new milestones.</li>
+            </ul>
+          </div>
+        </section>
+        <section class="didyouknow-featured featured-card">
+          <div class="did-you-know">
+            <h3>Did You Know?</h3>
+            <p id="dyk-fact">Loading fact...</p>
+            <button id="next-fact-btn" style="margin-top:10px;padding:6px 16px;background:#2196F3;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:1em;">Next Fact</button>
+          </div>
+        </section>
+      </div>
+      <div class="section-divider"></div>
+      <div class="card">
+        <div class="search-results" id="results">
+          <!-- Search results will be displayed here -->
+        </div>
+      </div>
+      <div class="section-divider"></div>
+      <div class="card">
+        <div id="tableOfContents"></div>
+        <div id="articleContent"></div>
+      </div>
+      <div class="section-divider"></div>
+      <div class="card">
+        <div id="articleModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+          <div style="background:var(--card-bg,#fff);max-width:900px;width:90vw;height:80vh;position:relative;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.3);overflow:hidden;display:flex;flex-direction:column;">
+            <button onclick="closeArticleModal()" style="position:absolute;top:10px;right:10px;background:#dc3545;color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:1.3rem;cursor:pointer;z-index:2;">✖</button>
+            <iframe id="articleIframe" src="" style="flex:1;width:100%;border:none;"></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="section-divider"></div>
+      <div class="card">
+        <!-- Further Reading Section -->
+        <div class="further-reading">
+          <h2>Further Reading</h2>
+          <div class="recommendations-container">
+            <div class="recommendation-card">
+              <h3>Based on your reading history</h3>
+              <div class="recommendations-list" id="readingHistory">
+                <!-- Recommendations will be dynamically loaded -->
+              </div>
+            </div>
+            <div class="recommendation-card">
+              <h3>Related Topics</h3>
+              <div class="recommendations-list" id="relatedTopics">
+                <!-- Related topics will be dynamically loaded -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="section-divider"></div>
+      <div class="card wiki-sisters-languages">
+        <div class="sister-projects-panel">
+          <h3>Wikipedia's sister projects</h3>
+          <p>Wikipedia is written by volunteer editors and hosted by the <a href="https://wikimediafoundation.org/" target="_blank">Wikimedia Foundation</a>, a non-profit organization that also hosts a range of other volunteer projects:</p>
+          <div class="sister-projects-grid">
+            <div class="sister-project"><span class="icon">🖼️</span> <a href="https://commons.wikimedia.org/" target="_blank"><b>Commons</b></a><br><span>Free media repository</span></div>
+            <div class="sister-project"><span class="icon">📚</span> <a href="https://en.wikibooks.org/" target="_blank"><b>Wikibooks</b></a><br><span>Free textbooks and manuals</span></div>
+            <div class="sister-project"><span class="icon">💬</span> <a href="https://en.wikiquote.org/" target="_blank"><b>Wikiquote</b></a><br><span>Collection of quotations</span></div>
+            <div class="sister-project"><span class="icon">🎓</span> <a href="https://en.wikiversity.org/" target="_blank"><b>Wikiversity</b></a><br><span>Free learning tools</span></div>
+            <div class="sister-project"><span class="icon">🌐</span> <a href="https://www.mediawiki.org/" target="_blank"><b>MediaWiki</b></a><br><span>Wiki software development</span></div>
+            <div class="sister-project"><span class="icon">📊</span> <a href="https://www.wikidata.org/" target="_blank"><b>Wikidata</b></a><br><span>Free knowledge base</span></div>
+            <div class="sister-project"><span class="icon">📜</span> <a href="https://en.wikisource.org/" target="_blank"><b>Wikisource</b></a><br><span>Free-content library</span></div>
+            <div class="sister-project"><span class="icon">🧭</span> <a href="https://en.wikivoyage.org/" target="_blank"><b>Wikivoyage</b></a><br><span>Free travel guide</span></div>
+            <div class="sister-project"><span class="icon">🌎</span> <a href="https://meta.wikimedia.org/" target="_blank"><b>Meta-Wiki</b></a><br><span>Wikimedia project coordination</span></div>
+            <div class="sister-project"><span class="icon">📰</span> <a href="https://en.wikinews.org/" target="_blank"><b>Wikinews</b></a><br><span>Free-content news</span></div>
+            <div class="sister-project"><span class="icon">🧬</span> <a href="https://species.wikimedia.org/" target="_blank"><b>Wikispecies</b></a><br><span>Directory of species</span></div>
+            <div class="sister-project"><span class="icon">📖</span> <a href="https://en.wiktionary.org/" target="_blank"><b>Wiktionary</b></a><br><span>Dictionary and thesaurus</span></div>
+          </div>
+        </div>
+        <div class="languages-panel">
+          <h3>Wikipedia languages</h3>
+          <p>This Wikipedia is written in <a href="#">English</a>. Many <a href="#">other Wikipedias are available</a>; some of the largest are listed below.</p>
+          <div class="languages-group">
+            <div class="lang-group-title">1,000,000+ articles</div>
+            <div class="lang-list">العربية · Deutsch · Español · فارسی · Français · Italiano · Nederlands · 日本語 · Polski · Português · Русский · Svenska · Українська · Tiếng Việt · 中文</div>
+          </div>
+          <div class="languages-group">
+            <div class="lang-group-title">250,000+ articles</div>
+            <div class="lang-list">Bahasa Indonesia · Bahasa Melayu · Bân-lâm-gú · Български · Català · Čeština · Dansk · Eesti · Esperanto · Euskara · עברית · Hrvatski · 한국어 · Magyar · Norsk bokmål · Română · Simple English · Slovenčina · Srpski · Srpskohrvatski · Suomi · Türkçe · Oʻzbekcha</div>
+          </div>
+          <div class="languages-group">
+            <div class="lang-group-title">50,000+ articles</div>
+            <div class="lang-list">Asturianu · Azərbaycanca · বাংলা · Bosanski · Cymraeg · Ελληνικά · Frysk · Gaeilge · Galego · Hrvatski · ქართული · Kurdî · Latviešu · Lietuvių · Македонски · မြန်မာဘာသာ · Norsk nynorsk · Shqip · Slovenščina · ไทย · తెలుగు · اردو</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="searchResultsModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.6);z-index:10000;align-items:center;justify-content:center;">
+    <div style="background:var(--card-bg,#fff);max-width:800px;width:90vw;max-height:80vh;overflow-y:auto;position:relative;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.3);padding:32px 24px;">
+      <button onclick="closeSearchResultsModal()" style="position:absolute;top:10px;right:10px;background:#dc3545;color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:1.3rem;cursor:pointer;z-index:2;">✖</button>
+      <div id="modalResults"></div>
+    </div>
+  </div>
+
+  <!-- Navigation Overlay -->
+  <div id="navOverlay" class="nav-overlay">
+    <div class="nav-overlay-content">
+      <button id="closeNavOverlay" class="close-nav-overlay" aria-label="Close menu">✖</button>
+      <h3>Navigation</h3>
+      <ul class="nav-overlay-list">
+        <li><a href="#">Main Page</a></li>
+        <li><a href="#">Contents</a></li>
+        <li><a href="#">Current Events</a></li>
+        <li><a href="#">Random Article</a></li>
+        <li><a href="#">About Wikipedia</a></li>
+      </ul>
+      <h3>Contribute</h3>
+      <ul class="nav-overlay-list">
+        <li><a href="#">Help</a></li>
+        <li><a href="#">Learn to Edit</a></li>
+        <li><a href="#">Community Portal</a></li>
+        <li><a href="#">Recent Changes</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    async function getSearchSuggestions() {
+      const query = document.getElementById('searchInput').value.trim();
+      const list = document.getElementById('searchSuggestions');
+      list.innerHTML = "";
+
+      if (query.length === 0) {
+        list.style.display = 'none';
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=10&namespace=0&format=json&origin=*`);
+        const data = await response.json();
+
+        const suggestions = data[1]; // Array of article titles
+
+        if (suggestions.length > 0) {
+          list.style.display = 'block';
+          suggestions.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            li.onclick = () => {
+              document.getElementById('searchInput').value = item;
+              list.style.display = 'none';
+              searchWikipedia();
+            };
+            list.appendChild(li);
+          });
+        } else {
+          list.style.display = 'none';
+        }
+      } catch (err) {
+        console.error("Error fetching suggestions:", err);
+        list.style.display = 'none';
+      }
+    }
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+      const suggestions = document.getElementById('searchSuggestions');
+      const input = document.getElementById('searchInput');
+      if (e.target !== input && e.target !== suggestions) {
+        suggestions.style.display = 'none';
+      }
+    });
+
+    // Handle keyboard navigation
+    document.getElementById('searchInput').addEventListener('keydown', (e) => {
+      const suggestions = document.getElementById('searchSuggestions');
+      const items = suggestions.getElementsByTagName('li');
+      let currentIndex = -1;
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].classList.contains('active')) {
+          currentIndex = i;
+          break;
+        }
+      }
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (currentIndex < items.length - 1) {
+          items[currentIndex]?.classList.remove('active');
+          items[currentIndex + 1].classList.add('active');
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentIndex > 0) {
+          items[currentIndex]?.classList.remove('active');
+          items[currentIndex - 1].classList.add('active');
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const activeItem = suggestions.querySelector('.active');
+        if (activeItem) {
+          document.getElementById('searchInput').value = activeItem.textContent;
+          suggestions.style.display = 'none';
+          searchWikipedia();
+        } else {
+          searchWikipedia();
+        }
+      }
+    });
+
+    async function fetchRandomArticle() {
+      try {
+        const response = await fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary');
+        if (!response.ok) {
+          throw new Error('Failed to fetch random article');
+        }
+        const data = await response.json();
+        
+        // Update the featured section with the random article
+        const featuredContent = document.querySelector('.featured-content');
+        featuredContent.innerHTML = `
+          <h3>${data.title}</h3>
+          <p>${data.extract}</p>
+          <div class="article-meta">
+            <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(data.title)}" target="_blank" class="read-more">
+              Read full article
+            </a>
+          </div>
+        `;
+
+        // Scroll to the featured section
+        featuredContent.scrollIntoView({ behavior: 'smooth' });
+      } catch (error) {
+        console.error('Error fetching random article:', error);
+        const featuredContent = document.querySelector('.featured-content');
+        featuredContent.innerHTML = `
+          <div class="error-message">
+            ❌ Failed to fetch random article. Please try again.
+          </div>
+        `;
+      }
+    }
+
+    let currentArticleTitle = "";
+    function showArticleModal(title) {
+      currentArticleTitle = title;
+      const modal = document.getElementById('articleModal');
+      const iframe = document.getElementById('articleIframe');
+      iframe.src = `https://en.wikipedia.org/wiki/${encodeURIComponent(currentArticleTitle)}`;
+      modal.style.display = 'flex';
+    }
+    function closeArticleModal() {
+      const modal = document.getElementById('articleModal');
+      const iframe = document.getElementById('articleIframe');
+      iframe.src = "";
+      modal.style.display = 'none';
+    }
+
+    function showSearchResultsModal(html) {
+      document.getElementById('modalResults').innerHTML = html;
+      document.getElementById('searchResultsModal').style.display = 'flex';
+    }
+    function closeSearchResultsModal() {
+      document.getElementById('searchResultsModal').style.display = 'none';
+      document.getElementById('modalResults').innerHTML = '';
+    }
+
+    // --- Featured Article ---
+    async function loadFeaturedArticle() {
+      const featuredDiv = document.querySelector('.main-featured .featured-content');
+      featuredDiv.innerHTML = '<div>Loading featured article...</div>';
+      try {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const d = String(today.getDate()).padStart(2, '0');
+        const url = `https://en.wikipedia.org/api/rest_v1/feed/featured/${y}/${m}/${d}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch featured article');
+        const data = await res.json();
+        const article = data.tfa;
+        featuredDiv.innerHTML = `
+          <h3>${article.title}</h3>
+          ${article.thumbnail ? `<img src="${article.thumbnail.source}" alt="${article.title}" style="max-width:120px;float:right;margin-left:16px;border-radius:8px;">` : ''}
+          <p>${article.extract}</p>
+          <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(article.title)}" target="_blank" style="color:var(--primary-color);font-weight:500;">Read full article</a>
+        `;
+      } catch (e) {
+        featuredDiv.innerHTML = '<div style="color:#dc3545;">Failed to load featured article.</div>';
+      }
+    }
+
+    // --- On This Day ---
+    async function loadOnThisDay() {
+      const otdDiv = document.querySelector('.onthisday-featured .onthisday-content');
+      otdDiv.innerHTML = '<div>Loading events...</div>';
+      try {
+        const today = new Date();
+        const m = today.getMonth() + 1;
+        const d = today.getDate();
+        const url = `https://en.wikipedia.org/api/rest_v1/feed/onthisday/events/${m}/${d}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch events');
+        const data = await res.json();
+        otdDiv.innerHTML = '<ul>' + data.events.slice(0, 5).map(ev =>
+          `<li>${ev.year}: <span>${ev.text}</span></li>`
+        ).join('') + '</ul>';
+      } catch (e) {
+        otdDiv.innerHTML = '<div style="color:#dc3545;">Failed to load events.</div>';
+      }
+    }
+
+    // --- Did You Know (Static, Cycling) ---
+    const facts = [
+      "... that an 1895 painting (pictured), depicting a woman clutching a crumpled letter, was described by a critic as 'a list of disasters'?",
+      "... that Avi Yemini is one of seventeen children who were raised in an ultra-Orthodox Chabad family?",
+      "... that Playboi Carti's song titled '2024' was first teased in 2023 and later officially released in 2025?",
+      "... that Soemartini was appointed as the chief of the National Archives of Indonesia after working in the agency for a year?",
+      "... that Home of a Rebel Sharpshooter was staged by moving a corpse?",
+      "... that Wen Chia-ling, despite her family's initial opposition to her becoming an archer, helped Taiwan's team achieve its best-ever finish at the 2000 Summer Olympics?",
+      "... that just two weeks after a Florida TV station began using a news helicopter, it crashed, killing two of three occupants?",
+      "... that although the philosophical study of well-being dates back millennia, empirical research has intensified since the second half of the 20th century?",
+      "... that the 1982 film The Second November was filmed in colour, but shown in black-and-white until 2012?"
+    ];
+    let dykIndex = Math.floor(Math.random() * facts.length);
+    function showFact() {
+      const factElement = document.getElementById("dyk-fact");
+      if (factElement) {
+        factElement.textContent = facts[dykIndex];
+      }
+    }
+    function nextFact() {
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * facts.length);
+      } while (newIndex === dykIndex && facts.length > 1);
+      dykIndex = newIndex;
+      showFact();
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      loadFeaturedArticle();
+      loadOnThisDay();
+      showFact();
+      const btn = document.getElementById('next-fact-btn');
+      if (btn) btn.onclick = nextFact;
+    });
+
+    // Hamburger menu overlay logic
+    document.getElementById('navMenuBtn').onclick = function() {
+      document.getElementById('navOverlay').classList.add('open');
+    };
+    document.getElementById('closeNavOverlay').onclick = function() {
+      document.getElementById('navOverlay').classList.remove('open');
+    };
+    // Close overlay when clicking outside content
+    document.getElementById('navOverlay').addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.remove('open');
+      }
+    });
+
+    // Table of Contents generation
+    function generateTableOfContents() {
+      const article = document.getElementById('articleContent');
+      const toc = document.getElementById('tableOfContents');
+      if (!article || !toc) return;
+      const headings = article.querySelectorAll('h2, h3, h4, h5, h6');
+      if (headings.length === 0) {
+        toc.innerHTML = '';
+        return;
+      }
+      let tocHtml = '<div class="toc-panel"><strong>Contents</strong><ul>';
+      headings.forEach((heading, idx) => {
+        if (!heading.id) heading.id = 'section-' + idx;
+        tocHtml += `<li class="toc-level-${heading.tagName.toLowerCase()}"><a href="#${heading.id}">${heading.textContent}</a></li>`;
+      });
+      tocHtml += '</ul></div>';
+      toc.innerHTML = tocHtml;
+    }
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

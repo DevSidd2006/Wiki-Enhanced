@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    pre {
+      background-color: #f4f4f4;
+      padding: 15px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .quiz-generator-btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #4a90e2;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 16px 0;
+      transition: background 0.2s;
+    }
+    .quiz-generator-btn:hover {
+      background: #357abd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Wikipedia Quiz Generator</h1>
+  <label for="title">Article Title:</label>
+  <input type="text" id="title" placeholder="Enter article title" />
+
+  <label for="text">Article Text:</label>
+  <textarea id="text" rows="10" placeholder="Paste article text here..."></textarea>
+
+  <label for="num">Number of Questions:</label>
+  <input type="number" id="num" value="5" min="1" />
+
+  <label for="wikiSearch">Search Wikipedia Article:</label>
+  <input type="text" id="wikiSearch" placeholder="Type article name..." oninput="getWikiSuggestions()" autocomplete="off" />
+  <ul id="wikiSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:#fff;border:1px solid #ccc;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);width:100%;display:none;"></ul>
+  <button onclick="fetchWikipediaArticle()">Fetch Article</button>
+  <div id="wikiStatus"></div>
+
+  <button onclick="generateQuiz()">Generate Quiz</button>
+  <button onclick="summarizeArticle()">Summarize Article</button>
+
+  <h2>Generated Questions:</h2>
+  <pre id="output"></pre>
+
+  <script>
+    async function generateQuiz() {
+      const title = document.getElementById('title').value;
+      const text = document.getElementById('text').value;
+      const num = document.getElementById('num').value;
+      const output = document.getElementById('output');
+
+      output.textContent = 'Generating quiz... Please wait.';
+
+      try {
+        const response = await fetch('/api/quiz', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            articleTitle: title,
+            articleText: text,
+            numQuestions: parseInt(num, 10)
+          })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          output.textContent = data.questions;
+        } else {
+          output.textContent = `Error: ${data.error || 'Unknown error occurred.'}`;
+        }
+      } catch (err) {
+        output.textContent = `Fetch error: ${err.message}`;
+      }
+    }
+
+    async function fetchWikipediaArticle() {
+      const search = document.getElementById('wikiSearch').value.trim();
+      const status = document.getElementById('wikiStatus');
+      if (!search) {
+        status.textContent = "Please enter a search term.";
+        return;
+      }
+      status.textContent = "Searching Wikipedia...";
+      try {
+        // Fetch summary from Wikipedia REST API
+        const resp = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(search)}`);
+        if (!resp.ok) throw new Error("Article not found.");
+        const data = await resp.json();
+        document.getElementById('title').value = data.title || search;
+        document.getElementById('text').value = data.extract || '';
+        status.textContent = "Article loaded! You can now generate a quiz.";
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    }
+
+    async function summarizeArticle() {
+      const articleText = document.getElementById('text').value;
+      const status = document.getElementById('wikiStatus');
+      if (!articleText) {
+        status.textContent = "Please enter an article text.";
+        return;
+      }
+      status.textContent = "Summarizing article...";
+      try {
+        const response = await fetch('/api/summarize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            articleText: articleText
+          })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          document.getElementById('text').value = data.summary;
+          status.textContent = "Article summarized!";
+        } else {
+          status.textContent = `Error: ${data.error || 'Unknown error occurred.'}`;
+        }
+      } catch (err) {
+        status.textContent = `Fetch error: ${err.message}`;
+      }
+    }
+
+    async function getWikiSuggestions() {
+      const query = document.getElementById('wikiSearch').value.trim();
+      const list = document.getElementById('wikiSuggestions');
+      list.innerHTML = "";
+      if (query.length === 0) {
+        list.style.display = 'none';
+        return;
+      }
+      try {
+        const response = await fetch(`https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=10&namespace=0&format=json&origin=*`);
+        const data = await response.json();
+        const suggestions = data[1];
+        if (suggestions.length > 0) {
+          list.style.display = 'block';
+          suggestions.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            li.style.padding = '10px 15px';
+            li.style.cursor = 'pointer';
+            li.onmouseover = () => li.style.background = '#4a90e2';
+            li.onmouseout = () => li.style.background = '#fff';
+            li.onclick = () => {
+              document.getElementById('wikiSearch').value = item;
+              list.style.display = 'none';
+              fetchWikipediaArticle();
+            };
+            list.appendChild(li);
+          });
+        } else {
+          list.style.display = 'none';
+        }
+      } catch (err) {
+        list.style.display = 'none';
+      }
+    }
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+      const suggestions = document.getElementById('wikiSuggestions');
+      const input = document.getElementById('wikiSearch');
+      if (e.target !== input && e.target !== suggestions) {
+        suggestions.style.display = 'none';
+      }
+    });
+
+    // Keyboard navigation for suggestions
+    document.getElementById('wikiSearch').addEventListener('keydown', (e) => {
+      const suggestions = document.getElementById('wikiSuggestions');
+      const items = suggestions.getElementsByTagName('li');
+      let currentIndex = -1;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].classList.contains('active')) {
+          currentIndex = i;
+          break;
+        }
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (currentIndex < items.length - 1) {
+          if (currentIndex >= 0) items[currentIndex].classList.remove('active');
+          items[currentIndex + 1].classList.add('active');
+        } else if (items.length > 0) {
+          items[0].classList.add('active');
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentIndex > 0) {
+          items[currentIndex].classList.remove('active');
+          items[currentIndex - 1].classList.add('active');
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const activeItem = suggestions.querySelector('.active');
+        if (activeItem) {
+          document.getElementById('wikiSearch').value = activeItem.textContent;
+          suggestions.style.display = 'none';
+          fetchWikipediaArticle();
+        } else {
+          fetchWikipediaArticle();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
