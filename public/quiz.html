@@ -4,12 +4,94 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quiz Generator</title>
+  <link rel="stylesheet" href="styles.css">
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+    }
+    .main-nav {
+      background-color: #004080;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 15px 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .main-nav a {
+      color: white;
+      text-decoration: none;
+    }
+    .main-nav a:hover {
+      text-decoration: underline;
+    }
+    .container {
       max-width: 800px;
-      margin: auto;
+      margin: 40px auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    h1 {
+      color: #004080;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .quiz-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .quiz-form label {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .quiz-form input[type="text"] {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 1rem;
+      width: 100%;
+    }
+    .quiz-form input[type="text"]:focus {
+      outline: none;
+      border-color: #0078D7;
+      box-shadow: 0 0 4px #0078D7;
+    }
+    .quiz-form button {
+      background-color: #0078D7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .quiz-form button:hover {
+      background-color: #005A9E;
+    }
+    .quiz-results {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-left: 5px solid #2196F3;
+      border-radius: 6px;
+    }
+    .quiz-results h2 {
+      color: #2196F3;
+      margin-top: 0;
+    }
+    .quiz-results ul {
+      list-style: none;
+      padding: 0;
+    }
+    .quiz-results li {
+      margin-bottom: 10px;
+      font-size: 1rem;
     }
     input, textarea, button {
       width: 100%;
@@ -39,28 +121,35 @@
   </style>
 </head>
 <body>
-  <h1>Wikipedia Quiz Generator</h1>
-  <label for="title">Article Title:</label>
-  <input type="text" id="title" placeholder="Enter article title" />
+  <nav class="main-nav">
+    <a href="index.html">Home</a>
+  </nav>
+  <div class="container">
+    <h1>Wikipedia Quiz Generator</h1>
+    <form class="quiz-form" id="quizForm">
+      <label for="title">Article Title:</label>
+      <input type="text" id="title" placeholder="Enter article title" />
 
-  <label for="text">Article Text:</label>
-  <textarea id="text" rows="10" placeholder="Paste article text here..."></textarea>
+      <label for="text">Article Text:</label>
+      <textarea id="text" rows="10" placeholder="Paste article text here..."></textarea>
 
-  <label for="num">Number of Questions:</label>
-  <input type="number" id="num" value="5" min="1" />
+      <label for="num">Number of Questions:</label>
+      <input type="number" id="num" value="5" min="1" />
 
-  <label for="wikiSearch">Search Wikipedia Article:</label>
-  <input type="text" id="wikiSearch" placeholder="Type article name..." oninput="getWikiSuggestions()" autocomplete="off" />
-  <ul id="wikiSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:#fff;border:1px solid #ccc;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);width:100%;display:none;"></ul>
-  <button onclick="fetchWikipediaArticle()">Fetch Article</button>
-  <div id="wikiStatus"></div>
+      <label for="wikiSearch">Search Wikipedia Article:</label>
+      <input type="text" id="wikiSearch" placeholder="Type article name..." oninput="getWikiSuggestions()" autocomplete="off" />
+      <ul id="wikiSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:#fff;border:1px solid #ccc;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);width:100%;display:none;"></ul>
+      <button type="button" onclick="fetchWikipediaArticle()">Fetch Article</button>
+      <div id="wikiStatus"></div>
 
-  <button onclick="generateQuiz()">Generate Quiz</button>
-  <button onclick="summarizeArticle()">Summarize Article</button>
-
-  <h2>Generated Questions:</h2>
-  <pre id="output"></pre>
-
+      <button type="button" onclick="generateQuiz()">Generate Quiz</button>
+      <button type="button" onclick="summarizeArticle()">Summarize Article</button>
+    </form>
+    <div class="quiz-results" id="quizResults" style="display: none;">
+      <h2>Generated Questions:</h2>
+      <pre id="output"></pre>
+    </div>
+  </div>
   <script>
     async function generateQuiz() {
       const title = document.getElementById('title').value;

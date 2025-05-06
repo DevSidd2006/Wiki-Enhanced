@@ -136,38 +136,39 @@
     }
     .nav-link {
       align-items: center;
-      background-color: var(--primary-color);
-      border-radius: 4px;
+      background-color: #0078D7; /* Updated primary color */
+      border-radius: 6px;
       color: white;
       display: flex;
       font-weight: 500;
-      gap: 6px;
-      padding: 8px 16px;
+      gap: 8px;
+      padding: 10px 20px; /* Uniform size */
       text-decoration: none;
       transition: all 0.3s ease;
+      font-size: 1rem; /* Consistent font size */
     }
     .nav-link:hover {
-      background-color: var(--primary-hover);
+      background-color: #005A9E; /* Updated hover color */
       transform: translateY(-2px);
     }
     .nav-links {
       display: flex;
-      gap: 10px;
+      gap: 12px; /* Adjusted spacing */
     }
     .nav-menu-btn {
       align-items: center;
-      background: none;
+      background: #0078D7; /* Updated button color */
       border: none;
-      color: var(--text-color);
+      border-radius: 6px;
+      color: white;
       cursor: pointer;
       display: flex;
-      font-size: 2rem;
-      margin-right: 10px;
-      padding: 0 8px 0 0;
-      transition: color 0.2s;
+      font-size: 1.5rem;
+      padding: 10px; /* Uniform size */
+      transition: background-color 0.3s ease;
     }
     .nav-menu-btn:hover {
-      color: var(--primary-color);
+      background-color: #005A9E; /* Updated hover color */
     }
     .nav-overlay {
       align-items: flex-start;
@@ -396,6 +397,54 @@
     .close-nav-overlay:hover {
       background: #b52a37;
     }
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #F3F4F6; /* Light background for contrast */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+    .search-button {
+      background-color: #0078D7; /* Updated button color */
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      padding: 10px 20px; /* Uniform size */
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+    .search-button:hover {
+      background-color: #005A9E; /* Updated hover color */
+    }
+    .search-container input {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 1rem;
+      width: 200px;
+    }
+    .search-container input:focus {
+      outline: none;
+      border-color: #0078D7;
+      box-shadow: 0 0 4px #0078D7;
+    }
+    .main-nav {
+      background-color: #004080; /* Bold background color */
+      color: white;
+      font-size: 1.2rem; /* Larger font size */
+      font-weight: bold;
+      padding: 15px 20px; /* Add padding for better spacing */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    }
+    .main-nav a {
+      color: white; /* Ensure links are visible */
+      text-decoration: none;
+    }
+    .main-nav a:hover {
+      text-decoration: underline; /* Add hover effect for links */
+    }
   </style>
 </head>
 <body>
@@ -427,7 +476,7 @@
           <a href="summarizer.html" class="nav-link">
             <span>📝</span>
             Summarizer
-          </ ROTATED_TEXT a>
+          </a>
           <a href="qa.html" class="nav-link">
             <span>❓</span>
             Q&A Bot
@@ -443,9 +492,6 @@
 
   <div class="main-container">
     <main class="content">
-      <div class="debug-info" style="position:fixed;top:0;right:0;background:rgba(0,0,0,0.8);color:white;padding:10px;z-index:9999;">
-        <div id="debug-status">Loading...</div>
-      </div>
       
       <div class="card featured-section-grid">
         <section class="main-featured featured-card">
@@ -483,53 +529,6 @@
       </div>
       <div class="section-divider"></div>
       <div class="card">
-        <div class="search-results" id="results">
-          <!-- Search results will be displayed here -->
-        </div>
-      </div>
-      <div class="section-divider"></div>
-      <div class="card">
-        <div id="tableOfContents"></div>
-        <div id="articleContent"></div>
-      </div>
-
-      <!-- Quiz Section -->
-      <div class="card">
-        <h2>Quiz Generator</h2>
-        <div class="quiz-controls">
-          <button onclick="generateQuiz(currentArticleTitle)" class="generate-quiz-btn" style="display:none;">
-            Generate Quiz
-          </button>
-        </div>
-        <div id="quizContent">
-          <!-- Quiz content will be loaded here -->
-        </div>
-      </div>
-
-      <!-- Q&A Section -->
-      <div class="card">
-        <h2>Ask Questions</h2>
-        <div class="qa-container">
-          <input type="text" id="questionInput" class="qa-input" placeholder="Ask a question about the article...">
-          <button onclick="handleQuestion()" class="qa-button">Ask</button>
-          <div id="qaAnswer" class="qa-answer">
-            <!-- Answers will be displayed here -->
-          </div>
-        </div>
-      </div>
-
-      <div class="section-divider"></div>
-      <div class="card">
-        <div id="articleModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
-          <div style="background:var(--card-bg,#fff);max-width:900px;width:90vw;height:80vh;position:relative;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.3);overflow:hidden;display:flex;flex-direction:column;">
-            <button onclick="closeArticleModal()" style="position:absolute;top:10px;right:10px;background:#dc3545;color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:1.3rem;cursor:pointer;z-index:2;">✖</button>
-            <iframe id="articleIframe" src="" style="flex:1;width:100%;border:none;"></iframe>
-          </div>
-        </div>
-      </div>
-      <div class="section-divider"></div>
-      <div class="card">
-        <!-- Further Reading Section -->
         <div class="further-reading">
           <h2>Further Reading</h2>
           <div class="recommendations-container">
@@ -580,21 +579,6 @@
             <div class="lang-list">Bahasa Indonesia · Bahasa Melayu · Bân-lâmobtained-gú · Български · Català · Čeština · Dansk · Eesti · Esperanto · Euskara · עבר  · Hrvatski · 한국어 · Magyar · Norsk bokmål · Română · Simple English · Slovenčina · Srpski · Srpskohrvatski · Suomi · Türkçe · Oʻzbekcha</div>
           </div>
           <div class="languages-group">
-            <div class="lang-group-title">50,000+ articles</div>
-            <div class="lang-list">Asturianu · Azərbaycanca · বাংলা · Bosanski · Cymraeg · Ελληνικά · Frysk · Gaeilge · Galego · Hrvatski · ქართული · Kurdî · Latviešu · Lietuvių · Македонски · မြန်မာဘာသာ · Norsk nynorsk · Shqip · Slovenščina · ไทย · తెలుగు · اردو</div>
-          </div>
-        </div>
-      </div>
-    </main>
-  </div>
-
-  <div id="searchResultsModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.6);z-index:10000;align-items:center;justify-content:center;">
-    <div style="background:var(--card-bg,#fff);max-width:800px;width:90vw;max-height:80vh;overflow-y:auto;position:relative;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.3);padding:32px 24px;">
-      <button onclick="closeSearchResultsModal()" style="position:absolute;top:10px;right:10px;background:#dc3545;color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:1.3rem;cursor:pointer;z-index:2;">✖</button>
-      <div id="modalResults"></div>
-    </div>
-  </div>
-
   <!-- Navigation Overlay -->
   <div id="navOverlay" class="nav-overlay">
     <div class="nav-overlay-content">

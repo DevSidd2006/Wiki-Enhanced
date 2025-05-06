@@ -264,16 +264,6 @@ body {
   background-color: var(--primary-hover);
 }
 
-/* Scrolling Animations */
-.content > * {
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.content > *.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 /* Further Reading Section */
 .further-reading {
   margin-top: 40px;
@@ -511,22 +501,6 @@ body {
   font-size: 1.2em;
 }
 
-.loading::after {
-  content: '';
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--primary-color);
-  border-radius: 50%;
-  border-top-color: transparent;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* Error State */
 .error-message {
   color: #dc3545;
@@ -579,7 +553,7 @@ body {
 }
 
 .back-button:hover {
-  color: var(--primary-color);
+  color: var (--primary-color);
   transform: translateX(-2px);
 }
 
@@ -700,25 +674,6 @@ body {
   .nav-link {
     width: 100%;
     justify-content: center;
-  }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .content > *,
-  .recommendation-card,
-  .disclosure-section,
-  .disclosure-content,
-  .disclosure-icon {
-    transition: none !important;
-    transform: none !important;
   }
 }
 
