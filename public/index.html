@@ -136,31 +136,31 @@
     }
     .nav-link {
       align-items: center;
-      background-color: #0078D7; /* Updated primary color */
-      border-radius: 6px;
-      color: white;
+      background-color: transparent; /* Remove background for cleaner look */
+      color: rgb(0, 0, 0);
       display: flex;
       font-weight: 500;
       gap: 8px;
-      padding: 10px 20px; /* Uniform size */
+      padding: 8px 12px; /* Reduced padding for compactness */
       text-decoration: none;
-      transition: all 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
       font-size: 1rem; /* Consistent font size */
+      border-radius: 4px;
     }
     .nav-link:hover {
-      background-color: #005A9E; /* Updated hover color */
-      transform: translateY(-2px);
+      background-color: rgba(255, 255, 255, 0.2); /* Subtle hover effect */
+      transform: translateY(-1px); /* Slight lift on hover */
     }
     .nav-links {
       display: flex;
-      gap: 12px; /* Adjusted spacing */
+      gap: 16px; /* Adjusted spacing for cleaner layout */
     }
     .nav-menu-btn {
       align-items: center;
       background: #0078D7; /* Updated button color */
       border: none;
       border-radius: 6px;
-      color: white;
+      color: rgb(0, 0, 0);
       cursor: pointer;
       display: flex;
       font-size: 1.5rem;
@@ -171,11 +171,11 @@
       background-color: #005A9E; /* Updated hover color */
     }
     .nav-overlay {
-      align-items: flex-start;
-      background: rgba(0,0,0,0.6);
+      align-items: center; /* Center content vertically */
+      background: rgba(0, 0, 0, 0.8); /* Darker overlay for better visibility */
       display: none;
       height: 100vh;
-      justify-content: flex-start;
+      justify-content: center; /* Center content horizontally */
       left: 0;
       position: fixed;
       top: 0;
@@ -183,45 +183,20 @@
       z-index: 20000;
     }
     .nav-overlay-content {
-      animation: slideInNav 0.25s cubic-bezier(.4,0,.2,1);
+      animation: slideInNav 0.25s cubic-bezier(.4, 0, .2, 1);
       background: var(--card-bg, #fff);
-      border-radius: 0 12px 12px 0;
-      box-shadow: 2px 0 16px rgba(0,0,0,0.18);
+      border-radius: 12px; /* Rounded corners for better aesthetics */
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
       display: flex;
       flex-direction: column;
       gap: 18px;
-      max-width: 90vw;
-      min-height: 100vh;
-      padding: 32px 24px 24px 24px;
+      max-width: 90%; /* Adjust width for responsiveness */
+      min-height: 80%; /* Ensure it covers most of the page */
+      padding: 32px 24px;
       position: relative;
-      width: 320px;
-    }
-    .nav-overlay-content h3 {
-      color: var(--primary-color);
-      font-size: 1.1em;
-      font-weight: 600;
-      margin: 0 0 8px 0;
-    }
-    .nav-overlay-list {
-      list-style: none;
-      margin: 0 0 18px 0;
-      padding: 0;
-    }
-    .nav-overlay-list a {
-      color: var(--text-color);
-      font-size: 1.05em;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-overlay-list a:hover {
-      color: var(--primary-color);
-      text-decoration: underline;
-    }
-    .nav-overlay-list li {
-      margin-bottom: 10px;
     }
     .nav-overlay.open {
-      display: flex;
+      display: flex; /* Ensure overlay covers the entire page */
     }
     .random-article-button {
       align-items: center;
@@ -404,15 +379,17 @@
       padding: 10px 20px;
       background-color: #F3F4F6; /* Light background for contrast */
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      max-width: 1200px; /* Center content with max width */
+      margin: 0 auto;
     }
     .search-button {
       background-color: #0078D7; /* Updated button color */
       border: none;
-      border-radius: 6px;
+      border-radius: 4px;
       color: white;
       cursor: pointer;
-      padding: 10px 20px; /* Uniform size */
-      font-size: 1rem;
+      padding: 8px 16px; /* Reduced padding for compactness */
+      font-size: 0.95rem; /* Consistent font size */
       transition: background-color 0.3s ease;
     }
     .search-button:hover {
@@ -420,10 +397,10 @@
     }
     .search-container input {
       border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 10px;
-      font-size: 1rem;
-      width: 200px;
+      border-radius: 4px;
+      padding: 8px;
+      font-size: 0.95rem; /* Slightly smaller font size */
+      width: 180px; /* Adjusted width */
     }
     .search-container input:focus {
       outline: none;
@@ -433,17 +410,19 @@
     .main-nav {
       background-color: #004080; /* Bold background color */
       color: white;
-      font-size: 1.2rem; /* Larger font size */
-      font-weight: bold;
-      padding: 15px 20px; /* Add padding for better spacing */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+      font-size: 1.1rem; /* Slightly smaller font size for balance */
+      font-weight: 600; /* Adjusted font weight */
+      padding: 10px 20px; /* Reduced padding for compactness */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* Softer shadow */
     }
-    .main-nav a {
-      color: white; /* Ensure links are visible */
-      text-decoration: none;
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 16px; /* Adjusted spacing */
     }
-    .main-nav a:hover {
-      text-decoration: underline; /* Add hover effect for links */
+    .nav-right {
+      display: flex;
+      align-items: center;
     }
   </style>
 </head>
@@ -451,7 +430,7 @@
   <nav class="main-nav">
     <div class="nav-container">
       <div class="nav-left">
-        <button id="navMenuBtn" class="nav-menu-btn" aria-label="Open menu">☰</button>
+        <!-- Removed the hamburger menu button -->
         <a href="#" class="logo">
           <img src="https://en.wikipedia.org/static/images/icons/wikipedia.png" alt="Wikipedia globe" class="logo-globe">
           <span class="logo-text">
@@ -579,28 +558,6 @@
             <div class="lang-list">Bahasa Indonesia · Bahasa Melayu · Bân-lâmobtained-gú · Български · Català · Čeština · Dansk · Eesti · Esperanto · Euskara · עבר  · Hrvatski · 한국어 · Magyar · Norsk bokmål · Română · Simple English · Slovenčina · Srpski · Srpskohrvatski · Suomi · Türkçe · Oʻzbekcha</div>
           </div>
           <div class="languages-group">
-  <!-- Navigation Overlay -->
-  <div id="navOverlay" class="nav-overlay">
-    <div class="nav-overlay-content">
-      <button id="closeNavOverlay" class="close-nav-overlay" aria-label="Close menu">✖</button>
-      <h3>Navigation</h3>
-      <ul class="nav-overlay-list">
-        <li><a href="#">About Wikipedia</a></li>
-        <li><a href="#">Contents</a></li>
-        <li><a href="#">Current Events</a></li>
-        <li><a href="#">Main Page</a></li>
-        <li><a href="#">Random Article</a></li>
-      </ul>
-      <h3>Contribute</h3>
-      <ul class="nav-overlay-list">
-        <li><a href="#">Community Portal</a></li>
-        <li><a href="#">Help</a></li>
-        <li><a href="#">Learn to Edit</a></li>
-        <li><a href="#">Recent Changes</a></li>
-      </ul>
-    </div>
-  </div>
-
   <script>
     // Add debug logging
     const debugStatus = document.getElementById('debug-status');
@@ -648,20 +605,6 @@
       dykIndex = newIndex;
       showFact();
     }
-
-    // Hamburger menu overlay logic
-    document.getElementById('navMenuBtn').onclick = function() {
-      document.getElementById('navOverlay').classList.add('open');
-    };
-    document.getElementById('closeNavOverlay').onclick = function() {
-      document.getElementById('navOverlay').classList.remove('open');
-    };
-    // Close overlay when clicking outside content
-    document.getElementById('navOverlay').addEventListener('click', function(e) {
-      if (e.target === this) {
-        this.classList.remove('open');
-      }
-    });
 
     // Handle keyboard navigation
     const searchInput = document.getElementById('searchInput');
