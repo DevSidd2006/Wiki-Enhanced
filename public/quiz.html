@@ -122,34 +122,40 @@
 </head>
 <body>
   <nav class="main-nav">
-    <a href="index.html">Home</a>
-  </nav>
-  <div class="container">
-    <h1>Wikipedia Quiz Generator</h1>
-    <form class="quiz-form" id="quizForm">
-      <label for="title">Article Title:</label>
-      <input type="text" id="title" placeholder="Enter article title" />
-
-      <label for="text">Article Text:</label>
-      <textarea id="text" rows="10" placeholder="Paste article text here..."></textarea>
-
-      <label for="num">Number of Questions:</label>
-      <input type="number" id="num" value="5" min="1" />
-
-      <label for="wikiSearch">Search Wikipedia Article:</label>
-      <input type="text" id="wikiSearch" placeholder="Type article name..." oninput="getWikiSuggestions()" autocomplete="off" />
-      <ul id="wikiSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:#fff;border:1px solid #ccc;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);width:100%;display:none;"></ul>
-      <button type="button" onclick="fetchWikipediaArticle()">Fetch Article</button>
-      <div id="wikiStatus"></div>
-
-      <button type="button" onclick="generateQuiz()">Generate Quiz</button>
-      <button type="button" onclick="summarizeArticle()">Summarize Article</button>
-    </form>
-    <div class="quiz-results" id="quizResults" style="display: none;">
-      <h2>Generated Questions:</h2>
-      <pre id="output"></pre>
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="index.html" class="nav-link">Back to Main</a>
+      </div>
     </div>
+  </nav>
+
+  <div class="main-container">
+    <main class="content">
+      <div class="card">
+        <h1>Wikipedia Quiz Generator</h1>
+        <form class="quiz-form" id="quizForm">
+          <label for="title">Article Title:</label>
+          <input type="text" id="title" placeholder="Enter article title" />
+
+          <label for="num">Number of Questions:</label>
+          <input type="number" id="num" value="5" min="1" />
+
+          <label for="wikiSearch">Search Wikipedia Article:</label>
+          <input type="text" id="wikiSearch" placeholder="Type article name..." oninput="getWikiSuggestions()" autocomplete="off" />
+          <ul id="wikiSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:#fff;border:1px solid #ccc;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);width:100%;display:none;"></ul>
+          <button type="button" onclick="fetchWikipediaArticle()">Fetch Article</button>
+          <div id="wikiStatus"></div>
+
+          <button type="button" onclick="generateQuiz()">Generate Quiz</button>
+        </form>
+        <div class="quiz-results" id="quizResults" style="display: none;">
+          <h2>Generated Questions:</h2>
+          <pre id="output"></pre>
+        </div>
+      </div>
+    </main>
   </div>
+
   <script>
     async function generateQuiz() {
       const title = document.getElementById('title').value;
@@ -190,44 +196,15 @@
       }
       status.textContent = "Searching Wikipedia...";
       try {
-        // Fetch summary from Wikipedia REST API
-        const resp = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(search)}`);
+        // Fetch full article content from Wikipedia REST API
+        const resp = await fetch(`https://en.wikipedia.org/api/rest_v1/page/html/${encodeURIComponent(search)}`);
         if (!resp.ok) throw new Error("Article not found.");
-        const data = await resp.json();
-        document.getElementById('title').value = data.title || search;
-        document.getElementById('text').value = data.extract || '';
+        const data = await resp.text();
+        document.getElementById('title').value = search;
+        document.getElementById('wikiStatus').innerHTML = "<h3>Full Article:</h3>" + data;
         status.textContent = "Article loaded! You can now generate a quiz.";
       } catch (err) {
         status.textContent = "Error: " + err.message;
-      }
-    }
-
-    async function summarizeArticle() {
-      const articleText = document.getElementById('text').value;
-      const status = document.getElementById('wikiStatus');
-      if (!articleText) {
-        status.textContent = "Please enter an article text.";
-        return;
-      }
-      status.textContent = "Summarizing article...";
-      try {
-        const response = await fetch('/api/summarize', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            articleText: articleText
-          })
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          document.getElementById('text').value = data.summary;
-          status.textContent = "Article summarized!";
-        } else {
-          status.textContent = `Error: ${data.error || 'Unknown error occurred.'}`;
-        }
-      } catch (err) {
-        status.textContent = `Fetch error: ${err.message}`;
       }
     }
 
