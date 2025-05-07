@@ -136,46 +136,46 @@
     }
     .nav-link {
       align-items: center;
-      background-color: transparent; /* Remove background for cleaner look */
+      background-color: transparent;
       color: rgb(0, 0, 0);
       display: flex;
       font-weight: 500;
       gap: 8px;
-      padding: 8px 12px; /* Reduced padding for compactness */
+      padding: 8px 12px;
       text-decoration: none;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      font-size: 1rem; /* Consistent font size */
+      font-size: 1rem;
       border-radius: 4px;
     }
     .nav-link:hover {
-      background-color: rgba(255, 255, 255, 0.2); /* Subtle hover effect */
-      transform: translateY(-1px); /* Slight lift on hover */
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
     }
     .nav-links {
       display: flex;
-      gap: 16px; /* Adjusted spacing for cleaner layout */
+      gap: 16px;
     }
     .nav-menu-btn {
       align-items: center;
-      background: #0078D7; /* Updated button color */
+      background: #0078D7;
       border: none;
       border-radius: 6px;
       color: rgb(0, 0, 0);
       cursor: pointer;
       display: flex;
       font-size: 1.5rem;
-      padding: 10px; /* Uniform size */
+      padding: 10px;
       transition: background-color 0.3s ease;
     }
     .nav-menu-btn:hover {
-      background-color: #005A9E; /* Updated hover color */
+      background-color: #005A9E;
     }
     .nav-overlay {
-      align-items: center; /* Center content vertically */
-      background: rgba(0, 0, 0, 0.8); /* Darker overlay for better visibility */
+      align-items: center;
+      background: rgba(0, 0, 0, 0.8);
       display: none;
       height: 100vh;
-      justify-content: center; /* Center content horizontally */
+      justify-content: center;
       left: 0;
       position: fixed;
       top: 0;
@@ -185,18 +185,18 @@
     .nav-overlay-content {
       animation: slideInNav 0.25s cubic-bezier(.4, 0, .2, 1);
       background: var(--card-bg, #fff);
-      border-radius: 12px; /* Rounded corners for better aesthetics */
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
       display: flex;
       flex-direction: column;
       gap: 18px;
-      max-width: 90%; /* Adjust width for responsiveness */
-      min-height: 80%; /* Ensure it covers most of the page */
+      max-width: 90%;
+      min-height: 80%;
       padding: 32px 24px;
       position: relative;
     }
     .nav-overlay.open {
-      display: flex; /* Ensure overlay covers the entire page */
+      display: flex;
     }
     .random-article-button {
       align-items: center;
@@ -377,30 +377,30 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px 20px;
-      background-color: #F3F4F6; /* Light background for contrast */
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-      max-width: 1200px; /* Center content with max width */
+      background-color: #F3F4F6;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      max-width: 1200px;
       margin: 0 auto;
     }
     .search-button {
-      background-color: #0078D7; /* Updated button color */
+      background-color: #0078D7;
       border: none;
       border-radius: 4px;
       color: white;
       cursor: pointer;
-      padding: 8px 16px; /* Reduced padding for compactness */
-      font-size: 0.95rem; /* Consistent font size */
+      padding: 8px 16px;
+      font-size: 0.95rem;
       transition: background-color 0.3s ease;
     }
     .search-button:hover {
-      background-color: #005A9E; /* Updated hover color */
+      background-color: #005A9E;
     }
     .search-container input {
       border: 1px solid #ccc;
       border-radius: 4px;
       padding: 8px;
-      font-size: 0.95rem; /* Slightly smaller font size */
-      width: 180px; /* Adjusted width */
+      font-size: 0.95rem;
+      width: 180px;
     }
     .search-container input:focus {
       outline: none;
@@ -408,21 +408,84 @@
       box-shadow: 0 0 4px #0078D7;
     }
     .main-nav {
-      background-color: #004080; /* Bold background color */
+      background-color: #004080;
       color: white;
-      font-size: 1.1rem; /* Slightly smaller font size for balance */
-      font-weight: 600; /* Adjusted font weight */
-      padding: 10px 20px; /* Reduced padding for compactness */
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* Softer shadow */
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
     .nav-left {
       display: flex;
       align-items: center;
-      gap: 16px; /* Adjusted spacing */
+      gap: 16px;
     }
     .nav-right {
       display: flex;
       align-items: center;
+    }
+    /* Styles for search results modal */
+    #searchResultsModal {
+      align-items: center;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      height: 100vh;
+      justify-content: center;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100vw;
+      z-index: 20000;
+    }
+    #searchResultsModal .modal-content {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      max-height: 80vh; /* Limit height to enable scrolling */
+      overflow-y: auto; /* Enable vertical scrolling */
+      padding: 24px;
+      position: relative;
+      width: 90%;
+    }
+    #searchResultsModal .modal-content h2 {
+      color: #222;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+      margin-top: 0;
+    }
+    #searchResultsModal .modal-content p {
+      color: #333;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    #searchResultsModal .read-more {
+      color: #3366cc;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    #searchResultsModal .read-more:hover {
+      text-decoration: underline;
+    }
+    #searchResultsModal .close-modal {
+      background: #dc3545;
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.3rem;
+      height: 36px;
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      width: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Ensures the cross is centered */
+    }
+    #searchResultsModal .close-modal:hover {
+      background: #b52a37;
     }
   </style>
 </head>
@@ -430,7 +493,6 @@
   <nav class="main-nav">
     <div class="nav-container">
       <div class="nav-left">
-        <!-- Removed the hamburger menu button -->
         <a href="#" class="logo">
           <img src="https://en.wikipedia.org/static/images/icons/wikipedia.png" alt="Wikipedia globe" class="logo-globe">
           <span class="logo-text">
@@ -471,7 +533,6 @@
 
   <div class="main-container">
     <main class="content">
-      
       <div class="card featured-section-grid">
         <section class="main-featured featured-card">
           <h2>From today's featured article</h2>
@@ -555,9 +616,23 @@
           </div>
           <div class="languages-group">
             <div class="lang-group-title">250,000+ articles</div>
-            <div class="lang-list">Bahasa Indonesia · Bahasa Melayu · Bân-lâmobtained-gú · Български · Català · Čeština · Dansk · Eesti · Esperanto · Euskara · עבר  · Hrvatski · 한국어 · Magyar · Norsk bokmål · Română · Simple English · Slovenčina · Srpski · Srpskohrvatski · Suomi · Türkçe · Oʻzbekcha</div>
+            <div class="lang-list">Bahasa Indonesia · Bahasa Melayu · Bân-lâmobtained-gú · Български · Català · Čeština · Dansk · Eesti · Esperanto · Euskara · עברית · Hrvatski · 한국어 · Magyar · Norsk bokmål · Română · Simple English · Slovenčina · Srpski · Srpskohrvatski · Suomi · Türkçe · Oʻzbekcha</div>
           </div>
           <div class="languages-group">
+            <div class="lang-group-title">50,000+ articles</div>
+            <div class="lang-list">Asturianu · Azərbaycanca · বাংলা · Bosanski · Ελληνικά · Euskara · Galego · ગુજરાતી · हिंदी · Íslenska · Jawa · ಕನ್ನಡ · ქართული · Latina · Latviešu · Lietuvių · Македонски · Malagasy · മലയാളം · मराठी · مصرى · Norsk nynorsk · Occitan · ਪੰਜਾਬੀ · Scots · Shqip · Sicilianu · සිංහල · Slovenščina · تونسي · اردو · Yorùbá</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Search Results Modal -->
+  <div id="searchResultsModal">
+    <button class="close-modal" onclick="closeSearchResultsModal()" aria-label="Close modal">×</button>
+    <div id="modalResults" class="modal-content"></div>
+  </div>
+
   <script>
     // Add debug logging
     const debugStatus = document.getElementById('debug-status');
@@ -584,7 +659,7 @@
       "... that an 1895 painting (pictured), depicting a woman clutching a crumpled letter, was described by a critic as 'a list of disasters'?",
       "... that Avi Yemini is one of seventeen children who were raised in an ultra-Orthodox Chabad family?",
       "... that Home of a Rebel Sharpshooter was staged by moving a corpse?",
-      "... that just two weeks after a Florida TV station began using a news helicopter, it crashed, killing two of threeüzel occupants?",
+      "... that just two weeks after a Florida TV station began using a news helicopter, it crashed, killing two of three occupants?",
       "... that Playboi Carti's song titled '2024' was first teased in 2023 and later officially released in 2025?",
       "... that Soemartini was appointed as the chief of the National Archives of Indonesia after working in the agency for a year?",
       "... that the 1982 film The Second November was filmed in colour, but shown in black-and-white until 2012?",
@@ -813,9 +888,13 @@
       document.getElementById('modalResults').innerHTML = html;
       document.getElementById('searchResultsModal').style.display = 'flex';
     }
+
     function closeSearchResultsModal() {
       document.getElementById('modalResults').innerHTML = '';
       document.getElementById('searchResultsModal').style.display = 'none';
+      // Focus the search input to allow immediate new searches
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) searchInput.focus();
     }
 
     async function handleQuestion() {
@@ -855,7 +934,7 @@
       }
     }
 
-    // Modify the searchWikipedia function to update currentArticleTitle
+    // Search Wikipedia function with close button
     async function searchWikipedia() {
       const query = document.getElementById('searchInput').value.trim();
       if (!query) return;
@@ -867,38 +946,26 @@
         
         const data = await response.json();
         currentArticleTitle = data.title; // Store the current article title
-        
-        const resultsDiv = document.getElementById('results');
-        
-        resultsDiv.innerHTML = `
+
+        // Display the summary in the search results modal with a close button
+        const modalHtml = `
+          <button class="close-modal" onclick="closeSearchResultsModal()" aria-label="Close modal">×</button>
           <h2>${data.title}</h2>
-          ${data.thumbnail ? `<img src="${data.thumbnail.source}" alt="${data.title}" style="max-width:200px;float:right;margin-left:20px;">` : ''}
           <p>${data.extract}</p>
-          <div class="article-meta">
-            <button onclick="handleArticleSummarization('${data.title}')" class="summarize-button">
-              Generate AI Summary
-            </button>
-            <button onclick="generateQuiz('${data.title}')" class="generate-quiz-btn">
-              Generate Quiz
-            </button>
-            <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(data.title)}" target="_blank">
-              Read full article
-            </a>
-          </div>
+          <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(data.title)}" class="read-more">Read full article</a>
         `;
+        showSearchResultsModal(modalHtml);
         
-        // Show the quiz button
-        document.querySelector('.generate-quiz-btn').style.display = 'inline-block';
-        
-        resultsDiv.scrollIntoView({ behavior: 'smooth' });
-        updateDebugStatus('Search completed');
+        updateDebugStatus('Search successful');
       } catch (error) {
         const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = `
-          <div class="error-message">
-            ❌ No results found for "${query}". Try a different search term.
-          </div>
-        `;
+        if (resultsDiv) {
+          resultsDiv.innerHTML = `
+            <div class="error-message">
+              ❌ No results found for "${query}". Try a different search term.
+            </div>
+          `;
+        }
         updateDebugStatus('Search failed');
       }
     }

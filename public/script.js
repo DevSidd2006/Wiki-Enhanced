@@ -369,7 +369,6 @@ function initTheme() {
     }
   }
   
-  // Initialize everything when the DOM is loaded
   document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     createTableOfContents();
