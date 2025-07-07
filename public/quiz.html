@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"/>
   <title>Quiz Generator</title>
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -11,6 +11,7 @@
       background-color: #f3f4f6;
       margin: 0;
       padding: 0;
+      line-height: 1.5;
     }
     .main-nav {
       background-color: #004080;
@@ -29,7 +30,7 @@
     }
     .container {
       max-width: 800px;
-      margin: 40px auto;
+      margin: 20px auto;
       background: white;
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -39,6 +40,7 @@
       color: #004080;
       text-align: center;
       margin-bottom: 20px;
+      font-size: 1.8rem;
     }
     .quiz-form {
       display: flex;
@@ -48,15 +50,17 @@
     .quiz-form label {
       font-weight: bold;
       margin-bottom: 8px;
+      color: #333;
     }
-    .quiz-form input[type="text"] {
+    .quiz-form input[type="text"], .quiz-form textarea {
       border: 1px solid #ccc;
       border-radius: 6px;
-      padding: 10px;
+      padding: 12px;
       font-size: 1rem;
       width: 100%;
+      box-sizing: border-box;
     }
-    .quiz-form input[type="text"]:focus {
+    .quiz-form input[type="text"]:focus, .quiz-form textarea:focus {
       outline: none;
       border-color: #0078D7;
       box-shadow: 0 0 4px #0078D7;
@@ -66,7 +70,7 @@
       color: white;
       border: none;
       border-radius: 6px;
-      padding: 10px 20px;
+      padding: 12px 20px;
       font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
@@ -93,16 +97,20 @@
       margin-bottom: 10px;
       font-size: 1rem;
     }
-    input, textarea, button {
+    input, textarea, button, select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
+      box-sizing: border-box;
+      font-size: 16px; /* Prevents zoom on iOS */
     }
     pre {
       background-color: #f4f4f4;
       padding: 15px;
       white-space: pre-wrap;
       word-wrap: break-word;
+      font-size: 0.9rem;
+      overflow-x: auto;
     }
     .quiz-generator-btn {
       display: inline-block;
@@ -114,56 +122,304 @@
       font-weight: bold;
       margin: 16px 0;
       transition: background 0.2s;
+      text-align: center;
+      cursor: pointer;
+      border: none;
     }
     .quiz-generator-btn:hover {
       background: #357abd;
     }
+    
+    /* Interactive Quiz Styles */
+    .option-container label:hover {
+      background-color: #f0f8ff !important;
+      border-color: #4a90e2 !important;
+    }
+    
+    .option-container input[type="radio"]:checked + span {
+      color: #4a90e2;
+      font-weight: bold;
+    }
+    
+    .option-container input[type="radio"]:checked {
+      accent-color: #4a90e2;
+    }
+    
+    .question-container {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .quiz-mode-selector button {
+      transition: all 0.3s ease;
+    }
+    
+    .quiz-mode-selector button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    #quizNavigation button:disabled {
+      cursor: not-allowed;
+      background: #6c757d !important;
+    }
+    
+    #quizNavigation button:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .suggestions-active {
+      background: #e3f2fd !important;
+      color: #1976d2 !important;
+    }
   </style>
 </head>
 <body>
-  <nav class="main-nav">
-    <div class="nav-container">
-      <div class="nav-left">
-        <a href="index.html" class="nav-link">Back to Main Page</a>
-      </div>
-    </div>
-  </nav>
-
   <div class="main-container">
     <main class="content">
+      <div class="card" style="max-width: 100%; margin: 0 auto; padding: 15px;">
+        <h1>Wikipedia Quiz Generator</h1>
+        <div style="background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4a90e2;">
+          <h3 style="margin-top: 0; color: #1976d2;">🎯 How to Use the Interactive Quiz</h3>
+          <ul style="margin-bottom: 0; color: #1976d2; padding-left: 20px;">
+            <li><strong>Generate Quiz:</strong> Enter a topic and customize your preferences, then click "Generate Custom Quiz"</li>
+            <li><strong>Take Quiz:</strong> Click "Take Quiz" to answer questions interactively and get your score</li>
+            <li><strong>View Questions:</strong> Click "View Questions" to see the raw quiz format for study or printing</li>
+            <li><strong>Try Demo:</strong> Click "Try Demo Quiz" to test the interactive features with sample questions</li>
+          </ul>
+        </div>s="content">
       <div class="card">
         <h1>Wikipedia Quiz Generator</h1>
+        <div style="background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4a90e2;">
+          <h3 style="margin-top: 0; color: #1976d2;">🎯 How to Use the Interactive Quiz</h3>
+          <ul style="margin-bottom: 0; color: #1976d2;">
+            <li><strong>Generate Quiz:</strong> Enter a topic and customize your preferences, then click "Generate Custom Quiz"</li>
+            <li><strong>Take Quiz:</strong> Click "Take Quiz" to answer questions interactively and get your score</li>
+            <li><strong>View Questions:</strong> Click "View Questions" to see the raw quiz format for study or printing</li>
+            <li><strong>Try Demo:</strong> Click "Try Demo Quiz" to test the interactive features with sample questions</li>
+          </ul>
+        </div>
         <form class="quiz-form" id="quizForm">
           <label for="title">Article Title:</label>
           <input type="text" id="title" placeholder="Enter article title" />
-
-          <label for="num">Number of Questions:</label>
-          <input type="number" id="num" value="5" min="1" />
 
           <label for="wikiSearch">Search Wikipedia Article:</label>
           <input type="text" id="wikiSearch" placeholder="Type article name..." oninput="getWikiSuggestions()" autocomplete="off" />
           <ul id="wikiSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:#fff;border:1px solid #ccc;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);width:100%;display:none;"></ul>
           <button type="button" onclick="fetchWikipediaArticle()">Fetch Article</button>
           <div id="wikiStatus"></div>
+          
+          <label for="text">Article Content:</label>
+          <textarea id="text" placeholder="Paste article content here or use the search above to fetch automatically..." rows="6" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: Arial, sans-serif; resize: vertical;"></textarea>
+          
+          <!-- Enhanced Quiz Options -->
+          <div class="quiz-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; border: 1px solid #dee2e6;">
+            <h3 style="grid-column: span 2; margin: 0 0 15px 0; color: #495057; font-size: 1.1em;">🎯 Quiz Preferences</h3>
+            
+            <div>
+              <label for="num" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Number of Questions:</label>
+              <select id="num" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
+                <option value="3">3 Questions</option>
+                <option value="5" selected>5 Questions</option>
+                <option value="10">10 Questions</option>
+                <option value="15">15 Questions</option>
+                <option value="20">20 Questions</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="difficulty" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Difficulty Level:</label>
+              <select id="difficulty" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
+                <option value="easy">🟢 Easy - Basic facts</option>
+                <option value="medium" selected>🟡 Medium - Moderate understanding</option>
+                <option value="hard">🔴 Hard - Advanced analysis</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="questionType" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Question Type:</label>
+              <select id="questionType" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
+                <option value="multiple-choice" selected>🔤 Multiple Choice</option>
+                <option value="true-false">✅ True/False</option>
+                <option value="fill-blank">📝 Fill in the Blank</option>
+                <option value="short-answer">💭 Short Answer</option>
+                <option value="mixed">🎯 Mixed Types</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="focus" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Focus Area:</label>
+              <select id="focus" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
+                <option value="general">🌐 General Knowledge</option>
+                <option value="history">📅 History & Timeline</option>
+                <option value="achievements">🏆 Achievements</option>
+                <option value="facts">📋 Key Facts</option>
+                <option value="impact">💫 Impact & Significance</option>
+                <option value="details">🔍 Specific Details</option>
+              </select>
+            </div>
+            
+            <div style="grid-column: span 2;">
+              <label for="language" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Language:</label>
+              <select id="language" style="width: 250px; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
+                <option value="english" selected>🇺🇸 English</option>
+                <option value="spanish">🇪🇸 Spanish</option>
+                <option value="french">🇫🇷 French</option>
+                <option value="german">🇩🇪 German</option>
+                <option value="italian">🇮🇹 Italian</option>
+                <option value="portuguese">🇵🇹 Portuguese</option>
+                <option value="chinese">🇨🇳 Chinese</option>
+                <option value="japanese">🇯🇵 Japanese</option>
+              </select>
+            </div>
+          </div>
 
-          <button type="button" onclick="generateQuiz()">Generate Quiz</button>
+          <button type="button" onclick="generateQuiz()" style="background: #4a90e2; color: white; font-size: 16px; font-weight: bold; padding: 15px; border: none; border-radius: 6px; cursor: pointer;">
+            🧩 Generate Custom Quiz
+          </button>
+          <button onclick="loadDemoQuiz()" style="background: #17a2b8; color: white; font-size: 16px; font-weight: bold; padding: 15px; border: none; border-radius: 6px; cursor: pointer; margin-left: 10px;">
+            🎮 Try Demo Quiz
+          </button>
         </form>
         <div class="quiz-results" id="quizResults" style="display: none;">
-          <h2>Generated Questions:</h2>
-          <pre id="output"></pre>
+          <div class="quiz-metadata" id="quizMetadata" style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <!-- Metadata will be populated here -->
+          </div>
+          
+          <!-- Quiz Mode Selection -->
+          <div class="quiz-mode-selector" style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+            <label style="font-weight: bold; color: #1976d2;">📝 Quiz Mode:</label>
+            <button id="viewModeBtn" onclick="switchToViewMode()" style="background: #6c757d; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+              👁️ View Questions
+            </button>
+            <button id="takeModeBtn" onclick="switchToTakeMode()" style="background: #4a90e2; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+              🎯 Take Quiz
+            </button>
+          </div>
+
+          <!-- View Mode (Original) -->
+          <div id="viewMode" style="display: block;">
+            <h2>Generated Questions:</h2>
+            <div id="output" style="background: #f8f9fa; padding: 20px; border-radius: 8px; white-space: pre-wrap; font-family: 'Courier New', monospace; line-height: 1.6;"></div>
+            <div class="quiz-actions" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <button onclick="downloadQuiz()" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                📄 Download Quiz
+              </button>
+              <button onclick="copyQuiz()" style="background: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                📋 Copy to Clipboard
+              </button>
+              <button onclick="generateNewQuiz()" style="background: #17a2b8; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                🔄 Generate New Quiz
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive Quiz Mode -->
+          <div id="takeMode" style="display: none;">
+            <h2>📝 Take the Quiz</h2>
+            <div id="interactiveQuiz" style="background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+              <!-- Interactive questions will be populated here -->
+            </div>
+            <div id="quizNavigation" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+              <button id="prevBtn" onclick="previousQuestion()" style="background: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" disabled>
+                ← Previous
+              </button>
+              <div id="questionProgress" style="font-weight: bold; color: #1976d2;">
+                Question 1 of 5
+              </div>
+              <button id="nextBtn" onclick="nextQuestion()" style="background: #4a90e2; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                Next →
+              </button>
+            </div>
+            <div id="submitQuizContainer" style="margin-top: 20px; text-align: center; display: none;">
+              <button onclick="submitQuiz()" style="background: #28a745; color: white; padding: 15px 30px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold;">
+                🎯 Submit Quiz & Get Score
+              </button>
+            </div>
+          </div>
+
+          <!-- Quiz Results -->
+          <div id="quizScore" style="display: none; margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 5px solid #28a745;">
+            <h3 style="margin-top: 0; color: #28a745;">🎉 Quiz Results</h3>
+            <div id="scoreDisplay" style="font-size: 1.2em; margin-bottom: 15px;"></div>
+            <div id="detailedResults" style="margin-bottom: 15px;"></div>
+            <div class="quiz-actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button onclick="reviewAnswers()" style="background: #17a2b8; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                📋 Review Answers
+              </button>
+              <button onclick="retakeQuiz()" style="background: #ffc107; color: #212529; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                🔄 Retake Quiz
+              </button>
+              <button onclick="generateNewQuiz()" style="background: #6f42c1; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                🎯 New Quiz
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
   <script>
-    async function generateQuiz() {
-      const title = document.getElementById('title').value;
-      const text = document.getElementById('text').value;
-      const num = document.getElementById('num').value;
-      const output = document.getElementById('output');
+    // Check for URL parameters to auto-load article
+    function checkURLParameters() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const article = urlParams.get('article');
+      const text = urlParams.get('text');
+      
+      if (article && text) {
+        document.getElementById('title').value = article;
+        document.getElementById('text').value = text;
+        
+        // Auto-generate quiz
+        setTimeout(() => {
+          generateQuiz();
+        }, 500);
+      }
+    }
 
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      checkURLParameters();
+    });
+
+    async function generateQuiz() {
+      const title = document.getElementById('title').value.trim();
+      const text = document.getElementById('text').value.trim();
+      const num = document.getElementById('num').value;
+      const difficulty = document.getElementById('difficulty').value;
+      const questionType = document.getElementById('questionType').value;
+      const focus = document.getElementById('focus').value;
+      const language = document.getElementById('language').value;
+      const output = document.getElementById('output');
+      const resultsDiv = document.getElementById('quizResults');
+      const metadataDiv = document.getElementById('quizMetadata');
+
+      // Validation
+      if (!title) {
+        alert('Please provide an article title.');
+        return;
+      }
+      
+      if (!text) {
+        alert('Please provide article content. You can search for a Wikipedia article above or paste content directly.');
+        return;
+      }
+      
+      if (text.length < 100) {
+        alert('Article content seems to short. Please provide more detailed content for better quiz generation.');
+        return;
+      }
+
+      // Show loading state
       output.textContent = 'Generating quiz... Please wait.';
+      resultsDiv.style.display = 'block';
+      metadataDiv.innerHTML = '';
 
       try {
         const response = await fetch('/api/quiz', {
@@ -172,19 +428,143 @@
           body: JSON.stringify({
             articleTitle: title,
             articleText: text,
-            numQuestions: parseInt(num, 10)
+            numQuestions: parseInt(num, 10),
+            difficulty: difficulty,
+            questionType: questionType,
+            focus: focus,
+            language: language
           })
         });
 
         const data = await response.json();
+        
         if (response.ok) {
+          // Display metadata
+          const metadata = data.metadata || {};
+          metadataDiv.innerHTML = `
+            <h3 style="margin-top: 0; color: #1976d2;">📊 Quiz Details</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.9em;">
+              <div><strong>Article:</strong> ${title}</div>
+              <div><strong>Questions:</strong> ${metadata.numQuestions || num}</div>
+              <div><strong>Difficulty:</strong> ${getDifficultyIcon(metadata.difficulty)} ${capitalize(metadata.difficulty || 'medium')}</div>
+              <div><strong>Type:</strong> ${getTypeIcon(metadata.questionType)} ${formatQuestionType(metadata.questionType || 'multiple-choice')}</div>
+              <div><strong>Focus:</strong> ${capitalize(metadata.focus || 'general')}</div>
+              <div><strong>Language:</strong> ${getLanguageFlag(metadata.language)} ${capitalize(metadata.language || 'english')}</div>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.8em; color: #666;">
+              Generated on: ${new Date().toLocaleString()}
+            </div>
+          `;
+          
+          // Display questions
           output.textContent = data.questions;
+          
+          // Parse and store quiz data for interactive mode
+          const parsedQuiz = parseQuizQuestions(data.questions, metadata.questionType || 'multiple-choice');
+          
+          // Store quiz data for actions
+          window.currentQuizData = {
+            title: title,
+            questions: data.questions,
+            metadata: metadata,
+            parsedQuestions: parsedQuiz,
+            userAnswers: {},
+            currentQuestion: 0
+          };
+          
+          // Initialize interactive quiz
+          initializeInteractiveQuiz();
+          
+          // Scroll to results
+          resultsDiv.scrollIntoView({ behavior: 'smooth' });
+          
         } else {
-          output.textContent = `Error: ${data.error || 'Unknown error occurred.'}`;
+          output.textContent = `Error: ${data.error || 'Unknown error occurred'}`;
+          metadataDiv.innerHTML = '';
         }
-      } catch (err) {
-        output.textContent = `Fetch error: ${err.message}`;
+      } catch (error) {
+        console.error('Quiz generation error:', error);
+        output.textContent = `Error: ${error.message}`;
+        metadataDiv.innerHTML = '';
       }
+    }
+
+    // Helper functions
+    function getDifficultyIcon(difficulty) {
+      const icons = { easy: '🟢', medium: '🟡', hard: '🔴' };
+      return icons[difficulty] || '🟡';
+    }
+
+    function getTypeIcon(type) {
+      const icons = {
+        'multiple-choice': '🔤',
+        'true-false': '✅',
+        'fill-blank': '📝',
+        'short-answer': '💭',
+        'mixed': '🎯'
+      };
+      return icons[type] || '🔤';
+    }
+
+    function getLanguageFlag(language) {
+      const flags = {
+        english: '🇺🇸', spanish: '🇪🇸', french: '🇫🇷', german: '🇩🇪',
+        italian: '🇮🇹', portuguese: '🇵🇹', chinese: '🇨🇳', japanese: '🇯🇵'
+      };
+      return flags[language] || '🇺🇸';
+    }
+
+    function formatQuestionType(type) {
+      return type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Quiz action functions
+    function downloadQuiz() {
+      if (!window.currentQuizData) {
+        alert('No quiz data available to download.');
+        return;
+      }
+      
+      const { title, questions, metadata } = window.currentQuizData;
+      const content = `Quiz: ${title}\n\nGenerated on: ${new Date().toLocaleDateString()}\nDifficulty: ${metadata.difficulty}\nType: ${metadata.questionType}\nQuestions: ${metadata.numQuestions}\n\n${questions}`;
+      
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_quiz.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function copyQuiz() {
+      if (!window.currentQuizData) {
+        alert('No quiz data available to copy.');
+        return;
+      }
+      
+      const { questions } = window.currentQuizData;
+      navigator.clipboard.writeText(questions).then(() => {
+        alert('Quiz copied to clipboard!');
+      }).catch(() => {
+        alert('Failed to copy quiz to clipboard.');
+      });
+    }
+
+    function generateNewQuiz() {
+      // Reset the current quiz and generate a new one
+      const output = document.getElementById('output');
+      const metadataDiv = document.getElementById('quizMetadata');
+      
+      output.textContent = '';
+      metadataDiv.innerHTML = '';
+      
+      // Generate with current settings
+      generateQuiz();
     }
 
     async function fetchWikipediaArticle() {
@@ -196,15 +576,35 @@
       }
       status.textContent = "Searching Wikipedia...";
       try {
-        // Fetch full article content from Wikipedia REST API
-        const resp = await fetch(`https://en.wikipedia.org/api/rest_v1/page/html/${encodeURIComponent(search)}`);
-        if (!resp.ok) throw new Error("Article not found.");
-        const data = await resp.text();
-        document.getElementById('title').value = search;
-        document.getElementById('wikiStatus').innerHTML = "<h3>Full Article:</h3>" + data;
-        status.textContent = "Article loaded! You can now generate a quiz.";
+        // First try to get the page summary using the REST API
+        const summaryResp = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(search)}`);
+        if (!summaryResp.ok) throw new Error("Article not found.");
+        const summaryData = await summaryResp.json();
+        
+        // Get the full article content using the standard API
+        const contentResp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&titles=${encodeURIComponent(search)}&prop=extracts&exintro=false&explaintext=true&exsectionformat=plain&origin=*`);
+        const contentData = await contentResp.json();
+        
+        const pages = contentData.query.pages;
+        const pageId = Object.keys(pages)[0];
+        const pageContent = pages[pageId].extract || summaryData.extract;
+        
+        if (!pageContent) {
+          throw new Error("No content found for this article.");
+        }
+        
+        // Update the form fields
+        document.getElementById('title').value = summaryData.title || search;
+        document.getElementById('text').value = pageContent;
+        
+        status.innerHTML = `<div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin: 10px 0;">
+          ✅ Article loaded successfully! <strong>${summaryData.title}</strong><br>
+          <small>Content length: ${pageContent.length} characters</small>
+        </div>`;
       } catch (err) {
-        status.textContent = "Error: " + err.message;
+        status.innerHTML = `<div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0;">
+          ❌ Error: ${err.message}
+        </div>`;
       }
     }
 
@@ -227,8 +627,14 @@
             li.textContent = item;
             li.style.padding = '10px 15px';
             li.style.cursor = 'pointer';
-            li.onmouseover = () => li.style.background = '#4a90e2';
-            li.onmouseout = () => li.style.background = '#fff';
+            li.onmouseover = () => {
+              li.style.background = '#e3f2fd';
+              li.style.color = '#1976d2';
+            };
+            li.onmouseout = () => {
+              li.style.background = '#fff';
+              li.style.color = '#000';
+            };
             li.onclick = () => {
               document.getElementById('wikiSearch').value = item;
               list.style.display = 'none';
@@ -258,29 +664,36 @@
       const suggestions = document.getElementById('wikiSuggestions');
       const items = suggestions.getElementsByTagName('li');
       let currentIndex = -1;
+      
+      // Find current active item
       for (let i = 0; i < items.length; i++) {
-        if (items[i].classList.contains('active')) {
+        if (items[i].classList.contains('suggestions-active')) {
           currentIndex = i;
           break;
         }
       }
+      
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         if (currentIndex < items.length - 1) {
-          if (currentIndex >= 0) items[currentIndex].classList.remove('active');
-          items[currentIndex + 1].classList.add('active');
+          if (currentIndex >= 0) items[currentIndex].classList.remove('suggestions-active');
+          items[currentIndex + 1].classList.add('suggestions-active');
         } else if (items.length > 0) {
-          items[0].classList.add('active');
+          if (currentIndex >= 0) items[currentIndex].classList.remove('suggestions-active');
+          items[0].classList.add('suggestions-active');
         }
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         if (currentIndex > 0) {
-          items[currentIndex].classList.remove('active');
-          items[currentIndex - 1].classList.add('active');
+          items[currentIndex].classList.remove('suggestions-active');
+          items[currentIndex - 1].classList.add('suggestions-active');
+        } else if (currentIndex === 0) {
+          items[0].classList.remove('suggestions-active');
+          items[items.length - 1].classList.add('suggestions-active');
         }
       } else if (e.key === 'Enter') {
         e.preventDefault();
-        const activeItem = suggestions.querySelector('.active');
+        const activeItem = suggestions.querySelector('.suggestions-active');
         if (activeItem) {
           document.getElementById('wikiSearch').value = activeItem.textContent;
           suggestions.style.display = 'none';
@@ -288,8 +701,434 @@
         } else {
           fetchWikipediaArticle();
         }
+      } else if (e.key === 'Escape') {
+        suggestions.style.display = 'none';
       }
     });
+
+    // Interactive Quiz Functions
+    let currentQuestionIndex = 0;
+    let userAnswers = {};
+    let quizQuestions = [];
+
+    function parseQuizQuestions(questionsText, questionType) {
+      const questions = [];
+      const lines = questionsText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      let currentQuestion = null;
+      let answerOptions = [];
+      let correctAnswer = '';
+      let questionText = '';
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        
+        // Check if this is a question line
+        if (line.match(/^Q\d+[:.]?\s*/)) {
+          // Save previous question if exists
+          if (currentQuestion) {
+            questions.push({
+              question: currentQuestion,
+              options: [...answerOptions],
+              correct: correctAnswer.trim(),
+              type: questionType
+            });
+          }
+          
+          // Start new question
+          currentQuestion = line.replace(/^Q\d+[:.]?\s*/, '');
+          answerOptions = [];
+          correctAnswer = '';
+          questionText = currentQuestion;
+          
+        } else if (line.match(/^[A-D][\)\.]?\s*/)) {
+          // Multiple choice option
+          answerOptions.push(line);
+          
+        } else if (line.match(/^Answer:\s*/)) {
+          // Extract correct answer
+          correctAnswer = line.replace(/^Answer:\s*/, '');
+          
+        } else if (line.match(/^(True|False)$/i)) {
+          // True/False answer
+          if (answerOptions.length === 0) {
+            answerOptions = ['True', 'False'];
+          }
+          if (!correctAnswer) {
+            correctAnswer = line;
+          }
+          
+        } else if (currentQuestion && !line.match(/^(Q\d+|Answer:)/)) {
+          // Continue question text or might be an answer
+          if (line.match(/^[A-D][\)\.]?\s*/)) {
+            answerOptions.push(line);
+          } else if (answerOptions.length === 0) {
+            // This is likely continuation of the question
+            currentQuestion += ' ' + line;
+          }
+        }
+      }
+
+      // Add the last question
+      if (currentQuestion) {
+        questions.push({
+          question: currentQuestion,
+          options: [...answerOptions],
+          correct: correctAnswer.trim(),
+          type: questionType
+        });
+      }
+
+      // Handle different question types
+      questions.forEach(question => {
+        if (questionType === 'true-false' && question.options.length === 0) {
+          question.options = ['True', 'False'];
+        } else if (questionType === 'fill-blank' || questionType === 'short-answer') {
+          question.options = []; // No options for text input
+        }
+      });
+
+      return questions;
+    }
+
+    function initializeInteractiveQuiz() {
+      if (!window.currentQuizData || !window.currentQuizData.parsedQuestions) {
+        return;
+      }
+
+      quizQuestions = window.currentQuizData.parsedQuestions;
+      currentQuestionIndex = 0;
+      userAnswers = {};
+      
+      // Reset quiz state
+      document.getElementById('quizScore').style.display = 'none';
+      updateQuizDisplay();
+    }
+
+    function switchToViewMode() {
+      document.getElementById('viewMode').style.display = 'block';
+      document.getElementById('takeMode').style.display = 'none';
+      document.getElementById('viewModeBtn').style.background = '#4a90e2';
+      document.getElementById('takeModeBtn').style.background = '#6c757d';
+    }
+
+    function switchToTakeMode() {
+      document.getElementById('viewMode').style.display = 'none';
+      document.getElementById('takeMode').style.display = 'block';
+      document.getElementById('viewModeBtn').style.background = '#6c757d';
+      document.getElementById('takeModeBtn').style.background = '#4a90e2';
+      
+      if (quizQuestions.length > 0) {
+        updateQuizDisplay();
+      }
+    }
+
+    function updateQuizDisplay() {
+      if (quizQuestions.length === 0) {
+        document.getElementById('interactiveQuiz').innerHTML = '<p>No questions available for interactive mode.</p>';
+        return;
+      }
+
+      const question = quizQuestions[currentQuestionIndex];
+      const questionDiv = document.getElementById('interactiveQuiz');
+      
+      let html = `
+        <div class="question-container">
+          <h3 style="color: #1976d2; margin-bottom: 15px;">
+            Question ${currentQuestionIndex + 1} of ${quizQuestions.length}
+          </h3>
+          <div class="question-text" style="font-size: 1.1em; margin-bottom: 20px; font-weight: 500;">
+            ${question.question}
+          </div>
+          <div class="answer-options">
+      `;
+
+      if (question.options.length > 0) {
+        question.options.forEach((option, index) => {
+          const optionId = `option_${currentQuestionIndex}_${index}`;
+          const isChecked = userAnswers[currentQuestionIndex] === option ? 'checked' : '';
+          
+          html += `
+            <div class="option-container" style="margin-bottom: 12px;">
+              <label style="display: flex; align-items: center; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 4px; transition: background-color 0.2s;">
+                <input type="radio" name="question_${currentQuestionIndex}" value="${option}" id="${optionId}" ${isChecked} 
+                       onchange="selectAnswer('${option}')" style="margin-right: 10px;">
+                <span style="font-size: 1em;">${option}</span>
+              </label>
+            </div>
+          `;
+        });
+      } else {
+        // For fill-in-the-blank or short answer
+        const currentAnswer = userAnswers[currentQuestionIndex] || '';
+        html += `
+          <div class="text-answer" style="margin-bottom: 15px;">
+            <input type="text" id="textAnswer_${currentQuestionIndex}" value="${currentAnswer}" 
+                   onchange="selectAnswer(this.value)" 
+                   placeholder="Enter your answer here..." 
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1em;">
+          </div>
+        `;
+      }
+
+      html += `
+          </div>
+        </div>
+      `;
+
+      questionDiv.innerHTML = html;
+      
+      // Update navigation
+      updateNavigation();
+    }
+
+    function selectAnswer(answer) {
+      userAnswers[currentQuestionIndex] = answer;
+      
+      // Update button states
+      updateNavigation();
+    }
+
+    function updateNavigation() {
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const submitContainer = document.getElementById('submitQuizContainer');
+      const progress = document.getElementById('questionProgress');
+      
+      prevBtn.disabled = currentQuestionIndex === 0;
+      prevBtn.style.opacity = currentQuestionIndex === 0 ? '0.5' : '1';
+      
+      const isLastQuestion = currentQuestionIndex === quizQuestions.length - 1;
+      
+      if (isLastQuestion) {
+        nextBtn.style.display = 'none';
+        submitContainer.style.display = 'block';
+      } else {
+        nextBtn.style.display = 'block';
+        submitContainer.style.display = 'none';
+      }
+      
+      progress.textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+    }
+
+    function previousQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        updateQuizDisplay();
+      }
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIndex < quizQuestions.length - 1) {
+        currentQuestionIndex++;
+        updateQuizDisplay();
+      }
+    }
+
+    function submitQuiz() {
+      const score = calculateScore();
+      displayResults(score);
+      
+      // Scroll to results
+      document.getElementById('quizScore').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function calculateScore() {
+      let correct = 0;
+      let total = quizQuestions.length;
+      const results = [];
+
+      quizQuestions.forEach((question, index) => {
+        const userAnswer = userAnswers[index];
+        const correctAnswer = question.correct;
+        
+        let isCorrect = false;
+        
+        if (question.type === 'multiple-choice') {
+          // For multiple choice, check if the selected option matches the correct answer
+          if (userAnswer && correctAnswer) {
+            const userOption = userAnswer.charAt(0).toUpperCase(); // Get A, B, C, or D
+            const correctOption = correctAnswer.charAt(0).toUpperCase();
+            isCorrect = userOption === correctOption;
+          }
+        } else if (question.type === 'true-false') {
+          // Direct comparison for true/false
+          isCorrect = userAnswer && correctAnswer && 
+                     userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+        } else {
+          // For fill-in-the-blank or short answer, use flexible matching
+          if (userAnswer && correctAnswer) {
+            const userAnswerClean = userAnswer.toLowerCase().trim();
+            const correctAnswerClean = correctAnswer.toLowerCase().trim();
+            
+            // Check for exact match first
+            if (userAnswerClean === correctAnswerClean) {
+              isCorrect = true;
+            } else {
+              // Check for partial matches (contains)
+              const userWords = userAnswerClean.split(/\s+/);
+              const correctWords = correctAnswerClean.split(/\s+/);
+              
+              // If the correct answer is contained in user answer or vice versa
+              isCorrect = userWords.some(word => correctWords.includes(word)) ||
+                         correctWords.some(word => userWords.includes(word));
+            }
+          }
+        }
+
+        if (isCorrect) correct++;
+        
+        results.push({
+          question: question.question,
+          userAnswer: userAnswer || 'No answer',
+          correctAnswer: correctAnswer,
+          isCorrect: isCorrect
+        });
+      });
+
+      return {
+        correct: correct,
+        total: total,
+        percentage: Math.round((correct / total) * 100),
+        results: results
+      };
+    }
+
+    function displayResults(score) {
+      const scoreDiv = document.getElementById('quizScore');
+      const scoreDisplay = document.getElementById('scoreDisplay');
+      const detailedResults = document.getElementById('detailedResults');
+      
+      // Get score color and message
+      let scoreColor = '#28a745'; // Green
+      let scoreMessage = 'Excellent!';
+      
+      if (score.percentage < 60) {
+        scoreColor = '#dc3545'; // Red
+        scoreMessage = 'Keep studying!';
+      } else if (score.percentage < 80) {
+        scoreColor = '#ffc107'; // Yellow
+        scoreMessage = 'Good job!';
+      }
+      
+      scoreDisplay.innerHTML = `
+        <div style="text-align: center; font-size: 1.5em; color: ${scoreColor}; margin-bottom: 10px;">
+          🎯 Your Score: ${score.correct}/${score.total} (${score.percentage}%)
+        </div>
+        <div style="text-align: center; font-size: 1.2em; color: ${scoreColor}; font-weight: bold;">
+          ${scoreMessage}
+        </div>
+      `;
+      
+      // Show detailed results
+      let detailedHtml = '<h4>📋 Detailed Results:</h4>';
+      score.results.forEach((result, index) => {
+        const icon = result.isCorrect ? '✅' : '❌';
+        const color = result.isCorrect ? '#28a745' : '#dc3545';
+        
+        detailedHtml += `
+          <div style="margin-bottom: 15px; padding: 10px; border-left: 4px solid ${color}; background: ${result.isCorrect ? '#d4edda' : '#f8d7da'};">
+            <div style="font-weight: bold; color: ${color};">${icon} Question ${index + 1}</div>
+            <div style="margin: 5px 0; font-size: 0.9em;">${result.question}</div>
+            <div style="margin: 5px 0; font-size: 0.9em;"><strong>Your Answer:</strong> ${result.userAnswer}</div>
+            <div style="margin: 5px 0; font-size: 0.9em;"><strong>Correct Answer:</strong> ${result.correctAnswer}</div>
+          </div>
+        `;
+      });
+      
+      detailedResults.innerHTML = detailedHtml;
+      scoreDiv.style.display = 'block';
+    }
+
+    function reviewAnswers() {
+      // Switch to take mode and show all answers
+      switchToTakeMode();
+      currentQuestionIndex = 0;
+      updateQuizDisplay();
+    }
+
+    function retakeQuiz() {
+      // Reset user answers and start over
+      userAnswers = {};
+      currentQuestionIndex = 0;
+      document.getElementById('quizScore').style.display = 'none';
+      switchToTakeMode();
+      updateQuizDisplay();
+    }
+
+    function loadDemoQuiz() {
+      // Create a demo quiz with sample questions
+      const demoQuestions = `Q1: Which planet is closest to the Sun?
+A) Venus
+B) Mercury
+C) Earth
+D) Mars
+Answer: B
+
+Q2: What is the largest planet in our solar system?
+A) Earth
+B) Saturn
+C) Jupiter
+D) Neptune
+Answer: C
+
+Q3: True or False: Saturn is famous for its rings.
+Answer: True`;
+
+      const demoMetadata = {
+        numQuestions: 3,
+        difficulty: 'easy',
+        questionType: 'multiple-choice',
+        focus: 'general',
+        language: 'english'
+      };
+
+      // Display demo metadata
+      const metadataDiv = document.getElementById('quizMetadata');
+      metadataDiv.innerHTML = `
+        <h3 style="margin-top: 0; color: #1976d2;">📊 Demo Quiz Details</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.9em;">
+          <div><strong>Article:</strong> Solar System Demo</div>
+          <div><strong>Questions:</strong> 3</div>
+          <div><strong>Difficulty:</strong> 🟢 Easy</div>
+          <div><strong>Type:</strong> 🔤 Multiple Choice</div>
+          <div><strong>Focus:</strong> General</div>
+          <div><strong>Language:</strong> 🇺🇸 English</div>
+        </div>
+        <div style="margin-top: 10px; font-size: 0.8em; color: #666;">
+          Demo quiz - Try the interactive quiz features!
+        </div>
+      `;
+
+      // Show quiz output
+      const output = document.getElementById('output');
+      output.textContent = demoQuestions;
+
+      // Parse and store demo quiz data
+      const parsedQuiz = parseQuizQuestions(demoQuestions, 'multiple-choice');
+      
+      // Store demo quiz data
+      window.currentQuizData = {
+        title: 'Solar System Demo',
+        questions: demoQuestions,
+        metadata: demoMetadata,
+        parsedQuestions: parsedQuiz,
+        userAnswers: {},
+        currentQuestion: 0
+      };
+
+      // Initialize interactive quiz
+      initializeInteractiveQuiz();
+      
+      // Show results section
+      const resultsDiv = document.getElementById('quizResults');
+      resultsDiv.style.display = 'block';
+      
+      // Switch to take mode automatically
+      switchToTakeMode();
+      
+      // Scroll to results
+      resultsDiv.scrollIntoView({ behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>

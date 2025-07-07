@@ -222,27 +222,98 @@
       background: var(--primary-hover);
       transform: scale(1.1);
     }
+    .mode-selector {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .mode-btn {
+      padding: 10px 20px;
+      border: 2px solid var(--primary-color);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--primary-color);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .mode-btn.active {
+      background: var(--primary-color);
+      color: white;
+    }
+    .mode-btn:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      color: white;
+    }
+    .article-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      padding: 8px 16px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .action-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
   <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌓</button>
   <a href="index.html" class="back-link">← Back to Main</a>
   <div class="card qa-main-container">
-    <h2>🤖 Advanced Wikipedia Q&A Bot</h2>
-    <div class="search-container">
-      <input type="text" id="searchInput" class="search-input" placeholder="Search Wikipedia article..." oninput="getQASearchSuggestions()">
-      <ul id="qaSearchSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:var(--card-bg);border:1px solid var(--border-color);border-radius:4px;box-shadow:0 2px 4px var(--shadow-color);width:100%;display:none;"></ul>
-      <button onclick="searchWikipedia()" class="search-btn">🔍 Search</button>
+    <h2>🤖 AI Assistant & Wikipedia Q&A</h2>
+    
+    <!-- Chat Mode Selector -->
+    <div class="mode-selector" style="margin-bottom: 20px; text-align: center;">
+      <button id="generalMode" class="mode-btn active" onclick="setMode('general')">
+        💬 General AI Chat
+      </button>
+      <button id="wikipediaMode" class="mode-btn" onclick="setMode('wikipedia')">
+        📚 Wikipedia Q&A
+      </button>
     </div>
-    <div class="section-divider"></div>
-    <div id="articleSummary" class="article-summary"></div>
-    <div class="section-divider"></div>
+    
+    <!-- Wikipedia Section (initially hidden) -->
+    <div id="wikipediaSection" style="display: none;">
+      <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search Wikipedia article..." oninput="getQASearchSuggestions()">
+        <ul id="qaSearchSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:var(--card-bg);border:1px solid var(--border-color);border-radius:4px;box-shadow:0 2px 4px var(--shadow-color);width:100%;display:none;"></ul>
+        <button onclick="searchWikipedia()" class="search-btn">🔍 Search</button>
+      </div>
+      <div class="section-divider"></div>
+      <div id="articleSummary" class="article-summary"></div>
+      <div class="section-divider"></div>
+      <div class="suggested-questions" id="suggestedQuestions"></div>
+      <div class="section-divider"></div>
+    </div>
+    
+    <!-- Chat Container -->
     <div id="chatContainer" class="chat-container"></div>
-    <div class="section-divider"></div>
-    <div class="suggested-questions" id="suggestedQuestions"></div>
-    <div class="section-divider"></div>
+    
+    <!-- Context input section -->
+    <div class="context-section" style="margin-bottom: 16px;">
+      <label for="contextInput" style="display: block; margin-bottom: 8px; font-weight: bold; color: var(--primary-color);">
+        📄 Context (Optional):
+      </label>
+      <textarea id="contextInput" class="question-input" 
+                placeholder="Provide additional context or background information..." 
+                style="min-height: 60px; resize: vertical; font-family: inherit;"></textarea>
+    </div>
+    
     <div class="input-container">
-      <input type="text" id="questionInput" class="question-input" placeholder="Ask a question about the article...">
+      <input type="text" id="questionInput" class="question-input" placeholder="Ask me anything...">
       <button onclick="askQuestion()" class="send-btn">Send</button>
     </div>
   </div>
@@ -251,11 +322,41 @@
     let articleText = "";
     let currentArticleTitle = "";
     let chatHistory = [];
+    let currentMode = 'general';
+
+    // Mode switching functionality
+    function setMode(mode) {
+      currentMode = mode;
+      const generalBtn = document.getElementById('generalMode');
+      const wikipediaBtn = document.getElementById('wikipediaMode');
+      const wikipediaSection = document.getElementById('wikipediaSection');
+      const questionInput = document.getElementById('questionInput');
+      
+      if (mode === 'general') {
+        generalBtn.classList.add('active');
+        wikipediaBtn.classList.remove('active');
+        wikipediaSection.style.display = 'none';
+        questionInput.placeholder = 'Ask me anything...';
+        
+        // Welcome message for general mode
+        if (chatHistory.length === 0) {
+          showMessage("Hi! I'm your AI assistant. I can help you with any questions you have. What would you like to know?", "bot");
+        }
+      } else {
+        generalBtn.classList.remove('active');
+        wikipediaBtn.classList.add('active');
+        wikipediaSection.style.display = 'block';
+        questionInput.placeholder = 'Ask a question about the article...';
+        
+        if (chatHistory.length === 0) {
+          showMessage("Welcome to Wikipedia Q&A! Search for an article above, then ask me questions about it.", "bot");
+        }
+      }
+    }
 
     async function searchWikipedia() {
       const query = document.getElementById("searchInput").value.trim();
       const summaryDiv = document.getElementById("articleSummary");
-      const chatContainer = document.getElementById("chatContainer");
       
       if (!query) {
         showMessage("Please enter a search term.", "bot");
@@ -279,21 +380,26 @@
           
           let summaryHTML = `
             <h3 style="margin-top: 0; color: var(--primary-color);">${data.title}</h3>
-            <button class="read-full-btn" onclick="openFullArticle()">
-              <span>📖</span>
-              Read Full Article
-            </button>
-            <div style="margin-bottom: 16px; margin-top: 40px;">
+            <div style="margin-bottom: 16px; margin-top: 20px;">
               ${data.thumbnail?.source ? `<img src="${data.thumbnail.source}" alt="${data.title}" style="max-width: 200px; float: right; margin-left: 16px; border-radius: 8px;">` : ''}
-              <p style="margin: 0 0 12px 0;">${data.description || ''}</p>
+              <p style="margin: 0 0 12px 0; font-style: italic;">${data.description || ''}</p>
               <p style="margin: 0;">${data.extract}</p>
             </div>
             <div style="clear: both;"></div>
+            <div class="article-actions">
+              <button class="action-btn" onclick="openFullArticle()">
+                📖 Read Full Article
+              </button>
+              <button class="action-btn" onclick="generateQuiz()">
+                🧩 Generate Quiz
+              </button>
+              <button class="action-btn" onclick="summarizeArticle()">
+                📝 Summarize
+              </button>
+            </div>
           `;
           
           summaryDiv.innerHTML = summaryHTML;
-          chatContainer.innerHTML = "";
-          chatHistory = [];
           showMessage(`I've loaded the article about "${data.title}". What would you like to know about it?`, "bot");
           generateSuggestedQuestions();
         } else {
@@ -306,36 +412,139 @@
     }
 
     async function askQuestion() {
-  const question = document.getElementById("question").value;
-  const answerDiv = document.getElementById("answer");
+      const question = document.getElementById("questionInput").value.trim();
+      const context = document.getElementById("contextInput").value.trim();
+      
+      if (!question) {
+        alert("Please enter a question.");
+        return;
+      }
 
-  answerDiv.innerText = "Thinking...";
+      // Show question in chat
+      showMessage(question, "user");
+      
+      // Clear input
+      document.getElementById("questionInput").value = "";
+      
+      // Show loading message
+      const loadingMsg = showMessage("Thinking...", "bot", true);
 
-  try {
-    const res = await fetch("/api/qa", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question }),
-    });
+      try {
+        const requestBody = { 
+          question,
+          chatMode: currentMode 
+        };
+        
+        // Add context based on mode
+        if (currentMode === 'wikipedia' && articleText) {
+          requestBody.context = context ? `${context}\n\nArticle: ${articleText}` : articleText;
+        } else if (context) {
+          requestBody.context = context;
+        }
+        
+        const res = await fetch("/api/qa", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
+        });
 
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error(`Server Error: ${res.status} - ${err}`);
+        if (!res.ok) {
+          const err = await res.text();
+          throw new Error(`Server Error: ${res.status} - ${err}`);
+        }
+
+        const data = await res.json();
+        
+        // Remove loading message
+        loadingMsg.remove();
+        
+        // Show answer
+        showMessage(data.answer || "No answer received.", "bot");
+        
+        // Generate suggested questions for Wikipedia mode
+        if (currentMode === 'wikipedia' && currentArticleTitle) {
+          generateSuggestedQuestions();
+        }
+        
+      } catch (error) {
+        // Remove loading message
+        loadingMsg.remove();
+        
+        // Show error
+        showMessage(`Error: ${error.message}`, "bot");
+        console.error(error);
+      }
     }
 
-    const data = await res.json();
-    answerDiv.innerText = data.answer || "No answer received.";
-  } catch (error) {
-    answerDiv.innerText = `Error: ${error.message}`;
-    console.error(error);
-  }
-}
+    // New functions for article actions
+    function generateQuiz() {
+      if (!currentArticleTitle || !articleText) {
+        alert("Please select an article first.");
+        return;
+      }
+      
+      const url = `/quiz?article=${encodeURIComponent(currentArticleTitle)}&text=${encodeURIComponent(articleText)}`;
+      window.open(url, '_blank');
+    }
 
-document.getElementById("question").addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
-    askQuestion();
-  }
-});
+    function summarizeArticle() {
+      if (!currentArticleTitle || !articleText) {
+        alert("Please select an article first.");
+        return;
+      }
+      
+      const url = `/summarizer?article=${encodeURIComponent(currentArticleTitle)}&text=${encodeURIComponent(articleText)}`;
+      window.open(url, '_blank');
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check for URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const article = urlParams.get('article');
+      const text = urlParams.get('text');
+      
+      if (article && text) {
+        // Switch to Wikipedia mode and load article
+        setMode('wikipedia');
+        document.getElementById('searchInput').value = article;
+        articleText = text;
+        currentArticleTitle = article;
+        
+        const summaryDiv = document.getElementById("articleSummary");
+        summaryDiv.innerHTML = `
+          <h3 style="margin-top: 0; color: var(--primary-color);">${article}</h3>
+          <div style="margin-bottom: 16px; margin-top: 20px;">
+            <p style="margin: 0;">${text}</p>
+          </div>
+          <div class="article-actions">
+            <button class="action-btn" onclick="openFullArticle()">
+              📖 Read Full Article
+            </button>
+            <button class="action-btn" onclick="generateQuiz()">
+              🧩 Generate Quiz
+            </button>
+            <button class="action-btn" onclick="summarizeArticle()">
+              📝 Summarize
+            </button>
+          </div>
+        `;
+        
+        showMessage(`I've loaded the article about "${article}". What would you like to know about it?`, "bot");
+        generateSuggestedQuestions();
+      } else {
+        // Default to general mode
+        setMode('general');
+      }
+    });
+
+    // ...existing code...
+
+    document.getElementById("questionInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        askQuestion();
+      }
+    });
 
 
     function showMessage(text, sender, isLoading = false) {
@@ -346,6 +555,7 @@ document.getElementById("question").addEventListener("keypress", (e) => {
       if (isLoading) {
         const loadingDiv = document.createElement("div");
         loadingDiv.className = "loading";
+        loadingDiv.textContent = text;
         messageDiv.appendChild(loadingDiv);
       } else {
         // Format the text with line breaks and preserve formatting
@@ -364,6 +574,8 @@ document.getElementById("question").addEventListener("keypress", (e) => {
       if (!isLoading) {
         chatHistory.push({ text, sender });
       }
+      
+      return messageDiv; // Return the message element
     }
 
     function generateSuggestedQuestions() {

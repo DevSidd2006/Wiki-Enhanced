@@ -1,4 +1,9 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export default async function handler(req, res) {
@@ -9,14 +14,122 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { articleTitle, articleText, numQuestions } = req.body;
+    const { articleTitle, articleText, numQuestions, difficulty, questionType, focus, language } = req.body;
     if (!articleTitle || !articleText || !numQuestions) return res.status(400).json({ error: 'Missing required fields' });
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    const prompt = `Based on this Wikipedia article about "${articleTitle}":\n\n${articleText}\n\nGenerate ${numQuestions} multiple-choice questions with 4 options each and the correct answer. Format each question as:\nQ1: ...\nA) ...\nB) ...\nC) ...\nD) ...\nAnswer: ...\n(Repeat for each question)`;
+    
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
+    // Build dynamic prompt based on user preferences
+    let prompt = `Based on this Wikipedia article about "${articleTitle}":\n\n${articleText}\n\n`;
+    
+    // Add difficulty level
+    let difficultyInstruction = '';
+    switch (difficulty) {
+      case 'easy':
+        difficultyInstruction = 'Generate easy questions that focus on basic facts and main concepts. Use simple language and straightforward answers.';
+        break;
+      case 'medium':
+        difficultyInstruction = 'Generate medium difficulty questions that require some understanding of the content. Include questions about relationships and explanations.';
+        break;
+      case 'hard':
+        difficultyInstruction = 'Generate challenging questions that require deep understanding, analysis, and connections between different concepts.';
+        break;
+      default:
+        difficultyInstruction = 'Generate questions of appropriate difficulty for the content.';
+    }
+    
+    // Add question type
+    let questionTypeInstruction = '';
+    switch (questionType) {
+      case 'multiple-choice':
+        questionTypeInstruction = `Generate ${numQuestions} multiple-choice questions with 4 options each (A, B, C, D) and indicate the correct answer.`;
+        break;
+      case 'true-false':
+        questionTypeInstruction = `Generate ${numQuestions} true/false questions and indicate the correct answer.`;
+        break;
+      case 'fill-blank':
+        questionTypeInstruction = `Generate ${numQuestions} fill-in-the-blank questions with the missing word(s) clearly indicated.`;
+        break;
+      case 'short-answer':
+        questionTypeInstruction = `Generate ${numQuestions} short answer questions that require 1-2 sentence responses.`;
+        break;
+      case 'mixed':
+        questionTypeInstruction = `Generate ${numQuestions} questions using a mix of multiple-choice, true/false, and fill-in-the-blank formats.`;
+        break;
+      default:
+        questionTypeInstruction = `Generate ${numQuestions} multiple-choice questions with 4 options each and the correct answer.`;
+    }
+    
+    // Add focus area
+    let focusInstruction = '';
+    if (focus && focus !== 'general') {
+      focusInstruction = `Focus specifically on: ${focus}. `;
+    }
+    
+    // Add language preference
+    let languageInstruction = '';
+    if (language && language !== 'english') {
+      languageInstruction = `Generate all questions and answers in ${language}. `;
+    }
+    
+    // Combine all instructions
+    prompt += `${difficultyInstruction}\n\n${questionTypeInstruction}\n\n${focusInstruction}${languageInstruction}`;
+    
+    // Add formatting instructions
+    if (questionType === 'multiple-choice' || questionType === 'mixed') {
+      prompt += `\nFormat each multiple-choice question as:
+Q1: [Question]
+A) [Option A]
+B) [Option B]
+C) [Option C]
+D) [Option D]
+Answer: [Correct letter]
+
+`;
+    }
+    
+    if (questionType === 'true-false' || questionType === 'mixed') {
+      prompt += `\nFormat each true/false question as:
+Q1: [Statement]
+Answer: True/False
+
+`;
+    }
+    
+    if (questionType === 'fill-blank' || questionType === 'mixed') {
+      prompt += `\nFormat each fill-in-the-blank question as:
+Q1: [Statement with ______ for missing word(s)]
+Answer: [Correct word(s)]
+
+`;
+    }
+    
+    if (questionType === 'short-answer') {
+      prompt += `\nFormat each short answer question as:
+Q1: [Question]
+Answer: [Expected answer in 1-2 sentences]
+
+`;
+    }
+    
+    prompt += `\n(Repeat for each question)`;
+    
     const result = await model.generateContent(prompt);
-    const questions = result.response.text();
-    return res.status(200).json({ questions });
+    const response = await result.response;
+    const questions = response.text();
+    
+    return res.status(200).json({ 
+      questions,
+      metadata: {
+        difficulty: difficulty || 'medium',
+        questionType: questionType || 'multiple-choice',
+        focus: focus || 'general',
+        language: language || 'english',
+        numQuestions: numQuestions
+      }
+    });
   } catch (error) {
+    console.error("Gemini Error (Quiz):", error);
     return res.status(500).json({ error: 'Failed to generate quiz', details: error.message });
   }
 }

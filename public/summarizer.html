@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Wikipedia Article Summarizer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <link rel="stylesheet" href="styles.css">
   <style>
     .autocomplete-container {
@@ -21,14 +21,15 @@
       z-index: 1000;
       border-radius: 4px;
       box-shadow: 0 2px 4px var(--shadow-color);
-      max-height: 300px;
+      max-height: 250px;
       overflow-y: auto;
     }
     #suggestions li {
-      padding: 12px 15px;
+      padding: 14px 15px;
       cursor: pointer;
       color: var(--text-color);
       transition: background-color 0.2s ease;
+      font-size: 1rem;
     }
     #suggestions li:hover {
       background-color: var(--primary-color);
@@ -40,14 +41,16 @@
     .random-article-button {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
-      padding: 8px 16px;
+      padding: 12px 16px;
       background-color: var(--primary-color);
       color: white;
       text-decoration: none;
       border-radius: 4px;
       font-weight: 500;
       transition: all 0.3s ease;
+      min-height: 44px;
       border: none;
       cursor: pointer;
     }
@@ -57,6 +60,27 @@
     }
     .random-article-button::before {
       content: '🎲';
+    }
+    .action-btn {
+      padding: 8px 16px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-right: 10px;
+      transition: all 0.2s;
+    }
+    .action-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    .summary-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -80,6 +104,71 @@
         <p class="subtitle">Get quick summaries of any Wikipedia article</p>
       </div>
       <div class="card summarizer-section">
+        <!-- Advanced Summary Options -->
+        <div class="summary-options" style="margin-bottom: 20px; padding: 15px; background: var(--bg-color); border-radius: 8px;">
+          <h3 style="margin-top: 0; color: var(--primary-color);">📋 Advanced Summary Options</h3>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div>
+              <label style="display: block; margin-bottom: 5px; font-weight: bold;">Summary Type:</label>
+              <select id="summaryType" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-color);">
+                <option value="paragraph">📄 Comprehensive Paragraphs</option>
+                <option value="bullet">• Detailed Bullet Points</option>
+                <option value="structured">📊 Structured with Headings</option>
+                <option value="keypoints">🔑 Key Points & Details</option>
+                <option value="timeline">⏰ Chronological Timeline</option>
+              </select>
+            </div>
+            
+            <div>
+              <label style="display: block; margin-bottom: 5px; font-weight: bold;">Detail Level:</label>
+              <select id="summaryLength" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-color);">
+                <option value="brief">📝 Brief (Essential facts only)</option>
+                <option value="short">📄 Short (Core information)</option>
+                <option value="medium">📋 Medium (Balanced coverage)</option>
+                <option value="detailed" selected>📚 Detailed (Comprehensive - No details missed)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Focus Area (Optional):</label>
+            <input type="text" id="summaryFocus" placeholder="e.g., history, achievements, impact, scientific contributions, etc." style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-color);">
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <label style="display: block; margin-bottom: 5px; font-weight: bold;">Language:</label>
+              <select id="summaryLanguage" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-color);">
+                <option value="english">🇺🇸 English</option>
+                <option value="spanish">🇪🇸 Spanish</option>
+                <option value="french">🇫🇷 French</option>
+                <option value="german">🇩🇪 German</option>
+                <option value="italian">🇮🇹 Italian</option>
+                <option value="portuguese">🇵🇹 Portuguese</option>
+                <option value="chinese">🇨🇳 Chinese</option>
+                <option value="japanese">🇯🇵 Japanese</option>
+              </select>
+            </div>
+            
+            <div>
+              <label style="display: block; margin-bottom: 5px; font-weight: bold;">📊 Comprehensiveness:</label>
+              <select id="comprehensiveMode" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-color);">
+                <option value="standard">📋 Standard Summary</option>
+                <option value="comprehensive" selected>🔍 Comprehensive (No details missed)</option>
+                <option value="exhaustive">📚 Exhaustive (Every detail included)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div style="margin-top: 15px; padding: 10px; background: #e8f4fd; border-radius: 4px; border-left: 4px solid var(--primary-color);">
+            <small style="color: #1976d2;">
+              <strong>💡 Tip:</strong> For maximum detail retention, use "Detailed" length with "Comprehensive" or "Exhaustive" mode. 
+              The AI will ensure no important information is omitted from the summary.
+            </small>
+          </div>
+        </div>
+        
         <div class="summarizer-container">
           <div class="autocomplete-container">
             <input type="text" id="summarizerInput" placeholder="Enter Wikipedia topic..." class="summarizer-input" oninput="getSuggestions()">
@@ -258,6 +347,9 @@
           return;
         }
 
+        // Store article data for action buttons
+        storeArticleData(wikiData);
+
         // Display the article content
         contentDiv.innerHTML = `
           <h3>📄 Article Content</h3>
@@ -272,6 +364,13 @@
         // Show loading state for summarization
         summaryDiv.innerHTML = '<div class="loading">⏳ Generating summary...</div>';
 
+        // Get user preferences
+        const summaryType = document.getElementById('summaryType').value;
+        const summaryLength = document.getElementById('summaryLength').value;
+        const summaryFocus = document.getElementById('summaryFocus').value;
+        const summaryLanguage = document.getElementById('summaryLanguage').value;
+        const comprehensiveMode = document.getElementById('comprehensiveMode').value;
+
         // Send to our serverless function for summarization
         const response = await fetch('/api/summarize', {
           method: 'POST',
@@ -279,7 +378,12 @@
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            articleText: wikiData.extract
+            articleText: wikiData.extract,
+            summaryType: summaryType,
+            length: summaryLength,
+            focus: summaryFocus,
+            language: summaryLanguage,
+            comprehensiveMode: comprehensiveMode
           })
         });
 
@@ -290,12 +394,28 @@
 
         const data = await response.json();
 
-        // Display the summary
+        // Display the summary with enhanced metadata
+        const metadata = data.metadata || {};
         summaryDiv.innerHTML = `
-          <h3>📝 Summary</h3>
-          <p>${data.summary}</p>
-          <div class="summary-meta">
-            <span class="summary-length">${data.summary.split(' ').length} words</span>
+          <h3>📝 Comprehensive Summary</h3>
+          <div class="summary-meta" style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 6px; font-size: 0.9em;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; color: #666;">
+              <div><strong>Type:</strong> ${metadata.type || 'comprehensive'}</div>
+              <div><strong>Detail Level:</strong> ${metadata.length || 'detailed'}</div>
+              <div><strong>Language:</strong> ${metadata.language || 'english'}</div>
+              <div><strong>Mode:</strong> ${metadata.comprehensiveMode || 'standard'}</div>
+              ${metadata.focus ? `<div><strong>Focus:</strong> ${metadata.focus}</div>` : ''}
+              ${metadata.informationRetention ? `<div><strong>Detail Retention:</strong> ${metadata.informationRetention}</div>` : ''}
+            </div>
+            <div style="margin-top: 8px; font-size: 0.8em; color: #1976d2;">
+              ${metadata.comprehensive ? '✅ Comprehensive Analysis Mode - All important details included' : ''}
+            </div>
+          </div>
+          <div class="summary-content" style="line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; background: #fff; padding: 15px; border-radius: 6px; border: 1px solid #e0e0e0;">${data.summary}</div>
+          <div class="summary-actions" style="margin-top: 15px;">
+            <button onclick="generateQuizFromSummary()" class="action-btn">🧩 Generate Quiz</button>
+            <button onclick="askQuestionAboutSummary()" class="action-btn">❓ Ask Questions</button>
+            <button onclick="copySummary()" class="action-btn">📋 Copy Summary</button>
           </div>
         `;
 
@@ -308,6 +428,76 @@
         summaryDiv.innerHTML = `<div class="error-message">${errorMessage}</div>`;
       }
     }
+
+    // Global variables to store current article data
+    let currentArticleData = null;
+
+    // Action functions for summary
+    function generateQuizFromSummary() {
+      if (!currentArticleData) {
+        alert("No article data available for quiz generation.");
+        return;
+      }
+      
+      const url = `/quiz?article=${encodeURIComponent(currentArticleData.title)}&text=${encodeURIComponent(currentArticleData.extract)}`;
+      window.open(url, '_blank');
+    }
+
+    function askQuestionAboutSummary() {
+      if (!currentArticleData) {
+        alert("No article data available for questions.");
+        return;
+      }
+      
+      const url = `/qa?article=${encodeURIComponent(currentArticleData.title)}&text=${encodeURIComponent(currentArticleData.extract)}`;
+      window.open(url, '_blank');
+    }
+
+    // Store article data when fetched
+    function storeArticleData(data) {
+      currentArticleData = {
+        title: data.title,
+        extract: data.extract,
+        description: data.description
+      };
+    }
+
+    // Copy summary to clipboard
+    function copySummary() {
+      const summaryContent = document.querySelector('.summary-content');
+      if (!summaryContent) {
+        alert('No summary available to copy.');
+        return;
+      }
+      
+      navigator.clipboard.writeText(summaryContent.textContent).then(() => {
+        alert('Summary copied to clipboard!');
+      }).catch(() => {
+        alert('Failed to copy summary to clipboard.');
+      });
+    }
+
+    // Check for URL parameters to auto-load article
+    function checkURLParameters() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const article = urlParams.get('article');
+      const text = urlParams.get('text');
+      
+      if (article && text) {
+        document.getElementById('summarizerInput').value = article;
+        storeArticleData({ title: article, extract: text, description: '' });
+        
+        // Auto-summarize
+        setTimeout(() => {
+          fetchAndSummarize();
+        }, 500);
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      checkURLParameters();
+    });
   </script>
   <script src="script.js"></script>
 </body>

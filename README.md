@@ -1,103 +1,225 @@
-# Wikipedia Enhanced
+# Wikipedia Enhanced 🌟
 
-A modern, feature-rich Wikipedia interface with enhanced functionality including article summarization, Q&A capabilities, random article discovery, and AI-powered quiz generation.
+A modern, AI-powered Wikipedia interface with enhanced functionality including article summarization, intelligent Q&A, interactive quiz generation, and real-time news integration.
 
-## 🌟 Features
+![Wikipedia Enhanced](https://img.shields.io/badge/Version-2.0-blue.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-brightgreen.svg)
 
-### 1. Modern Search Interface
-- Real-time search suggestions
-- Clean, responsive design
-- Dark mode support
-- Smooth animations and transitions
+## 🚀 Features
 
-### 2. Article Summarizer
-- Quick article summaries using AI
-- Clean, readable formatting
-- Links to full Wikipedia articles
-- Error handling and loading states
+### 🔍 **Enhanced Search & Discovery**
+- Real-time Wikipedia search with smart suggestions
+- Random article discovery with AI summaries
+- Clean, responsive interface with dark mode support
+- Smooth animations and intuitive navigation
 
-### 3. Q&A Bot
-- Ask questions about any Wikipedia article
-- AI-powered answers using Hugging Face
-- Intuitive interface
-- Real-time feedback
+### 📝 **AI-Powered Article Summarizer**
+- Generate comprehensive summaries using Google's Gemini AI
+- Multiple summary types: Quick, Detailed, Academic, Creative
+- Customizable length and focus areas
+- Cross-tool integration with Q&A and Quiz features
 
-### 4. Random Articles
-- Discover random Wikipedia articles
-- Get quick summaries
-- Save interesting finds
-- Clean card-based layout
+### 🤖 **Intelligent Q&A System**
+- General AI chatbot for any topic
+- Wikipedia-specific Q&A with article context
+- Mode switching between chat and article Q&A
+- Article selector with search functionality
 
-### 5. Quiz Generator
-- Generate multiple-choice quizzes from any article
-- Customizable number of questions (3, 5, or 10)
-- AI-powered question generation
-- Instant scoring and feedback
-- Clean, interactive interface
+### 🎯 **Interactive Quiz Generator**
+- Generate custom quizzes from any Wikipedia article
+- Multiple difficulty levels and question types
+- Interactive quiz-taking with scoring system
+- Customizable preferences (language, focus, length)
+- Download/copy quiz functionality
 
-### 6. User Experience
-- Responsive design for all devices
-- Dark mode support
-- Smooth animations
-- Keyboard shortcuts
-- Progressive disclosure for complex content
+### 📰 **Real-Time News Integration**
+- Latest world news with category filtering
+- Country-specific news options
+- Responsive news cards with source attribution
+- Integration with NewsAPI for real-time updates
 
-## 🚀 Getting Started
+### 📱 **Mobile-First Design**
+- Fully responsive across all devices
+- Touch-friendly interactions
+- Optimized for mobile browsers
+- Progressive Web App features
 
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- Internet connection
-- Node.js (for local development)
-- Vercel account (for deployment)
+## 🛠️ Technology Stack
 
-### Local Development
-1. Clone the repository:
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Backend**: Node.js, Express.js
+- **AI Integration**: Google Gemini API
+- **APIs**: Wikipedia API, NewsAPI
+- **Deployment**: Vercel-ready
+- **Styling**: Custom CSS with mobile-first approach
+
+## 📋 Prerequisites
+
+- Node.js (version 18.0.0 or higher)
+- npm or yarn package manager
+- Google Gemini API key
+- NewsAPI key (optional, fallback data provided)
+
+## 🔧 Installation & Setup
+
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/yourusername/wikipedia-enhanced.git
-```
-
-2. Navigate to the project directory:
-```bash
 cd wikipedia-enhanced
 ```
 
-3. Install dependencies:
+### 2. Install Dependencies
 ```bash
 npm install
 ```
 
-4. Create a `.env` file in the root directory with your Hugging Face API key:
+### 3. Environment Configuration
+Create a `.env` file in the root directory:
 ```env
-HUGGING_FACE_API_KEY=your_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
+NEWS_API_KEY=your_news_api_key_here
 ```
 
-5. Run the development server:
+**Getting API Keys:**
+- **Gemini API**: Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+- **News API**: Visit [NewsAPI.org](https://newsapi.org/register) (free tier available)
+
+### 4. Start the Development Server
 ```bash
+npm start
+# or
 npm run dev
 ```
 
-### Deployment to Vercel
+Visit `http://localhost:3000` to view the application.
+
+## 📚 Usage Guide
+
+### 🏠 **Main Dashboard**
+- Search Wikipedia articles with real-time suggestions
+- Access all features through the navigation menu
+- View latest news in the integrated news section
+
+### 📄 **Article Summarizer**
+1. Navigate to `/summarizer` or click "Summarizer" in the menu
+2. Enter a Wikipedia topic or paste article text
+3. Customize summary preferences (type, length, focus)
+4. Generate AI-powered summaries
+5. Use cross-tool actions to create quizzes or ask questions
+
+### 💬 **Q&A System**
+1. Navigate to `/qa` or click "Q&A" in the menu
+2. Choose between General Chat or Wikipedia Q&A mode
+3. For Wikipedia mode: select an article using the search function
+4. Ask questions and receive AI-generated answers
+5. Context is maintained throughout the conversation
+
+### 🎮 **Quiz Generator**
+1. Navigate to `/quiz` or click "Quiz" in the menu
+2. Enter a topic or use URL parameters from other tools
+3. Customize quiz preferences (difficulty, type, questions count)
+4. Generate the quiz and choose your interaction mode:
+   - **Take Quiz**: Interactive quiz-taking with scoring
+   - **View Questions**: Study format for printing/review
+   - **Demo Quiz**: Try sample questions
+
+### 📰 **News Section**
+1. Navigate to `/news` or view on the main page
+2. Filter by category (general, business, technology, etc.)
+3. Select country for localized news
+4. Click articles to read from original sources
+
+## 🚀 Deployment
+
+### Vercel Deployment (Recommended)
 1. Push your code to GitHub
-2. Connect your GitHub repository to Vercel
-3. Add the following environment variables in Vercel:
-   - `HUGGING_FACE_API_KEY`: Your Hugging Face API key
-4. Deploy your project
+2. Connect your repository to [Vercel](https://vercel.com)
+3. Add environment variables in Vercel dashboard:
+   - `GEMINI_API_KEY`
+   - `NEWS_API_KEY`
+4. Deploy with one click
 
-## 📖 Usage
+### Manual Deployment
+1. Build the project: `npm run build` (if build script exists)
+2. Upload files to your hosting provider
+3. Configure environment variables on your server
+4. Start the application: `npm start`
 
-### Main Page
-- Use the search bar to find Wikipedia articles
-- Get real-time suggestions as you type
-- Press Enter or click Search to view results
+## 📁 Project Structure
 
-### Article Summarizer
-1. Click the "Summarizer" link in the navigation
-2. Enter a Wikipedia topic
-3. Click "Fetch Article" or press Enter
-4. View the AI-generated summary
+```
+wikipedia-enhanced/
+├── api/                    # API endpoints
+│   ├── news.js            # News API handler
+│   ├── qa.js              # Q&A API handler
+│   ├── quiz.js            # Quiz API handler
+│   └── summarize.js       # Summarizer API handler
+├── public/                 # Static files
+│   ├── index.html         # Main dashboard
+│   ├── news.html          # News page
+│   ├── qa.html            # Q&A interface
+│   ├── quiz.html          # Quiz generator
+│   ├── summarizer.html    # Article summarizer
+│   ├── random.html        # Random articles
+│   ├── styles.css         # Global styles
+│   └── script.js          # Main JavaScript
+├── .env.example           # Environment variables template
+├── .gitignore            # Git ignore rules
+├── package.json          # Dependencies and scripts
+├── README.md             # Project documentation
+├── test-server.js        # Development server
+└── vercel.json           # Vercel configuration
+```
 
-### Q&A Bot
-1. Click the "Q&A Bot" link in the navigation
+## 🎨 Customization
+
+### Adding New Features
+1. Create new API endpoints in the `api/` directory
+2. Add corresponding HTML pages in `public/`
+3. Update the navigation in existing pages
+4. Add routes in `test-server.js`
+
+### Styling
+- Edit `public/styles.css` for global styles
+- The design is mobile-first and fully responsive
+- CSS variables are used for easy theming
+
+### AI Prompts
+- Modify prompts in API files to customize AI behavior
+- Each API endpoint has configurable prompt templates
+- Support for multiple AI providers can be added
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-feature`
+3. Commit changes: `git commit -m 'Add new feature'`
+4. Push to branch: `git push origin feature/new-feature`
+5. Submit a pull request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- [Live Demo](https://your-demo-link.vercel.app)
+- [API Documentation](https://github.com/yourusername/wikipedia-enhanced/wiki)
+- [Issue Tracker](https://github.com/yourusername/wikipedia-enhanced/issues)
+
+## 📧 Support
+
+For support, questions, or feedback:
+- Create an issue on GitHub
+- Email: your.email@example.com
+- Twitter: [@yourusername](https://twitter.com/yourusername)
+
+---
+
+**Made with ❤️ using AI and modern web technologies**
 2. Enter a Wikipedia topic and fetch the article
 3. Ask any question about the article
 4. Get AI-powered answers
