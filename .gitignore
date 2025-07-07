@@ -1,8 +1,17 @@
-# Environment variables
+# Environment variables (API Keys and Secrets)
 .env
 .env.local
 .env.production
 .env.development
+.env.test
+
+# API Keys and Configuration
+config/secrets.json
+config/keys.json
+*.key
+*.pem
+*.p12
+*.pfx
 
 # Dependencies
 node_modules/
