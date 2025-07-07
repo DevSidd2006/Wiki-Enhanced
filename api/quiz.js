@@ -1,10 +1,35 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+async function callOpenRouter(prompt) {
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      "HTTP-Referer": "http://localhost:3000",
+      "X-Title": "Wikipedia Enhanced",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      "model": "mistralai/mistral-7b-instruct:free",
+      "messages": [
+        {
+          "role": "user",
+          "content": prompt
+        }
+      ]
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`OpenRouter API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,8 +41,6 @@ export default async function handler(req, res) {
   try {
     const { articleTitle, articleText, numQuestions, difficulty, questionType, focus, language } = req.body;
     if (!articleTitle || !articleText || !numQuestions) return res.status(400).json({ error: 'Missing required fields' });
-    
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     // Build dynamic prompt based on user preferences
     let prompt = `Based on this Wikipedia article about "${articleTitle}":\n\n${articleText}\n\n`;
@@ -114,9 +137,7 @@ Answer: [Expected answer in 1-2 sentences]
     
     prompt += `\n(Repeat for each question)`;
     
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const questions = response.text();
+    const questions = await callOpenRouter(prompt);
     
     return res.status(200).json({ 
       questions,
@@ -129,7 +150,7 @@ Answer: [Expected answer in 1-2 sentences]
       }
     });
   } catch (error) {
-    console.error("Gemini Error (Quiz):", error);
+    console.error("OpenRouter Error (Quiz):", error);
     return res.status(500).json({ error: 'Failed to generate quiz', details: error.message });
   }
 }

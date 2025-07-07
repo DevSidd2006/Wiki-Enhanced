@@ -108,7 +108,8 @@ Always use environment variables for sensitive configuration:
 
 ```bash
 # Good
-GEMINI_API_KEY=your_secure_key_here
+OPENROUTER_API_KEY=your_secure_key_here
+NEWS_API_KEY=your_secure_key_here
 
 # Bad - Never do this
 const API_KEY = "your_secure_key_here";

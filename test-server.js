@@ -55,5 +55,6 @@ app.get('/news', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
-  console.log(`API Key configured: ${!!process.env.GEMINI_API_KEY}`);
+  console.log(`OpenRouter API Key configured: ${!!process.env.OPENROUTER_API_KEY}`);
+  console.log(`News API Key configured: ${!!process.env.NEWS_API_KEY}`);
 });

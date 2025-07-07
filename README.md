@@ -77,12 +77,12 @@ npm install
 ### 3. Environment Configuration
 Create a `.env` file in the root directory:
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
+OPENROUTER_API_KEY=your_openrouter_api_key_here
 NEWS_API_KEY=your_news_api_key_here
 ```
 
 **Getting API Keys:**
-- **Gemini API**: Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+- **OpenRouter API**: Visit [OpenRouter.ai](https://openrouter.ai/keys) to get your API key
 - **News API**: Visit [NewsAPI.org](https://newsapi.org/register) (free tier available)
 
 ### 4. Start the Development Server
@@ -136,7 +136,7 @@ Visit `http://localhost:3000` to view the application.
 1. Push your code to GitHub
 2. Connect your repository to [Vercel](https://vercel.com)
 3. Add environment variables in Vercel dashboard:
-   - `GEMINI_API_KEY`
+   - `OPENROUTER_API_KEY`
    - `NEWS_API_KEY`
 4. Deploy with one click
 

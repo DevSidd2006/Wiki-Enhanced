@@ -10,7 +10,7 @@ http://localhost:3000/api
 
 ## Authentication
 
-All API endpoints require a valid `GEMINI_API_KEY` to be set in the environment variables.
+All API endpoints require a valid `OPENROUTER_API_KEY` to be set in the environment variables. The News API endpoints require a `NEWS_API_KEY`.
 
 ## Endpoints
 

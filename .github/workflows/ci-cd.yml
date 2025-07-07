@@ -30,7 +30,7 @@ jobs:
     - name: Run tests
       run: npm test --if-present
       env:
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
     
     - name: Run linter

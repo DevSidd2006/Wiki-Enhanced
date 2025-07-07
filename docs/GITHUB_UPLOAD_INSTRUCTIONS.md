@@ -87,7 +87,7 @@ git push -u origin main
 
 #### B. Environment Variables (for GitHub Actions)
 Go to Settings → Secrets and variables → Actions, add:
-- `GEMINI_API_KEY`: Your Google Gemini API key
+- `OPENROUTER_API_KEY`: Your OpenRouter API key
 - `NEWS_API_KEY`: Your NewsAPI key
 - `VERCEL_TOKEN`: Your Vercel token (if using Vercel)
 - `ORG_ID`: Your Vercel organization ID
@@ -139,7 +139,7 @@ git push
 1. Go to [Vercel](https://vercel.com)
 2. Import your GitHub repository
 3. Configure environment variables:
-   - `GEMINI_API_KEY`
+   - `OPENROUTER_API_KEY`
    - `NEWS_API_KEY`
 4. Deploy and get your live URL
 

@@ -200,27 +200,8 @@
       background: var(--primary-hover);
       transform: translateY(-2px);
     }
-    .theme-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      transition: all 0.3s ease;
-      z-index: 1000;
-    }
-    .theme-toggle:hover {
-      background: var(--primary-hover);
-      transform: scale(1.1);
+    .back-link {
+      display: none;
     }
     .mode-selector {
       display: flex;
@@ -267,11 +248,490 @@
       background: var(--primary-hover);
       transform: translateY(-2px);
     }
+
+    /* Modal Viewer Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      z-index: 10000;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 900px;
+      height: 85%;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s ease-in-out;
+    }
+
+    .modal-header {
+      background: var(--primary-color);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-body {
+      height: calc(100% - 64px);
+      position: relative;
+    }
+
+    .modal-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: white;
+    }
+
+    .modal-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: var(--text-color);
+    }
+
+    .modal-loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--border-color);
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { 
+        opacity: 0;
+        transform: translate(-50%, -60%);
+      }
+      to { 
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Enhanced Navbar Styles */
+    .main-navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      z-index: 9999;
+      padding: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-container {
+      width: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 32px;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.3rem;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-logo:hover {
+      transform: translateY(-2px);
+      color: #f0f8ff;
+    }
+
+    .navbar-logo .logo-icon {
+      font-size: 1.8rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-logo:hover .logo-icon {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(360deg);
+    }
+
+    .navbar-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .navbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s;
+    }
+
+    .nav-link:hover::before {
+      left: 100%;
+    }
+
+    .nav-link:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .nav-link.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: scale(1.1) rotate(180deg);
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu-toggle:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Mobile menu styles */
+    .mobile-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--primary-color);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .mobile-menu.active {
+      display: block;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .mobile-nav {
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mobile-nav .nav-link {
+      padding: 12px 16px;
+      border-radius: 8px;
+      justify-content: flex-start;
+    }
+
+    /* Adjust body padding for fixed navbar */
+    body {
+      padding-top: 80px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Update main container margin */
+    .qa-main-container {
+      max-width: 800px;
+      margin: 20px auto 0;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 16px var(--shadow-color);
+      padding: 32px 24px;
+    }
+
+    /* Remove old back-link styles since we're replacing it */
+    .back-link {
+      display: none;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive design for navbar */
+    @media (max-width: 768px) {
+      .navbar-container {
+        padding: 10px 16px;
+      }
+
+      .navbar-nav {
+        display: none;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      .navbar-title {
+        font-size: 1rem;
+      }
+
+      .navbar-logo {
+        font-size: 1.1rem;
+      }
+
+      .navbar-logo .logo-icon {
+        font-size: 1.5rem;
+        padding: 6px;
+      }
+
+      body {
+        padding-top: 70px;
+      }
+    }
+
+    /* Responsive design for modal */
+    @media (max-width: 768px) {
+      .modal-content {
+        width: 95%;
+        height: 90%;
+      }
+      
+      .modal-header {
+        padding: 12px 16px;
+      }
+      
+      .modal-title {
+        font-size: 1.1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">🌓</button>
-  <a href="index.html" class="back-link">← Back to Main</a>
+  <!-- Enhanced Navbar -->
+  <nav class="main-navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <a href="index.html" class="navbar-logo">
+          <span class="logo-icon">🤖</span>
+          <div>
+            <div>Q&A Assistant</div>
+            <div class="navbar-title">Wikipedia AI Bot</div>
+          </div>
+        </a>
+      </div>
+      
+      <div class="navbar-nav" id="navbarNav">
+        <div class="nav-item">
+          <a href="index.html" class="nav-link">
+            <span>🏠</span>
+            Home
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="summarizer.html" class="nav-link">
+            <span>📝</span>
+            Summarizer
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="quiz.html" class="nav-link">
+            <span>🧩</span>
+            Quiz
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="random.html" class="nav-link">
+            <span>🎲</span>
+            Random
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="news.html" class="nav-link">
+            <span>📰</span>
+            News
+          </a>
+        </div>
+      </div>
+
+      <div class="navbar-right">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+          <span id="themeIcon">🌓</span>
+        </button>
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+          <span id="menuIcon">☰</span>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-nav">
+          <a href="index.html" class="nav-link">
+            <span>🏠</span>
+            Home
+          </a>
+          <a href="summarizer.html" class="nav-link">
+            <span>📝</span>
+            Summarizer
+          </a>
+          <a href="quiz.html" class="nav-link">
+            <span>🧩</span>
+            Quiz
+          </a>
+          <a href="random.html" class="nav-link">
+            <span>🎲</span>
+            Random
+          </a>
+          <a href="news.html" class="nav-link">
+            <span>📰</span>
+            News
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
   <div class="card qa-main-container">
     <h2>🤖 AI Assistant & Wikipedia Q&A</h2>
     
@@ -315,6 +775,23 @@
     <div class="input-container">
       <input type="text" id="questionInput" class="question-input" placeholder="Ask me anything...">
       <button onclick="askQuestion()" class="send-btn">Send</button>
+    </div>
+  </div>
+
+  <!-- Modal Viewer HTML -->
+  <div id="articleModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">Article Viewer</div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-loading">
+          <div class="spinner"></div>
+          Loading article...
+        </div>
+        <iframe id="articleIframe" class="modal-iframe" src="" frameborder="0"></iframe>
+      </div>
     </div>
   </div>
 
@@ -483,8 +960,8 @@
         return;
       }
       
-      const url = `/quiz?article=${encodeURIComponent(currentArticleTitle)}&text=${encodeURIComponent(articleText)}`;
-      window.open(url, '_blank');
+      const url = `quiz.html?article=${encodeURIComponent(currentArticleTitle)}&text=${encodeURIComponent(articleText)}`;
+      openUrlInModal(url, `Quiz: ${currentArticleTitle}`);
     }
 
     function summarizeArticle() {
@@ -493,8 +970,47 @@
         return;
       }
       
-      const url = `/summarizer?article=${encodeURIComponent(currentArticleTitle)}&text=${encodeURIComponent(articleText)}`;
-      window.open(url, '_blank');
+      const url = `summarizer.html?article=${encodeURIComponent(currentArticleTitle)}&text=${encodeURIComponent(articleText)}`;
+      openUrlInModal(url, `Summarizer: ${currentArticleTitle}`);
+    }
+
+    // Generic function to open any URL in modal
+    function openUrlInModal(url, title) {
+      const modal = document.getElementById('articleModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalLoading = document.getElementById('modalLoading');
+      const modalIframe = document.getElementById('modalIframe');
+      
+      // Show modal
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      
+      // Reset modal state
+      modalTitle.textContent = `Loading: ${title}`;
+      modalLoading.style.display = 'block';
+      modalIframe.style.display = 'none';
+      
+      // Set up iframe
+      modalIframe.src = url;
+      
+      // Handle iframe load
+      modalIframe.onload = function() {
+        modalLoading.style.display = 'none';
+        modalIframe.style.display = 'block';
+        modalTitle.textContent = title;
+      };
+      
+      // Handle iframe error
+      modalIframe.onerror = function() {
+        modalLoading.innerHTML = `
+          <div style="text-align: center; color: var(--text-color);">
+            <p>Unable to load content in modal.</p>
+            <button class="action-btn" onclick="window.open('${url}', '_blank')">
+              🔗 Open in New Tab
+            </button>
+          </div>
+        `;
+      };
     }
 
     // Initialize on page load
@@ -537,8 +1053,6 @@
         setMode('general');
       }
     });
-
-    // ...existing code...
 
     document.getElementById("questionInput").addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
@@ -612,24 +1126,152 @@
       const next = current === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
+      
+      // Update theme icon
+      const themeIcon = document.getElementById('themeIcon');
+      if (themeIcon) {
+        themeIcon.textContent = next === 'dark' ? '🌙' : '☀️';
+      }
+    }
+
+    // Mobile menu toggle functionality
+    function toggleMobileMenu() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      const menuIcon = document.getElementById('menuIcon');
+      
+      if (mobileMenu && menuIcon) {
+        mobileMenu.classList.toggle('active');
+        menuIcon.textContent = mobileMenu.classList.contains('active') ? '✕' : '☰';
+      }
+    }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const mobileMenu = document.getElementById('mobileMenu');
+      const menuToggle = document.querySelector('.mobile-menu-toggle');
+      const navbar = document.querySelector('.main-navbar');
+      
+      if (mobileMenu && mobileMenu.classList.contains('active')) {
+        if (!navbar.contains(event.target)) {
+          mobileMenu.classList.remove('active');
+          const menuIcon = document.getElementById('menuIcon');
+          if (menuIcon) menuIcon.textContent = '☰';
+        }
+      }
+    });
+
+    // Set active nav link based on current page
+    function setActiveNavLink() {
+      const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+      const navLinks = document.querySelectorAll('.nav-link');
+      
+      navLinks.forEach(link => {
+        const linkPage = link.getAttribute('href');
+        if (linkPage === currentPage || (currentPage === '' && linkPage === 'index.html')) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
     }
 
     // Set initial theme
     (function() {
       const saved = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      let theme = 'light';
+      
       if (saved) {
+        theme = saved;
         document.documentElement.setAttribute('data-theme', saved);
       } else if (prefersDark) {
+        theme = 'dark';
         document.documentElement.setAttribute('data-theme', 'dark');
       }
+      
+      // Set initial theme icon
+      const themeIcon = document.getElementById('themeIcon');
+      if (themeIcon) {
+        themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
+      }
+      
+      // Set active navigation link
+      setActiveNavLink();
     })();
 
     function openFullArticle() {
       if (currentArticleTitle) {
-        window.open(`https://en.wikipedia.org/wiki/${encodeURIComponent(currentArticleTitle)}`, '_blank');
+        openArticleInModal(currentArticleTitle);
       }
     }
+
+    // Modal viewer functions
+    function openArticleInModal(articleTitle) {
+      const modal = document.getElementById('articleModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalLoading = document.getElementById('modalLoading');
+      const modalIframe = document.getElementById('modalIframe');
+      
+      // Show modal
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      
+      // Reset modal state
+      modalTitle.textContent = `Loading: ${articleTitle}`;
+      modalLoading.style.display = 'block';
+      modalIframe.style.display = 'none';
+      
+      // Set up iframe
+      const wikipediaUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(articleTitle)}`;
+      modalIframe.src = wikipediaUrl;
+      
+      // Handle iframe load
+      modalIframe.onload = function() {
+        modalLoading.style.display = 'none';
+        modalIframe.style.display = 'block';
+        modalTitle.textContent = articleTitle;
+      };
+      
+      // Handle iframe error
+      modalIframe.onerror = function() {
+        modalLoading.innerHTML = `
+          <div style="text-align: center; color: var(--text-color);">
+            <p>Unable to load article in modal.</p>
+            <button class="action-btn" onclick="window.open('${wikipediaUrl}', '_blank')">
+              🔗 Open in New Tab
+            </button>
+          </div>
+        `;
+      };
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('articleModal');
+      const modalIframe = document.getElementById('modalIframe');
+      
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+      
+      // Clear iframe to stop loading
+      modalIframe.src = 'about:blank';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('articleModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('articleModal');
+        if (modal.style.display === 'block') {
+          closeModal();
+        }
+      }
+    });
 
     async function getQASearchSuggestions() {
       const query = document.getElementById('searchInput').value.trim();
@@ -737,7 +1379,67 @@
         document.getElementById("answer").innerText = "Error: " + error.message;
       }
     });
+
+    // Modal functionality
+    function openModal() {
+      const modal = document.getElementById('articleModal');
+      modal.style.display = 'flex';
+
+      const iframe = document.getElementById('articleIframe');
+      const loading = document.querySelector('.modal-loading');
+
+      // Show loading spinner
+      loading.style.display = 'flex';
+      iframe.style.display = 'none';
+
+      // Set iframe source and handle load event
+      iframe.src = `https://en.wikipedia.org/wiki/${encodeURIComponent(currentArticleTitle)}`;
+      iframe.onload = () => {
+        // Hide loading spinner and show iframe
+        loading.style.display = 'none';
+        iframe.style.display = 'block';
+      };
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('articleModal');
+      modal.style.display = 'none';
+
+      const iframe = document.getElementById('articleIframe');
+      iframe.src = ''; // Stop the video or audio
+    }
+
+    // Open modal on button click
+    document.querySelectorAll('.action-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const action = this.textContent.trim();
+        if (action === '📖 Read Full Article') {
+          openModal();
+        } else if (action === '🧩 Generate Quiz') {
+          generateQuiz();
+        } else if (action === '📝 Summarize') {
+          summarizeArticle();
+        }
+      });
+    });
   </script>
+
+  <!-- Modal Viewer -->
+  <div id="articleModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Loading...</h3>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="modalLoading" class="modal-loading">
+          <div class="spinner"></div>
+          <p>Loading article...</p>
+        </div>
+        <iframe id="modalIframe" class="modal-iframe" style="display: none;"></iframe>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
 

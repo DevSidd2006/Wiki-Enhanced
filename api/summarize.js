@@ -1,10 +1,7 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,16 +14,6 @@ export default async function handler(req, res) {
     const { text, articleText, summaryType, length, focus, language, comprehensiveMode } = req.body;
     const contentToSummarize = text || articleText;
     if (!contentToSummarize) return res.status(400).json({ error: 'Missing required field: text or articleText' });
-    
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
-      generationConfig: {
-        temperature: 0.2, // Even lower temperature for more focused, comprehensive summaries
-        topP: 0.8,
-        topK: 40,
-        maxOutputTokens: 8192, // Allow for longer, more detailed summaries
-      }
-    });
     
     // Build comprehensive prompt for detailed summarization
     let prompt = `You are an expert summarizer with exceptional attention to detail. Your task is to create a comprehensive summary that captures ALL important information from the provided text without missing any significant details.
@@ -273,9 +260,60 @@ ${contentToSummarize}
 
 Begin your comprehensive, detailed summary now:`;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const summary = response.text();
+    // Make request to OpenRouter API
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': process.env.SITE_URL || 'http://localhost:3000',
+        'X-Title': 'Wiki Enhanced'
+      },
+      body: JSON.stringify({
+        model: 'mistralai/mistral-7b-instruct:free',
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.2,
+        max_tokens: 1500
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('OpenRouter API Error:', response.status, errorData);
+      
+      if (response.status === 429) {
+        return res.status(429).json({ 
+          error: 'API rate limit reached. Please try again in a moment.',
+          details: 'Too many requests'
+        });
+      } else if (response.status === 401) {
+        return res.status(500).json({ 
+          error: 'API configuration error. Please contact support.',
+          details: 'Authentication failed'
+        });
+      } else {
+        return res.status(500).json({ 
+          error: 'Summarization service temporarily unavailable. Please try again.',
+          details: errorData.error?.message || 'Unknown error'
+        });
+      }
+    }
+
+    const data = await response.json();
+    const summary = data.choices?.[0]?.message?.content;
+
+    if (!summary) {
+      console.error('Invalid OpenRouter response:', data);
+      return res.status(500).json({ 
+        error: 'Failed to generate summary. Please try again.',
+        details: 'Invalid response format'
+      });
+    }
 
     return res.status(200).json({ 
       summary,
@@ -291,7 +329,18 @@ Begin your comprehensive, detailed summary now:`;
       }
     });
   } catch (error) {
-    console.error("Gemini Error (Summarize):", error);
-    return res.status(500).json({ error: 'Unknown summarization error. Please try again.', details: error.message });
+    console.error("OpenRouter Error (Summarize):", error);
+    
+    if (error.name === 'AbortError') {
+      return res.status(408).json({ 
+        error: 'Request timeout. Please try again with shorter text.',
+        details: 'Request took too long'
+      });
+    }
+    
+    return res.status(500).json({ 
+      error: 'Summarization service error. Please try again.',
+      details: error.message 
+    });
   }
 }

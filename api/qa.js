@@ -1,10 +1,35 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+async function callOpenRouter(prompt) {
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      "HTTP-Referer": "http://localhost:3000",
+      "X-Title": "Wikipedia Enhanced",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      "model": "mistralai/mistral-7b-instruct:free",
+      "messages": [
+        {
+          "role": "user",
+          "content": prompt
+        }
+      ]
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`OpenRouter API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -20,8 +45,6 @@ export default async function handler(req, res) {
     if (!question) {
       return res.status(400).json({ error: "Missing question" });
     }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     // Create different prompts based on mode
     let prompt;
@@ -71,15 +94,13 @@ Please provide a detailed answer that:
 Answer:`;
     }
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const answer = await callOpenRouter(prompt);
 
-    return res.status(200).json({ answer: text });
+    return res.status(200).json({ answer });
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("OpenRouter Error:", error);
     return res.status(500).json({
-      error: "Failed to get response from Gemini",
+      error: "Failed to get response from AI service",
       details: error.message,
     });
   }
