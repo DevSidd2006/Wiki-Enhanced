@@ -22,11 +22,42 @@ import qaHandler from './api/qa.js';
 import quizHandler from './api/quiz.js';
 import newsHandler from './api/news.js';
 
-// API routes
-app.use('/api/summarize', (req, res) => summarizeHandler(req, res));
-app.use('/api/qa', (req, res) => qaHandler(req, res));
-app.use('/api/quiz', (req, res) => quizHandler(req, res));
-app.use('/api/news', (req, res) => newsHandler(req, res));
+// API routes with error logging
+app.use('/api/summarize', async (req, res) => {
+  try {
+    await summarizeHandler(req, res);
+  } catch (error) {
+    console.error('Summarize endpoint error:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+});
+
+app.use('/api/qa', async (req, res) => {
+  try {
+    await qaHandler(req, res);
+  } catch (error) {
+    console.error('QA endpoint error:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+});
+
+app.use('/api/quiz', async (req, res) => {
+  try {
+    await quizHandler(req, res);
+  } catch (error) {
+    console.error('Quiz endpoint error:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+});
+
+app.use('/api/news', async (req, res) => {
+  try {
+    await newsHandler(req, res);
+  } catch (error) {
+    console.error('News endpoint error:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+});
 
 // Serve static files
 app.get('/', (req, res) => {

@@ -610,12 +610,12 @@
   <nav class="main-nav">
     <div class="nav-container">
       <div class="nav-left">
-        <a href="#" class="logo">
-          <img src="https://en.wikipedia.org/static/images/icons/wikipedia.png" alt="Wikipedia globe" class="logo-globe">
-          <span class="logo-text">
-            <img src="https://en.wikipedia.org/static/images/mobile/copyright/wikipedia-wordmark-en.svg" alt="Wikipedia" class="logo-wordmark">
-            <img src="https://en.wikipedia.org/static/images/mobile/copyright/wikipedia-tagline-en.svg" alt="The Free Encyclopedia" class="logo-tagline">
-          </span>
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span>
+          <div class="logo-text">
+            <div class="logo-title">Wikipedia</div>
+            <div class="logo-subtitle">The Free Encyclopedia</div>
+          </div>
         </a>
         <div class="search-container">
           <div class="search-autocomplete-container">
@@ -625,11 +625,12 @@
           <button onclick="searchWikipedia()" class="search-button">Search</button>
         </div>
       </div>
-      <div class="nav-right">
+      
+      <div class="nav-center">
         <div class="nav-links">
-          <a href="random.html" class="nav-link">
-            <span>🎲</span>
-            Random Articles
+          <a href="index.html" class="nav-link active">
+            <span>�</span>
+            Home
           </a>
           <a href="summarizer.html" class="nav-link">
             <span>📝</span>
@@ -640,14 +641,64 @@
             Q&A Bot
           </a>
           <a href="quiz.html" class="nav-link">
-            <span>📚</span>
-            Quiz Generator
+            <span>🧩</span>
+            Quiz
+          </a>
+          <a href="random.html" class="nav-link">
+            <span>🎲</span>
+            Random
+          </a>
+          <a href="news.html" class="nav-link">
+            <span>📰</span>
+            News
           </a>
         </div>
+      </div>
+
+      <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+          <span>🌙</span>
+        </button>
         <button class="mobile-nav-toggle" onclick="toggleMobileNav()">☰</button>
       </div>
     </div>
   </nav>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay">
+    <div class="mobile-nav-content">
+      <div class="mobile-nav-header">
+        <span style="font-weight: 600; color: var(--primary-color);">Navigation</span>
+        <button class="mobile-nav-close" onclick="toggleMobileNav()">✕</button>
+      </div>
+      <div class="mobile-nav-links">
+        <a href="index.html" class="nav-link active">
+          <span>🏠</span>
+          Home
+        </a>
+        <a href="summarizer.html" class="nav-link">
+          <span>📝</span>
+          Summarizer
+        </a>
+        <a href="qa.html" class="nav-link">
+          <span>❓</span>
+          Q&A Bot
+        </a>
+        <a href="quiz.html" class="nav-link">
+          <span>🧩</span>
+          Quiz
+        </a>
+        <a href="random.html" class="nav-link">
+          <span>🎲</span>
+          Random
+        </a>
+        <a href="news.html" class="nav-link">
+          <span>📰</span>
+          News
+        </a>
+      </div>
+    </div>
+  </div>
 
   <div class="main-container">
     <main class="content">

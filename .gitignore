@@ -65,6 +65,11 @@ jspm_packages/
 
 # Serverless directories
 .serverless/
+.test-deepseek.js
+.test-openrouter.js
+.test-server.js
+.openrouter-diagnostic.js
+
 
 # FuseBox cache
 .fusebox/

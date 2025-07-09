@@ -13,7 +13,7 @@ async function callOpenRouter(prompt) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      "model": "mistralai/mistral-7b-instruct:free",
+      "model": "deepseek/deepseek-r1:free",
       "messages": [
         {
           "role": "user",

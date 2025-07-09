@@ -83,14 +83,88 @@
   <nav class="main-nav">
     <div class="nav-container">
       <div class="nav-left">
-        <a href="index.html" class="logo">Wikipedia</a>
-        <a href="index.html" class="back-button">← Back to Main</a>
+        <a href="index.html" class="logo">
+          <span class="logo-icon">📚</span>
+          <div class="logo-text">
+            <div class="logo-title">Wikipedia</div>
+            <div class="logo-subtitle">The Free Encyclopedia</div>
+          </div>
+        </a>
       </div>
+      
+      <div class="nav-center">
+        <div class="nav-links">
+          <a href="index.html" class="nav-link">
+            <span>🏠</span>
+            Home
+          </a>
+          <a href="summarizer.html" class="nav-link">
+            <span>📝</span>
+            Summarizer
+          </a>
+          <a href="qa.html" class="nav-link">
+            <span>❓</span>
+            Q&A Bot
+          </a>
+          <a href="quiz.html" class="nav-link">
+            <span>🧩</span>
+            Quiz
+          </a>
+          <a href="random.html" class="nav-link active">
+            <span>🎲</span>
+            Random
+          </a>
+          <a href="news.html" class="nav-link">
+            <span>📰</span>
+            News
+          </a>
+        </div>
+      </div>
+
       <div class="nav-right">
-        <button class="theme-toggle" aria-label="Toggle dark mode">🌓</button>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+          <span>🌙</span>
+        </button>
+        <button class="mobile-nav-toggle" onclick="toggleMobileNav()">☰</button>
       </div>
     </div>
   </nav>
+
+  <!-- Mobile Navigation Overlay -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay">
+    <div class="mobile-nav-content">
+      <div class="mobile-nav-header">
+        <span style="font-weight: 600; color: var(--primary-color);">Navigation</span>
+        <button class="mobile-nav-close" onclick="toggleMobileNav()">✕</button>
+      </div>
+      <div class="mobile-nav-links">
+        <a href="index.html" class="nav-link">
+          <span>�</span>
+          Home
+        </a>
+        <a href="summarizer.html" class="nav-link">
+          <span>📝</span>
+          Summarizer
+        </a>
+        <a href="qa.html" class="nav-link">
+          <span>❓</span>
+          Q&A Bot
+        </a>
+        <a href="quiz.html" class="nav-link">
+          <span>🧩</span>
+          Quiz
+        </a>
+        <a href="random.html" class="nav-link active">
+          <span>🎲</span>
+          Random
+        </a>
+        <a href="news.html" class="nav-link">
+          <span>📰</span>
+          News
+        </a>
+      </div>
+    </div>
+  </div>
 
   <div class="main-container">
     <main class="content random-page">
@@ -253,6 +327,45 @@
       iframe.src = "";
       modal.style.display = 'none';
     }
+
+    // Mobile Navigation Toggle
+    function toggleMobileNav() {
+      const overlay = document.getElementById('mobileNavOverlay');
+      overlay.classList.toggle('open');
+    }
+
+    // Theme Toggle
+    function toggleTheme() {
+      const body = document.body;
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      body.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      // Update theme toggle icon
+      const themeToggle = document.querySelector('.theme-toggle span');
+      themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Initialize theme on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.body.setAttribute('data-theme', savedTheme);
+      
+      const themeToggle = document.querySelector('.theme-toggle span');
+      if (themeToggle) {
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+      }
+    });
+
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', function(event) {
+      const overlay = document.getElementById('mobileNavOverlay');
+      if (event.target === overlay) {
+        overlay.classList.remove('open');
+      }
+    });
   </script>
   <script src="script.js"></script>
 </body>

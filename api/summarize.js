@@ -270,7 +270,7 @@ Begin your comprehensive, detailed summary now:`;
         'X-Title': 'Wiki Enhanced'
       },
       body: JSON.stringify({
-        model: 'mistralai/mistral-7b-instruct:free',
+        model: 'deepseek/deepseek-r1:free',
         messages: [
           {
             role: 'user',
@@ -278,7 +278,7 @@ Begin your comprehensive, detailed summary now:`;
           }
         ],
         temperature: 0.2,
-        max_tokens: 1500
+        max_tokens: 2000
       })
     });
 
