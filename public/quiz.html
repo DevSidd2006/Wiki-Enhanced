@@ -270,24 +270,12 @@
     <main class="content">
       <div class="card" style="max-width: 100%; margin: 0 auto; padding: 15px;">
         <h1>Wikipedia Quiz Generator</h1>
-        <div style="background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4a90e2;">
-          <h3 style="margin-top: 0; color: #1976d2;">🎯 How to Use the Interactive Quiz</h3>
-          <ul style="margin-bottom: 0; color: #1976d2; padding-left: 20px;">
-            <li><strong>Generate Quiz:</strong> Enter a topic and customize your preferences, then click "Generate Custom Quiz"</li>
-            <li><strong>Take Quiz:</strong> Click "Take Quiz" to answer questions interactively and get your score</li>
-            <li><strong>View Questions:</strong> Click "View Questions" to see the raw quiz format for study or printing</li>
-            <li><strong>Try Demo:</strong> Click "Try Demo Quiz" to test the interactive features with sample questions</li>
-          </ul>
-        </div>s="content">
-      <div class="card">
-        <h1>Wikipedia Quiz Generator</h1>
-        <div style="background: #e8f4fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #4a90e2;">
-          <h3 style="margin-top: 0; color: #1976d2;">🎯 How to Use the Interactive Quiz</h3>
-          <ul style="margin-bottom: 0; color: #1976d2;">
-            <li><strong>Generate Quiz:</strong> Enter a topic and customize your preferences, then click "Generate Custom Quiz"</li>
-            <li><strong>Take Quiz:</strong> Click "Take Quiz" to answer questions interactively and get your score</li>
-            <li><strong>View Questions:</strong> Click "View Questions" to see the raw quiz format for study or printing</li>
-            <li><strong>Try Demo:</strong> Click "Try Demo Quiz" to test the interactive features with sample questions</li>
+        <div style="background: var(--info-bg-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--primary-color);">
+          <h3 style="margin-top: 0; color: var(--primary-color);">🎯 How to Use the Interactive Quiz</h3>
+          <ul style="margin-bottom: 0; color: var(--text-color-secondary); padding-left: 20px;">
+            <li><strong>Generate Quiz:</strong> Enter a topic, customize your preferences, then click "Generate Custom Quiz".</li>
+            <li><strong>Take Quiz:</strong> After generation, click "Take Quiz" to answer questions interactively.</li>
+            <li><strong>View Score:</strong> Submit your answers to see your score and review the results.</li>
           </ul>
         </div>
         <form class="quiz-form" id="quizForm">
@@ -296,20 +284,20 @@
 
           <label for="wikiSearch">Search Wikipedia Article:</label>
           <input type="text" id="wikiSearch" placeholder="Type article name..." oninput="getWikiSuggestions()" autocomplete="off" />
-          <ul id="wikiSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:#fff;border:1px solid #ccc;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);width:100%;display:none;"></ul>
-          <button type="button" onclick="fetchWikipediaArticle()">Fetch Article</button>
+          <ul id="wikiSuggestions" style="list-style:none;padding:0;margin:0;position:absolute;z-index:1000;background:var(--bg-color);border:1px solid var(--border-color);border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);width:100%;display:none;"></ul>
+          <button type="button" class="button" onclick="fetchWikipediaArticle()">Fetch Article</button>
           <div id="wikiStatus"></div>
           
           <label for="text">Article Content:</label>
-          <textarea id="text" placeholder="Paste article content here or use the search above to fetch automatically..." rows="6" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: Arial, sans-serif; resize: vertical;"></textarea>
+          <textarea id="text" placeholder="Paste article content here or use the search above to fetch automatically..." rows="6"></textarea>
           
           <!-- Enhanced Quiz Options -->
-          <div class="quiz-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; border: 1px solid #dee2e6;">
-            <h3 style="grid-column: span 2; margin: 0 0 15px 0; color: #495057; font-size: 1.1em;">🎯 Quiz Preferences</h3>
+          <div class="quiz-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; padding: 20px; background: var(--card-bg-color); border-radius: 8px; border: 1px solid var(--border-color);">
+            <h3 style="grid-column: span 2; margin: 0 0 15px 0; color: var(--text-color-primary); font-size: 1.1em;">🎯 Quiz Preferences</h3>
             
             <div>
-              <label for="num" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Number of Questions:</label>
-              <select id="num" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
+              <label for="num" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-color-secondary);">Number of Questions:</label>
+              <select id="num">
                 <option value="3">3 Questions</option>
                 <option value="5" selected>5 Questions</option>
                 <option value="10">10 Questions</option>
@@ -319,8 +307,8 @@
             </div>
             
             <div>
-              <label for="difficulty" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Difficulty Level:</label>
-              <select id="difficulty" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
+              <label for="difficulty" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-color-secondary);">Difficulty Level:</label>
+              <select id="difficulty">
                 <option value="easy">🟢 Easy - Basic facts</option>
                 <option value="medium" selected>🟡 Medium - Moderate understanding</option>
                 <option value="hard">🔴 Hard - Advanced analysis</option>
@@ -328,8 +316,8 @@
             </div>
             
             <div>
-              <label for="questionType" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Question Type:</label>
-              <select id="questionType" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
+              <label for="questionType" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-color-secondary);">Question Type:</label>
+              <select id="questionType">
                 <option value="multiple-choice" selected>🔤 Multiple Choice</option>
                 <option value="true-false">✅ True/False</option>
                 <option value="fill-blank">📝 Fill in the Blank</option>
@@ -339,8 +327,8 @@
             </div>
             
             <div>
-              <label for="focus" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Focus Area:</label>
-              <select id="focus" style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
+              <label for="focus" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-color-secondary);">Focus Area:</label>
+              <select id="focus">
                 <option value="general">🌐 General Knowledge</option>
                 <option value="history">📅 History & Timeline</option>
                 <option value="achievements">🏆 Achievements</option>
@@ -349,41 +337,24 @@
                 <option value="details">🔍 Specific Details</option>
               </select>
             </div>
-            
-            <div style="grid-column: span 2;">
-              <label for="language" style="display: block; margin-bottom: 5px; font-weight: 600; color: #495057;">Language:</label>
-              <select id="language" style="width: 250px; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background: white;">
-                <option value="english" selected>🇺🇸 English</option>
-                <option value="spanish">🇪🇸 Spanish</option>
-                <option value="french">🇫🇷 French</option>
-                <option value="german">🇩🇪 German</option>
-                <option value="italian">🇮🇹 Italian</option>
-                <option value="portuguese">🇵🇹 Portuguese</option>
-                <option value="chinese">🇨🇳 Chinese</option>
-                <option value="japanese">🇯🇵 Japanese</option>
-              </select>
-            </div>
           </div>
 
-          <button type="button" onclick="generateQuiz()" style="background: #4a90e2; color: white; font-size: 16px; font-weight: bold; padding: 15px; border: none; border-radius: 6px; cursor: pointer;">
+          <button type="button" class="button button-primary" onclick="generateQuiz()">
             🧩 Generate Custom Quiz
-          </button>
-          <button onclick="loadDemoQuiz()" style="background: #17a2b8; color: white; font-size: 16px; font-weight: bold; padding: 15px; border: none; border-radius: 6px; cursor: pointer; margin-left: 10px;">
-            🎮 Try Demo Quiz
           </button>
         </form>
         <div class="quiz-results" id="quizResults" style="display: none;">
-          <div class="quiz-metadata" id="quizMetadata" style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+          <div class="quiz-metadata" id="quizMetadata" style="background: var(--info-bg-color); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
             <!-- Metadata will be populated here -->
           </div>
           
           <!-- Quiz Mode Selection -->
           <div class="quiz-mode-selector" style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
-            <label style="font-weight: bold; color: #1976d2;">📝 Quiz Mode:</label>
-            <button id="viewModeBtn" onclick="switchToViewMode()" style="background: #6c757d; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+            <label style="font-weight: bold; color: var(--primary-color);">📝 Quiz Mode:</label>
+            <button id="viewModeBtn" class="button" onclick="switchToViewMode()">
               👁️ View Questions
             </button>
-            <button id="takeModeBtn" onclick="switchToTakeMode()" style="background: #4a90e2; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;">
+            <button id="takeModeBtn" class="button button-primary" onclick="switchToTakeMode()">
               🎯 Take Quiz
             </button>
           </div>
@@ -391,15 +362,15 @@
           <!-- View Mode (Original) -->
           <div id="viewMode" style="display: block;">
             <h2>Generated Questions:</h2>
-            <div id="output" style="background: #f8f9fa; padding: 20px; border-radius: 8px; white-space: pre-wrap; font-family: 'Courier New', monospace; line-height: 1.6;"></div>
+            <div id="output" style="background: var(--card-bg-color); padding: 20px; border-radius: 8px; white-space: pre-wrap; font-family: 'Courier New', monospace; line-height: 1.6; border: 1px solid var(--border-color);"></div>
             <div class="quiz-actions" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-              <button onclick="downloadQuiz()" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+              <button class="button" onclick="downloadQuiz()">
                 📄 Download Quiz
               </button>
-              <button onclick="copyQuiz()" style="background: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+              <button class="button" onclick="copyQuiz()">
                 📋 Copy to Clipboard
               </button>
-              <button onclick="generateNewQuiz()" style="background: #17a2b8; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+              <button class="button" onclick="generateNewQuiz()">
                 🔄 Generate New Quiz
               </button>
             </div>
@@ -408,40 +379,40 @@
           <!-- Interactive Quiz Mode -->
           <div id="takeMode" style="display: none;">
             <h2>📝 Take the Quiz</h2>
-            <div id="interactiveQuiz" style="background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+            <div id="interactiveQuiz" style="background: var(--bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color);">
               <!-- Interactive questions will be populated here -->
             </div>
             <div id="quizNavigation" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
-              <button id="prevBtn" onclick="previousQuestion()" style="background: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" disabled>
+              <button id="prevBtn" class="button" onclick="previousQuestion()" disabled>
                 ← Previous
               </button>
-              <div id="questionProgress" style="font-weight: bold; color: #1976d2;">
+              <div id="questionProgress" style="font-weight: bold; color: var(--primary-color);">
                 Question 1 of 5
               </div>
-              <button id="nextBtn" onclick="nextQuestion()" style="background: #4a90e2; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+              <button id="nextBtn" class="button button-primary" onclick="nextQuestion()">
                 Next →
               </button>
             </div>
             <div id="submitQuizContainer" style="margin-top: 20px; text-align: center; display: none;">
-              <button onclick="submitQuiz()" style="background: #28a745; color: white; padding: 15px 30px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold;">
+              <button class="button button-success" onclick="submitQuiz()">
                 🎯 Submit Quiz & Get Score
               </button>
             </div>
           </div>
 
           <!-- Quiz Results -->
-          <div id="quizScore" style="display: none; margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 5px solid #28a745;">
-            <h3 style="margin-top: 0; color: #28a745;">🎉 Quiz Results</h3>
+          <div id="quizScore" style="display: none; margin-top: 20px; padding: 20px; background: var(--card-bg-color); border-radius: 8px; border-left: 5px solid var(--success-color);">
+            <h3 style="margin-top: 0; color: var(--success-color);">🎉 Quiz Results</h3>
             <div id="scoreDisplay" style="font-size: 1.2em; margin-bottom: 15px;"></div>
             <div id="detailedResults" style="margin-bottom: 15px;"></div>
             <div class="quiz-actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <button onclick="reviewAnswers()" style="background: #17a2b8; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+              <button class="button" onclick="reviewAnswers()">
                 📋 Review Answers
               </button>
-              <button onclick="retakeQuiz()" style="background: #ffc107; color: #212529; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+              <button class="button" onclick="retakeQuiz()">
                 🔄 Retake Quiz
               </button>
-              <button onclick="generateNewQuiz()" style="background: #6f42c1; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+              <button class="button" onclick="generateNewQuiz()">
                 🎯 New Quiz
               </button>
             </div>
@@ -481,7 +452,6 @@
       const difficulty = document.getElementById('difficulty').value;
       const questionType = document.getElementById('questionType').value;
       const focus = document.getElementById('focus').value;
-      const language = document.getElementById('language').value;
       const output = document.getElementById('output');
       const resultsDiv = document.getElementById('quizResults');
       const metadataDiv = document.getElementById('quizMetadata');
@@ -517,8 +487,7 @@
             numQuestions: parseInt(num, 10),
             difficulty: difficulty,
             questionType: questionType,
-            focus: focus,
-            language: language
+            focus: focus
           })
         });
 
@@ -528,14 +497,13 @@
           // Display metadata
           const metadata = data.metadata || {};
           metadataDiv.innerHTML = `
-            <h3 style="margin-top: 0; color: #1976d2;">📊 Quiz Details</h3>
+            <h3 style="margin-top: 0; color: var(--primary-color);">📊 Quiz Details</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.9em;">
               <div><strong>Article:</strong> ${title}</div>
               <div><strong>Questions:</strong> ${metadata.numQuestions || num}</div>
               <div><strong>Difficulty:</strong> ${getDifficultyIcon(metadata.difficulty)} ${capitalize(metadata.difficulty || 'medium')}</div>
               <div><strong>Type:</strong> ${getTypeIcon(metadata.questionType)} ${formatQuestionType(metadata.questionType || 'multiple-choice')}</div>
               <div><strong>Focus:</strong> ${capitalize(metadata.focus || 'general')}</div>
-              <div><strong>Language:</strong> ${getLanguageFlag(metadata.language)} ${capitalize(metadata.language || 'english')}</div>
             </div>
             <div style="margin-top: 10px; font-size: 0.8em; color: #666;">
               Generated on: ${new Date().toLocaleString()}
@@ -590,14 +558,6 @@
         'mixed': '🎯'
       };
       return icons[type] || '🔤';
-    }
-
-    function getLanguageFlag(language) {
-      const flags = {
-        english: '🇺🇸', spanish: '🇪🇸', french: '🇫🇷', german: '🇩🇪',
-        italian: '🇮🇹', portuguese: '🇵🇹', chinese: '🇨🇳', japanese: '🇯🇵'
-      };
-      return flags[language] || '🇺🇸';
     }
 
     function formatQuestionType(type) {
@@ -762,10 +722,14 @@
       if (e.key === 'ArrowDown') {
         e.preventDefault();
         if (currentIndex < items.length - 1) {
-          if (currentIndex >= 0) items[currentIndex].classList.remove('suggestions-active');
+          if (currentIndex >= 0) {
+            items[currentIndex].classList.remove('suggestions-active');
+          }
           items[currentIndex + 1].classList.add('suggestions-active');
         } else if (items.length > 0) {
-          if (currentIndex >= 0) items[currentIndex].classList.remove('suggestions-active');
+          if (currentIndex >= 0) {
+            items[currentIndex].classList.remove('suggestions-active');
+          }
           items[0].classList.add('suggestions-active');
         }
       } else if (e.key === 'ArrowUp') {
@@ -1139,81 +1103,6 @@
       document.getElementById('quizScore').style.display = 'none';
       switchToTakeMode();
       updateQuizDisplay();
-    }
-
-    function loadDemoQuiz() {
-      // Create a demo quiz with sample questions
-      const demoQuestions = `Q1: Which planet is closest to the Sun?
-A) Venus
-B) Mercury
-C) Earth
-D) Mars
-Answer: B
-
-Q2: What is the largest planet in our solar system?
-A) Earth
-B) Saturn
-C) Jupiter
-D) Neptune
-Answer: C
-
-Q3: True or False: Saturn is famous for its rings.
-Answer: True`;
-
-      const demoMetadata = {
-        numQuestions: 3,
-        difficulty: 'easy',
-        questionType: 'multiple-choice',
-        focus: 'general',
-        language: 'english'
-      };
-
-      // Display demo metadata
-      const metadataDiv = document.getElementById('quizMetadata');
-      metadataDiv.innerHTML = `
-        <h3 style="margin-top: 0; color: #1976d2;">📊 Demo Quiz Details</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.9em;">
-          <div><strong>Article:</strong> Solar System Demo</div>
-          <div><strong>Questions:</strong> 3</div>
-          <div><strong>Difficulty:</strong> 🟢 Easy</div>
-          <div><strong>Type:</strong> 🔤 Multiple Choice</div>
-          <div><strong>Focus:</strong> General</div>
-          <div><strong>Language:</strong> 🇺🇸 English</div>
-        </div>
-        <div style="margin-top: 10px; font-size: 0.8em; color: #666;">
-          Demo quiz - Try the interactive quiz features!
-        </div>
-      `;
-
-      // Show quiz output
-      const output = document.getElementById('output');
-      output.textContent = demoQuestions;
-
-      // Parse and store demo quiz data
-      const parsedQuiz = parseQuizQuestions(demoQuestions, 'multiple-choice');
-      
-      // Store demo quiz data
-      window.currentQuizData = {
-        title: 'Solar System Demo',
-        questions: demoQuestions,
-        metadata: demoMetadata,
-        parsedQuestions: parsedQuiz,
-        userAnswers: {},
-        currentQuestion: 0
-      };
-
-      // Initialize interactive quiz
-      initializeInteractiveQuiz();
-      
-      // Show results section
-      const resultsDiv = document.getElementById('quizResults');
-      resultsDiv.style.display = 'block';
-      
-      // Switch to take mode automatically
-      switchToTakeMode();
-      
-      // Scroll to results
-      resultsDiv.scrollIntoView({ behavior: 'smooth' });
     }
 
     // Mobile Navigation Toggle

@@ -123,6 +123,24 @@
       min-width: 150px;
     }
     
+    .filter-group select:disabled {
+      background: #f5f5f5;
+      color: #999;
+      cursor: not-allowed;
+    }
+    
+    .filter-note {
+      font-size: 0.85em;
+      color: #666;
+      font-style: italic;
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .filter-note.show {
+      display: block;
+    }
+    
     .refresh-btn {
       padding: 8px 16px;
       background: var(--primary-color);
@@ -294,6 +312,100 @@
             <option value="mx">🇲🇽 Mexico</option>
             <option value="it">🇮🇹 Italy</option>
             <option value="es">🇪🇸 Spain</option>
+            <option value="cn">🇨🇳 China</option>
+            <option value="ru">🇷🇺 Russia</option>
+            <option value="kr">🇰🇷 South Korea</option>
+            <option value="nl">🇳🇱 Netherlands</option>
+            <option value="se">🇸🇪 Sweden</option>
+            <option value="no">🇳🇴 Norway</option>
+            <option value="ch">🇨🇭 Switzerland</option>
+            <option value="at">🇦🇹 Austria</option>
+            <option value="be">🇧🇪 Belgium</option>
+            <option value="dk">🇩🇰 Denmark</option>
+            <option value="fi">🇫🇮 Finland</option>
+            <option value="ie">🇮🇪 Ireland</option>
+            <option value="nz">🇳🇿 New Zealand</option>
+            <option value="sg">🇸🇬 Singapore</option>
+            <option value="hk">🇭🇰 Hong Kong</option>
+            <option value="ae">🇦🇪 UAE</option>
+            <option value="sa">🇸🇦 Saudi Arabia</option>
+            <option value="il">🇮🇱 Israel</option>
+            <option value="za">🇿🇦 South Africa</option>
+            <option value="eg">🇪🇬 Egypt</option>
+            <option value="ng">🇳🇬 Nigeria</option>
+            <option value="ar">🇦🇷 Argentina</option>
+            <option value="cl">🇨🇱 Chile</option>
+            <option value="co">🇨🇴 Colombia</option>
+            <option value="ve">🇻🇪 Venezuela</option>
+            <option value="pe">🇵🇪 Peru</option>
+            <option value="pl">🇵🇱 Poland</option>
+            <option value="cz">🇨🇿 Czech Republic</option>
+            <option value="hu">🇭🇺 Hungary</option>
+            <option value="ro">🇷🇴 Romania</option>
+            <option value="bg">🇧🇬 Bulgaria</option>
+            <option value="hr">🇭🇷 Croatia</option>
+            <option value="si">🇸🇮 Slovenia</option>
+            <option value="sk">🇸🇰 Slovakia</option>
+            <option value="lt">🇱🇹 Lithuania</option>
+            <option value="lv">🇱🇻 Latvia</option>
+            <option value="ee">🇪🇪 Estonia</option>
+            <option value="gr">🇬🇷 Greece</option>
+            <option value="pt">🇵🇹 Portugal</option>
+            <option value="tr">🇹🇷 Turkey</option>
+            <option value="ma">🇲🇦 Morocco</option>
+            <option value="ph">🇵🇭 Philippines</option>
+            <option value="th">🇹🇭 Thailand</option>
+            <option value="my">🇲🇾 Malaysia</option>
+            <option value="id">🇮🇩 Indonesia</option>
+            <option value="vn">🇻🇳 Vietnam</option>
+            <option value="tw">🇹🇼 Taiwan</option>
+            <option value="ua">🇺🇦 Ukraine</option>
+            <option value="rs">🇷🇸 Serbia</option>
+            <option value="lk">🇱🇰 Sri Lanka</option>
+            <option value="bd">🇧🇩 Bangladesh</option>
+            <option value="pk">🇵🇰 Pakistan</option>
+          </select>
+        </div>
+        
+        <div>
+          <label for="newsSources">News Sources:</label>
+          <select id="newsSources">
+            <option value="">All Sources</option>
+            <option value="bbc-news">BBC News</option>
+            <option value="cnn">CNN</option>
+            <option value="reuters">Reuters</option>
+            <option value="associated-press">Associated Press</option>
+            <option value="the-guardian-uk">The Guardian</option>
+            <option value="the-new-york-times">The New York Times</option>
+            <option value="the-washington-post">The Washington Post</option>
+            <option value="time">Time</option>
+            <option value="newsweek">Newsweek</option>
+            <option value="usa-today">USA Today</option>
+            <option value="fox-news">Fox News</option>
+            <option value="abc-news">ABC News</option>
+            <option value="nbc-news">NBC News</option>
+            <option value="cbs-news">CBS News</option>
+            <option value="bloomberg">Bloomberg</option>
+            <option value="cnbc">CNBC</option>
+            <option value="financial-times">Financial Times</option>
+            <option value="wall-street-journal">Wall Street Journal</option>
+            <option value="techcrunch">TechCrunch</option>
+            <option value="ars-technica">Ars Technica</option>
+            <option value="wired">Wired</option>
+            <option value="the-verge">The Verge</option>
+            <option value="engadget">Engadget</option>
+            <option value="mashable">Mashable</option>
+            <option value="espn">ESPN</option>
+            <option value="bbc-sport">BBC Sport</option>
+            <option value="sky-sports-news">Sky Sports</option>
+            <option value="national-geographic">National Geographic</option>
+            <option value="new-scientist">New Scientist</option>
+            <option value="medical-news-today">Medical News Today</option>
+            <option value="entertainment-weekly">Entertainment Weekly</option>
+            <option value="buzzfeed">BuzzFeed</option>
+            <option value="vice-news">VICE News</option>
+            <option value="politico">Politico</option>
+            <option value="the-hill">The Hill</option>
           </select>
         </div>
         
@@ -310,6 +422,10 @@
         <button id="refreshBtn" class="refresh-btn" onclick="loadNews()">
           🔄 Refresh News
         </button>
+      </div>
+      
+      <div id="filterNote" class="filter-note">
+        📝 Note: When a specific news source is selected, country and category filters are disabled.
       </div>
     </div>
 
@@ -334,6 +450,7 @@
       const refreshBtn = document.getElementById('refreshBtn');
       const category = document.getElementById('newsCategory').value;
       const country = document.getElementById('newsCountry').value;
+      const sources = document.getElementById('newsSources').value;
       const pageSize = document.getElementById('newsCount').value;
       
       isLoading = true;
@@ -347,7 +464,17 @@
       `;
 
       try {
-        const response = await fetch(`/api/news?category=${category}&country=${country}&pageSize=${pageSize}`);
+        const queryParams = new URLSearchParams({
+          category,
+          country,
+          pageSize
+        });
+        
+        if (sources) {
+          queryParams.append('sources', sources);
+        }
+        
+        const response = await fetch(`/api/news?${queryParams}`);
         const data = await response.json();
         
         if (!data.articles || data.articles.length === 0) {
@@ -412,6 +539,29 @@
       }
     }
 
+    function handleSourceChange() {
+      const sourcesSelect = document.getElementById('newsSources');
+      const categorySelect = document.getElementById('newsCategory');
+      const countrySelect = document.getElementById('newsCountry');
+      const filterNote = document.getElementById('filterNote');
+      
+      const hasSource = sourcesSelect.value !== '';
+      
+      // Disable/enable country and category when source is selected
+      categorySelect.disabled = hasSource;
+      countrySelect.disabled = hasSource;
+      
+      // Show/hide note
+      if (hasSource) {
+        filterNote.classList.add('show');
+      } else {
+        filterNote.classList.remove('show');
+      }
+      
+      // Load news with new filters
+      loadNews();
+    }
+
     function getTimeAgo(date) {
       const now = new Date();
       const diffInSeconds = Math.floor((now - date) / 1000);
@@ -456,6 +606,7 @@
       // Add event listeners for filters
       document.getElementById('newsCategory').addEventListener('change', loadNews);
       document.getElementById('newsCountry').addEventListener('change', loadNews);
+      document.getElementById('newsSources').addEventListener('change', handleSourceChange);
       document.getElementById('newsCount').addEventListener('change', loadNews);
     });
 
