@@ -263,12 +263,11 @@ function initTheme() {
   
       const data = await response.json();
   
-      // Display the summary
+      // Display the summary with proper HTML rendering
       summaryDiv.innerHTML = `
         <h3>📝 Summary</h3>
-        <p>${data.summary}</p>
+        <div class="summary-content">${data.summary}</div>
         <div class="summary-meta">
-          <span class="summary-length">${data.summary.split(' ').length} words</span>
         </div>
       `;
   

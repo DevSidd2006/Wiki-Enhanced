@@ -6,47 +6,129 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .random-page {
-      max-width: 800px;
-      margin: 0 auto;
+    :root {
+      --primary-bg: #0a0a0a;
+      --secondary-bg: #141414;
+      --tertiary-bg: #1a1a1a;
+      --surface-bg: #1e1e1e;
+      --elevated-bg: #252525;
+      --border-color: #2a2a2a;
+      --border-hover: #404040;
+      --text-primary: #ffffff;
+      --text-secondary: #b4b4b4;
+      --text-muted: #707070;
+      --accent-primary: #007aff;
+      --accent-hover: #0066d9;
+      --accent-secondary: #5856d6;
+      --success-color: #30d158;
+      --warning-color: #ff9f0a;
+      --error-color: #ff3b30;
+      --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
     }
+
+    [data-theme="light"] {
+      --primary-bg: #ffffff;
+      --secondary-bg: #f8f9fa;
+      --tertiary-bg: #f1f3f4;
+      --surface-bg: #ffffff;
+      --elevated-bg: #ffffff;
+      --border-color: #e1e5e9;
+      --border-hover: #c1c7cd;
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #8a8a8a;
+      --accent-primary: #007aff;
+      --accent-hover: #0066d9;
+      --accent-secondary: #5856d6;
+      --success-color: #28a745;
+      --warning-color: #fd7e14;
+      --error-color: #dc3545;
+      --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.12);
+      --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--primary-bg);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0;
+      padding: 0;
+      transition: all 0.2s ease;
+      min-height: 100vh;
+    }
+
+    .random-page {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      min-height: calc(100vh - 80px);
+    }
+    
     .random-controls {
       display: flex;
-      gap: 15px;
-      margin-bottom: 30px;
+      gap: 16px;
+      margin-bottom: 32px;
       flex-wrap: wrap;
+      align-items: center;
     }
+    
     .random-article-card {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 6px var(--shadow-color);
-      transition: transform 0.3s ease;
+      background: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-subtle);
+      transition: all 0.2s ease;
     }
+    
     .random-article-card:hover {
-      transform: translateY(-5px);
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-medium);
+      transform: translateY(-2px);
     }
+    
     .article-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 16px;
     }
+    
     .article-title {
-      font-size: 1.5rem;
-      color: var(--text-color);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-primary);
       margin: 0;
+      line-height: 1.3;
     }
+    
     .article-meta {
       display: flex;
-      gap: 15px;
-      margin-top: 15px;
-      padding-top: 15px;
+      gap: 16px;
+      margin-top: 20px;
+      padding-top: 16px;
       border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      align-items: center;
     }
+    
     .article-meta a {
-      color: var(--primary-color);
+      color: var(--accent-primary);
       text-decoration: none;
       display: flex;
       align-items: center;
@@ -75,6 +157,296 @@
     @keyframes spin {
       to {
         transform: rotate(360deg);
+      }
+    }
+
+    /* Enhanced Loading Animation */
+    .loader {
+      display: inline-block;
+      position: relative;
+      width: 64px;
+      height: 64px;
+    }
+
+    .loader .box1,
+    .loader .box2,
+    .loader .box3 {
+      display: inline-block;
+      position: absolute;
+      left: 8px;
+      width: 16px;
+      background: var(--accent-primary);
+      animation: loader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+    }
+
+    .loader .box1 {
+      left: 8px;
+      animation-delay: -0.24s;
+    }
+
+    .loader .box2 {
+      left: 32px;
+      animation-delay: -0.12s;
+    }
+
+    .loader .box3 {
+      left: 56px;
+      animation-delay: 0;
+    }
+
+    @keyframes loader {
+      0% {
+        top: 8px;
+        height: 64px;
+      }
+      50%, 100% {
+        top: 24px;
+        height: 32px;
+      }
+    }
+
+    .loading-text {
+      color: var(--accent-primary);
+      font-weight: 500;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* Advanced Article Viewer Styles */
+    .modal-overlay {
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content-viewer {
+      display: flex;
+      width: 95%;
+      max-width: 1400px;
+      height: 90%;
+      background: var(--primary-bg);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-strong);
+      border: 1px solid var(--border-color);
+    }
+
+    .viewer-sidebar {
+      width: 280px;
+      background: var(--surface-bg);
+      padding: 20px;
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .viewer-sidebar h3 {
+      margin-top: 0;
+      color: var(--accent-primary);
+      font-size: 1.1em;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .viewer-main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .viewer-header {
+      padding: 15px 25px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface-bg);
+    }
+
+    #viewer-title {
+      margin: 0;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .viewer-controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-close {
+      background: var(--error-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: #c82333;
+      transform: scale(1.1);
+    }
+
+    #viewer-content {
+      padding: 30px 40px;
+      overflow-y: auto;
+      line-height: 1.7;
+      font-size: 1.1rem;
+      background: var(--primary-bg);
+    }
+
+    /* Article content styling */
+    .article-prose h1,
+    .article-prose h2,
+    .article-prose h3,
+    .article-prose h4 {
+      color: var(--text-primary);
+      margin-top: 2em;
+      margin-bottom: 0.5em;
+    }
+
+    .article-prose h2 {
+      font-size: 1.6em;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .article-prose h3 {
+      font-size: 1.3em;
+    }
+
+    .article-prose p {
+      margin-bottom: 1em;
+      color: var(--text-primary);
+    }
+
+    .article-prose img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+      margin: 1em 0;
+    }
+
+    .article-prose a {
+      color: var(--accent-primary);
+      text-decoration: none;
+    }
+
+    .article-prose a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    /* Table of Contents styling */
+    #viewer-toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #viewer-toc li {
+      margin: 4px 0;
+    }
+
+    #viewer-toc a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      display: block;
+      transition: all 0.2s ease;
+      font-size: 0.9em;
+    }
+
+    #viewer-toc a:hover {
+      background: var(--tertiary-bg);
+      color: var(--accent-primary);
+    }
+
+    .toc-level-h2 {
+      font-weight: 600;
+    }
+
+    .toc-level-h3 {
+      padding-left: 15px;
+      font-size: 0.85em;
+    }
+
+    /* Text Selection Popup Toolbar */
+    .selection-popup {
+      position: fixed;
+      display: none;
+      background: var(--elevated-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      box-shadow: var(--shadow-strong);
+      z-index: 10001;
+      backdrop-filter: blur(10px);
+    }
+
+    .selection-popup button {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      font-size: 0.9em;
+      margin: 0 2px;
+    }
+
+    .selection-popup button:hover {
+      background: var(--accent-primary);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    /* Loading state for article content */
+    #viewer-content .loader {
+      margin: 50px auto;
+    }
+
+    /* Responsive design for mobile */
+    @media (max-width: 768px) {
+      .modal-content-viewer {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        flex-direction: column;
+      }
+
+      .viewer-sidebar {
+        width: 100%;
+        max-height: 200px;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      #viewer-content {
+        padding: 20px;
+      }
+
+      .viewer-header {
+        padding: 10px 15px;
+      }
+
+      #viewer-title {
+        font-size: 1.2rem;
       }
     }
   </style>
@@ -186,18 +558,52 @@
     </main>
   </div>
 
-  <!-- Modal for Wikipedia Article -->
-  <div id="articleModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
-    <div style="background:var(--card-bg,#fff);max-width:900px;width:90vw;height:80vh;position:relative;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.3);overflow:hidden;display:flex;flex-direction:column;">
-      <button onclick="closeArticleModal()" style="position:absolute;top:10px;right:10px;background:#dc3545;color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:1.3rem;cursor:pointer;z-index:2;">✖</button>
-      <iframe id="articleIframe" src="" style="flex:1;width:100%;border:none;"></iframe>
+  <!-- Advanced Article Viewer Modal -->
+  <div id="articleModal" class="modal-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;">
+    <div class="modal-content-viewer">
+      <div class="viewer-sidebar">
+        <h3 id="viewer-title-sidebar">Contents</h3>
+        <div id="viewer-toc"></div>
+      </div>
+      <div class="viewer-main">
+        <div class="viewer-header">
+          <h2 id="viewer-title">Loading...</h2>
+          <div class="viewer-controls">
+            <button class="modal-close" onclick="closeArticleModal()" title="Close">✖</button>
+          </div>
+        </div>
+        <div id="viewer-content" class="article-prose">
+          <div class="loader">
+            <div class="box1"></div>
+            <div class="box2"></div>
+            <div class="box3"></div>
+          </div>
+          <span style="margin-left: 12px;">Loading article...</span>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Text Selection Toolbar -->
+  <div id="selection-toolbar" class="selection-popup">
+    <button onclick="summarizeSelectedText()" title="Summarize selected text">📝 Summarize</button>
+    <button onclick="explainSelectedText()" title="Explain selected text">❓ Explain</button>
+    <button onclick="quizSelectedText()" title="Create quiz from selection">🧩 Create Quiz</button>
   </div>
 
   <script>
     async function fetchRandomArticle() {
       const articlesContainer = document.getElementById('randomArticles');
-      articlesContainer.innerHTML = '<div class="loading-article">Fetching random article...</div>';
+      articlesContainer.innerHTML = `
+        <div class="loading-article">
+          <div class="loader">
+            <div class="box1"></div>
+            <div class="box2"></div>
+            <div class="box3"></div>
+          </div>
+          <span style="margin-left: 12px;">Fetching random article...</span>
+        </div>
+      `;
 
       try {
         const response = await fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary');
@@ -215,7 +621,7 @@
           ${data.thumbnail ? `<img src="${data.thumbnail.source}" alt="${data.title}" class="article-thumbnail">` : ''}
           <p>${data.extract}</p>
           <div class="article-meta">
-            <a href="#" onclick="currentArticleTitle='${data.title}';showArticleModal();return false;">
+            <a href="#" onclick="articleViewer.setCurrentArticle('${data.title}');articleViewer.showArticleModal();return false;">
               <span>📖</span> Read full article
             </a>
             <a href="#" onclick="fetchAndSummarizeRandom('${data.title}')">
@@ -239,9 +645,27 @@
     async function fetchAndSummarizeRandom(title = null) {
       const articlesContainer = document.getElementById('randomArticles');
       if (!title) {
-        articlesContainer.innerHTML = '<div class="loading-article">Fetching random article to summarize...</div>';
+        articlesContainer.innerHTML = `
+          <div class="loading-article">
+            <div class="loader">
+              <div class="box1"></div>
+              <div class="box2"></div>
+              <div class="box3"></div>
+            </div>
+            <span style="margin-left: 12px;">Fetching random article to summarize...</span>
+          </div>
+        `;
       } else {
-        articlesContainer.innerHTML = '<div class="loading-article">Generating summary...</div>';
+        articlesContainer.innerHTML = `
+          <div class="loading-article">
+            <div class="loader">
+              <div class="box1"></div>
+              <div class="box2"></div>
+              <div class="box3"></div>
+            </div>
+            <span style="margin-left: 12px;">Generating summary...</span>
+          </div>
+        `;
       }
 
       try {
@@ -292,7 +716,7 @@
           <h3>📝 Summary</h3>
           <p>${summaryData.summary}</p>
           <div class="article-meta">
-            <a href="#" onclick="currentArticleTitle='${data.title}';showArticleModal();return false;">
+            <a href="#" onclick="articleViewer.setCurrentArticle('${data.title}');articleViewer.showArticleModal();return false;">
               <span>📖</span> Read full article
             </a>
           </div>
@@ -312,21 +736,6 @@
 
     // Fetch a random article when the page loads
     fetchRandomArticle();
-
-    let currentArticleTitle = "";
-    function showArticleModal() {
-      if (!currentArticleTitle) return;
-      const modal = document.getElementById('articleModal');
-      const iframe = document.getElementById('articleIframe');
-      iframe.src = `https://en.wikipedia.org/wiki/${encodeURIComponent(currentArticleTitle)}`;
-      modal.style.display = 'flex';
-    }
-    function closeArticleModal() {
-      const modal = document.getElementById('articleModal');
-      const iframe = document.getElementById('articleIframe');
-      iframe.src = "";
-      modal.style.display = 'none';
-    }
 
     // Mobile Navigation Toggle
     function toggleMobileNav() {
@@ -367,6 +776,7 @@
       }
     });
   </script>
+  <script src="advanced-viewer.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

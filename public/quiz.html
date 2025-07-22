@@ -6,47 +6,107 @@
   <title>Quiz Generator</title>
   <link rel="stylesheet" href="styles.css">
   <style>
+    :root {
+      --primary-bg: #0a0a0a;
+      --secondary-bg: #141414;
+      --tertiary-bg: #1a1a1a;
+      --surface-bg: #1e1e1e;
+      --elevated-bg: #252525;
+      --border-color: #2a2a2a;
+      --border-hover: #404040;
+      --text-primary: #ffffff;
+      --text-secondary: #b4b4b4;
+      --text-muted: #707070;
+      --accent-primary: #007aff;
+      --accent-hover: #0066d9;
+      --accent-secondary: #5856d6;
+      --success-color: #30d158;
+      --warning-color: #ff9f0a;
+      --error-color: #ff3b30;
+      --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.3);
+      --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.5);
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+    }
+
+    [data-theme="light"] {
+      --primary-bg: #ffffff;
+      --secondary-bg: #f8f9fa;
+      --tertiary-bg: #f1f3f4;
+      --surface-bg: #ffffff;
+      --elevated-bg: #ffffff;
+      --border-color: #e1e5e9;
+      --border-hover: #c1c7cd;
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #8a8a8a;
+      --accent-primary: #007aff;
+      --accent-hover: #0066d9;
+      --accent-secondary: #5856d6;
+      --success-color: #28a745;
+      --warning-color: #fd7e14;
+      --error-color: #dc3545;
+      --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.08);
+      --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.12);
+      --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f3f4f6;
+      background: var(--primary-bg);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
       margin: 0;
       padding: 0;
-      line-height: 1.5;
+      transition: all 0.2s ease;
+      min-height: 100vh;
     }
+    
     .main-nav {
-      background-color: #004080;
-      color: white;
-      font-size: 1.2rem;
-      font-weight: bold;
-      padding: 15px 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      background: var(--secondary-bg);
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .main-nav a {
-      color: white;
-      text-decoration: none;
-    }
-    .main-nav a:hover {
-      text-decoration: underline;
-    }
+    
     .container {
-      max-width: 800px;
-      margin: 20px auto;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      min-height: calc(100vh - 80px);
     }
+    
     h1 {
-      color: #004080;
+      color: var(--text-primary);
       text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.8rem;
+      margin-bottom: 48px;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
     }
+    
     .quiz-form {
+      background: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-subtle);
+      margin-bottom: 24px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
     }
+    
     .quiz-form label {
       font-weight: bold;
       margin-bottom: 8px;
@@ -176,6 +236,388 @@
     .suggestions-active {
       background: #e3f2fd !important;
       color: #1976d2 !important;
+    }
+
+    /* Enhanced Quiz Gamification Styles */
+    .quiz-timer {
+      background: var(--surface-bg);
+      border: 2px solid var(--warning-color);
+      border-radius: var(--radius-lg);
+      padding: 15px;
+      text-align: center;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .quiz-timer.warning {
+      border-color: var(--error-color);
+      background: rgba(255, 59, 48, 0.1);
+    }
+
+    .timer-display {
+      font-size: 2em;
+      font-weight: bold;
+      color: var(--warning-color);
+      margin-bottom: 5px;
+    }
+
+    .timer-warning {
+      color: var(--error-color) !important;
+    }
+
+    .quiz-score-display {
+      background: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 15px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .score-breakdown {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+
+    .score-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .score-value {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .lifelines-container {
+      background: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .lifeline-btn {
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lifeline-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .lifeline-btn:disabled {
+      background: var(--text-muted);
+      cursor: not-allowed;
+      opacity: 0.5;
+      transform: none;
+    }
+
+    .progress-container {
+      background: var(--tertiary-bg);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 20px;
+      height: 8px;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      height: 100%;
+      transition: width 0.3s ease;
+      border-radius: var(--radius-md);
+    }
+
+    .enhanced-question-card {
+      background: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-medium);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .enhanced-question-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .question-number {
+      background: var(--accent-primary);
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    .question-difficulty {
+      font-size: 0.9em;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+    }
+
+    .difficulty-easy {
+      background: rgba(48, 209, 88, 0.2);
+      color: var(--success-color);
+    }
+
+    .difficulty-medium {
+      background: rgba(255, 159, 10, 0.2);
+      color: var(--warning-color);
+    }
+
+    .difficulty-hard {
+      background: rgba(255, 59, 48, 0.2);
+      color: var(--error-color);
+    }
+
+    .enhanced-option {
+      background: var(--tertiary-bg);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 15px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .enhanced-option:hover {
+      border-color: var(--accent-primary);
+      background: var(--surface-bg);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .enhanced-option.selected {
+      border-color: var(--accent-primary);
+      background: rgba(0, 122, 255, 0.1);
+    }
+
+    .enhanced-option.correct {
+      border-color: var(--success-color);
+      background: rgba(48, 209, 88, 0.1);
+    }
+
+    .enhanced-option.incorrect {
+      border-color: var(--error-color);
+      background: rgba(255, 59, 48, 0.1);
+    }
+
+    .enhanced-option.eliminated {
+      opacity: 0.3;
+      cursor: not-allowed;
+      background: var(--text-muted);
+    }
+
+    .option-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option-letter {
+      background: var(--accent-primary);
+      color: white;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+
+    .quiz-explanation {
+      background: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent-secondary);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .quiz-explanation.show {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .achievement-popup {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--surface-bg);
+      border: 1px solid var(--success-color);
+      border-radius: var(--radius-lg);
+      padding: 15px 20px;
+      box-shadow: var(--shadow-strong);
+      z-index: 1000;
+      animation: slideInRight 0.5s ease;
+      max-width: 300px;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .streak-display {
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: 12px 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .hint-display {
+      background: rgba(88, 86, 214, 0.1);
+      border: 1px solid var(--accent-secondary);
+      border-radius: var(--radius-lg);
+      padding: 15px;
+      margin-top: 15px;
+      display: none;
+    }
+
+    .hint-display.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Loading Animation */
+    .loader {
+      display: inline-block;
+      position: relative;
+      width: 64px;
+      height: 64px;
+    }
+
+    .loader .box1,
+    .loader .box2,
+    .loader .box3 {
+      display: inline-block;
+      position: absolute;
+      left: 8px;
+      width: 16px;
+      background: var(--accent-primary);
+      animation: loader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+    }
+
+    .loader .box1 {
+      left: 8px;
+      animation-delay: -0.24s;
+    }
+
+    .loader .box2 {
+      left: 32px;
+      animation-delay: -0.12s;
+    }
+
+    .loader .box3 {
+      left: 56px;
+      animation-delay: 0;
+    }
+
+    @keyframes loader {
+      0% {
+        top: 8px;
+        height: 64px;
+      }
+      50%, 100% {
+        top: 24px;
+        height: 32px;
+      }
+    }
+
+    .loading-text {
+      color: var(--accent-primary);
+      font-weight: 500;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .question-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+      
+      .score-breakdown {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .lifeline-btn {
+        display: block;
+        width: 100%;
+        margin: 5px 0;
+      }
     }
   </style>
 </head>
@@ -378,15 +820,78 @@
 
           <!-- Interactive Quiz Mode -->
           <div id="takeMode" style="display: none;">
-            <h2>📝 Take the Quiz</h2>
-            <div id="interactiveQuiz" style="background: var(--bg-color); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h2>🎯 Take the Quiz</h2>
+            
+            <!-- Quiz Timer -->
+            <div id="quizTimer" class="quiz-timer" style="display: none;">
+              <div class="timer-display" id="timerDisplay">05:00</div>
+              <div>Time Remaining</div>
+            </div>
+
+            <!-- Score Display -->
+            <div id="scoreDisplay" class="quiz-score-display">
+              <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 10px;">📊 Current Score</div>
+              <div class="score-breakdown">
+                <div class="score-item">
+                  <div class="score-value" id="currentScore">0</div>
+                  <div>Points</div>
+                </div>
+                <div class="score-item">
+                  <div class="score-value" id="correctCount">0</div>
+                  <div>Correct</div>
+                </div>
+                <div class="score-item">
+                  <div class="score-value" id="streakCount">0</div>
+                  <div>Streak</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+              <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+            </div>
+
+            <!-- Lifelines -->
+            <div id="lifelinesContainer" class="lifelines-container">
+              <div style="font-weight: bold; margin-bottom: 10px;">🆘 Lifelines Available:</div>
+              <button id="fiftyFiftyBtn" class="lifeline-btn" onclick="useFiftyFifty()">
+                🎯 50:50 Elimination
+              </button>
+              <button id="hintBtn" class="lifeline-btn" onclick="useHint()">
+                💡 AI Hint
+              </button>
+              <button id="skipBtn" class="lifeline-btn" onclick="skipQuestion()">
+                ⏭️ Skip Question
+              </button>
+            </div>
+
+            <!-- Current Streak Display -->
+            <div id="streakDisplay" class="streak-display" style="display: none;">
+              🔥 Perfect Streak: <span id="streakNumber">0</span> questions!
+            </div>
+
+            <div id="interactiveQuiz" class="enhanced-question-card">
               <!-- Interactive questions will be populated here -->
             </div>
-            <div id="quizNavigation" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+
+            <!-- Hint Display -->
+            <div id="hintDisplay" class="hint-display">
+              <div style="font-weight: bold; color: var(--accent-secondary); margin-bottom: 10px;">💡 AI Hint:</div>
+              <div id="hintText"></div>
+            </div>
+
+            <!-- Explanation Display -->
+            <div id="explanationDisplay" class="quiz-explanation">
+              <div style="font-weight: bold; color: var(--accent-secondary); margin-bottom: 10px;">📚 Explanation:</div>
+              <div id="explanationText"></div>
+            </div>
+
+            <div id="quizNavigation" style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
               <button id="prevBtn" class="button" onclick="previousQuestion()" disabled>
                 ← Previous
               </button>
-              <div id="questionProgress" style="font-weight: bold; color: var(--primary-color);">
+              <div id="questionProgress" style="font-weight: bold; color: var(--primary-color); text-align: center; flex: 1;">
                 Question 1 of 5
               </div>
               <button id="nextBtn" class="button button-primary" onclick="nextQuestion()">
@@ -403,7 +908,7 @@
           <!-- Quiz Results -->
           <div id="quizScore" style="display: none; margin-top: 20px; padding: 20px; background: var(--card-bg-color); border-radius: 8px; border-left: 5px solid var(--success-color);">
             <h3 style="margin-top: 0; color: var(--success-color);">🎉 Quiz Results</h3>
-            <div id="scoreDisplay" style="font-size: 1.2em; margin-bottom: 15px;"></div>
+            <div id="finalScoreDisplay" style="font-size: 1.2em; margin-bottom: 15px;"></div>
             <div id="detailedResults" style="margin-bottom: 15px;"></div>
             <div class="quiz-actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
               <button class="button" onclick="reviewAnswers()">
@@ -473,7 +978,16 @@
       }
 
       // Show loading state
-      output.textContent = 'Generating quiz... Please wait.';
+      output.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; padding: 40px 20px; text-align: center;">
+          <div class="loader">
+            <div class="box1"></div>
+            <div class="box2"></div>
+            <div class="box3"></div>
+          </div>
+          <span class="loading-text">Generating your custom quiz... Please wait.</span>
+        </div>
+      `;
       resultsDiv.style.display = 'block';
       metadataDiv.innerHTML = '';
 
@@ -492,6 +1006,10 @@
         });
 
         const data = await response.json();
+        
+        // Debug: Log the raw API response
+        console.log('Raw API response:', data);
+        console.log('Questions text from API:', data.questions);
         
         if (response.ok) {
           // Display metadata
@@ -760,80 +1278,113 @@
     let currentQuestionIndex = 0;
     let userAnswers = {};
     let quizQuestions = [];
+    let quizTimer = null;
+    let timeRemaining = 300; // 5 minutes default
+    let quizScore = 0;
+    let correctAnswers = 0;
+    let currentStreak = 0;
+    let maxStreak = 0;
+    let lifelinesUsed = {
+      fiftyFifty: false,
+      hint: false,
+      skip: false
+    };
+    let eliminatedOptions = {};
+    let isTimerActive = false;
 
     function parseQuizQuestions(questionsText, questionType) {
       const questions = [];
-      const lines = questionsText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-      let currentQuestion = null;
-      let answerOptions = [];
-      let correctAnswer = '';
-      let questionText = '';
-
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
+      
+      // First, let's split by questions
+      const questionBlocks = questionsText.split(/(?=Q\d+[:.]?\s)/);
+      
+      questionBlocks.forEach((block, blockIndex) => {
+        if (!block.trim()) return;
         
-        // Check if this is a question line
-        if (line.match(/^Q\d+[:.]?\s*/)) {
-          // Save previous question if exists
-          if (currentQuestion) {
-            questions.push({
-              question: currentQuestion,
-              options: [...answerOptions],
-              correct: correctAnswer.trim(),
-              type: questionType
-            });
-          }
+        const lines = block.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        if (lines.length === 0) return;
+        
+        let question = '';
+        let options = [];
+        let correctAnswer = '';
+        let explanation = '';
+        
+        let currentSection = 'question';
+        
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i];
           
-          // Start new question
-          currentQuestion = line.replace(/^Q\d+[:.]?\s*/, '');
-          answerOptions = [];
-          correctAnswer = '';
-          questionText = currentQuestion;
-          
-        } else if (line.match(/^[A-D][\)\.]?\s*/)) {
-          // Multiple choice option
-          answerOptions.push(line);
-          
-        } else if (line.match(/^Answer:\s*/)) {
-          // Extract correct answer
-          correctAnswer = line.replace(/^Answer:\s*/, '');
-          
-        } else if (line.match(/^(True|False)$/i)) {
-          // True/False answer
-          if (answerOptions.length === 0) {
-            answerOptions = ['True', 'False'];
-          }
-          if (!correctAnswer) {
-            correctAnswer = line;
-          }
-          
-        } else if (currentQuestion && !line.match(/^(Q\d+|Answer:)/)) {
-          // Continue question text or might be an answer
-          if (line.match(/^[A-D][\)\.]?\s*/)) {
-            answerOptions.push(line);
-          } else if (answerOptions.length === 0) {
-            // This is likely continuation of the question
-            currentQuestion += ' ' + line;
+          if (line.match(/^Q\d+[:.]?\s*/)) {
+            question = line.replace(/^Q\d+[:.]?\s*/, '');
+            currentSection = 'question';
+          } else if (line.match(/^[A-D][\)\.]?\s+/)) {
+            options.push(line);
+            currentSection = 'options';
+          } else if (line.match(/^Answer:\s*/)) {
+            correctAnswer = line.replace(/^Answer:\s*/, '').trim();
+            currentSection = 'answer';
+          } else if (line.match(/^Explanation:\s*/)) {
+            explanation = line.replace(/^Explanation:\s*/, '').trim();
+            currentSection = 'explanation';
+          } else if (line.match(/^[A-D]$/)) {
+            // Standalone answer letter
+            if (!correctAnswer) correctAnswer = line;
+          } else {
+            // Continue current section
+            if (currentSection === 'question' && !line.match(/^[A-D][\)\.]?\s/)) {
+              question += ' ' + line;
+            } else if (currentSection === 'explanation') {
+              explanation += ' ' + line;
+            } else if (currentSection === 'answer' && !explanation) {
+              correctAnswer += ' ' + line;
+            }
           }
         }
-      }
+        
+        // Clean up and validate
+        if (question) {
+          questions.push({
+            question: question.trim(),
+            options: options,
+            correct: correctAnswer.trim(),
+            explanation: explanation.trim() || 'No explanation available.',
+            type: questionType
+          });
+        }
+      });
 
-      // Add the last question
-      if (currentQuestion) {
-        questions.push({
-          question: currentQuestion,
-          options: [...answerOptions],
-          correct: correctAnswer.trim(),
-          type: questionType
+      // Debug logging
+      console.log('Parsed questions:', questions);
+      questions.forEach((q, index) => {
+        console.log(`Question ${index + 1}:`, {
+          question: q.question,
+          correct: q.correct,
+          explanation: q.explanation,
+          options: q.options
         });
-      }
+      });
 
-      // Handle different question types
-      questions.forEach(question => {
+      // Handle different question types and add fallbacks
+      questions.forEach((question, index) => {
         if (questionType === 'true-false' && question.options.length === 0) {
           question.options = ['True', 'False'];
         } else if (questionType === 'fill-blank' || questionType === 'short-answer') {
           question.options = []; // No options for text input
+        }
+        
+        // Fallback: if no correct answer found, try to extract from options
+        if (!question.correct && question.options.length > 0) {
+          // Look for patterns like "Answer: A)" or standalone "A"
+          const answerLine = questionsText.split('\n').find(line => 
+            line.trim().match(/^(Answer:\s*)?[A-D][\)\.]?\s*/) && 
+            line.includes(`Q${index + 1}`)
+          );
+          if (answerLine) {
+            const match = answerLine.match(/[A-D]/);
+            if (match) {
+              question.correct = match[0];
+            }
+          }
         }
       });
 
@@ -851,6 +1402,22 @@
       
       // Reset quiz state
       document.getElementById('quizScore').style.display = 'none';
+      
+      // Initialize gamification variables
+      quizScore = 0;
+      correctAnswers = 0;
+      currentStreak = 0;
+      maxStreak = 0;
+      lifelinesUsed = { fiftyFifty: false, hint: false, skip: false };
+      eliminatedOptions = {};
+      
+      // Reset timer
+      timeRemaining = quizQuestions.length * 60; // 1 minute per question
+      isTimerActive = false;
+      
+      // Update score display
+      updateScoreDisplay();
+      updateLifelineButtons();
       updateQuizDisplay();
     }
 
@@ -868,6 +1435,8 @@
       document.getElementById('takeModeBtn').style.background = '#4a90e2';
       
       if (quizQuestions.length > 0) {
+        // Start timer when switching to take mode
+        startTimer();
         updateQuizDisplay();
       }
     }
@@ -880,30 +1449,42 @@
 
       const question = quizQuestions[currentQuestionIndex];
       const questionDiv = document.getElementById('interactiveQuiz');
+      const difficulty = window.currentQuizData.metadata.difficulty || 'medium';
       
       let html = `
-        <div class="question-container">
-          <h3 style="color: #1976d2; margin-bottom: 15px;">
-            Question ${currentQuestionIndex + 1} of ${quizQuestions.length}
-          </h3>
-          <div class="question-text" style="font-size: 1.1em; margin-bottom: 20px; font-weight: 500;">
-            ${question.question}
+        <div class="question-header">
+          <div class="question-number">${currentQuestionIndex + 1}</div>
+          <div class="question-difficulty difficulty-${difficulty}">
+            ${getDifficultyIcon(difficulty)} ${capitalize(difficulty)}
           </div>
-          <div class="answer-options">
+        </div>
+        <div class="question-text" style="font-size: 1.2em; margin-bottom: 25px; font-weight: 500; line-height: 1.4;">
+          ${question.question}
+        </div>
+        <div class="answer-options">
       `;
 
       if (question.options.length > 0) {
         question.options.forEach((option, index) => {
+          // Skip if this is option E or beyond (only show A, B, C, D)
+          if (index >= 4) return;
+          
+          const optionLetter = String.fromCharCode(65 + index); // A, B, C, D
           const optionId = `option_${currentQuestionIndex}_${index}`;
-          const isChecked = userAnswers[currentQuestionIndex] === option ? 'checked' : '';
+          const isSelected = userAnswers[currentQuestionIndex] === option;
+          const isEliminated = eliminatedOptions[currentQuestionIndex] && 
+                              eliminatedOptions[currentQuestionIndex].includes(index);
+          
+          if (isEliminated) return; // Skip eliminated options
           
           html += `
-            <div class="option-container" style="margin-bottom: 12px;">
-              <label style="display: flex; align-items: center; cursor: pointer; padding: 10px; border: 1px solid #ddd; border-radius: 4px; transition: background-color 0.2s;">
-                <input type="radio" name="question_${currentQuestionIndex}" value="${option}" id="${optionId}" ${isChecked} 
-                       onchange="selectAnswer('${option}')" style="margin-right: 10px;">
-                <span style="font-size: 1em;">${option}</span>
-              </label>
+            <div class="enhanced-option ${isSelected ? 'selected' : ''}" 
+                 onclick="selectAnswer('${option.replace(/'/g, '\\\'')}')" 
+                 style="${isEliminated ? 'display: none;' : ''}">
+              <div class="option-content">
+                <div class="option-letter">${optionLetter}</div>
+                <span style="font-size: 1em; flex: 1;">${option}</span>
+              </div>
             </div>
           `;
         });
@@ -911,31 +1492,265 @@
         // For fill-in-the-blank or short answer
         const currentAnswer = userAnswers[currentQuestionIndex] || '';
         html += `
-          <div class="text-answer" style="margin-bottom: 15px;">
+          <div class="enhanced-option">
             <input type="text" id="textAnswer_${currentQuestionIndex}" value="${currentAnswer}" 
                    onchange="selectAnswer(this.value)" 
                    placeholder="Enter your answer here..." 
-                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1em;">
+                   style="width: 100%; padding: 15px; border: none; background: transparent; font-size: 1.1em; outline: none;">
           </div>
         `;
       }
 
       html += `
-          </div>
         </div>
       `;
 
       questionDiv.innerHTML = html;
       
+      // Update progress bar
+      const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+      
       // Update navigation
       updateNavigation();
+      
+      // Hide explanation and hint from previous question
+      document.getElementById('explanationDisplay').classList.remove('show');
+      document.getElementById('hintDisplay').classList.remove('show');
     }
 
     function selectAnswer(answer) {
       userAnswers[currentQuestionIndex] = answer;
       
+      // Update visual selection
+      const options = document.querySelectorAll('.enhanced-option');
+      options.forEach(option => {
+        option.classList.remove('selected');
+        if (option.textContent.includes(answer) || 
+            (option.querySelector('input') && option.querySelector('input').value === answer)) {
+          option.classList.add('selected');
+        }
+      });
+      
       // Update button states
       updateNavigation();
+    }
+
+    // Timer Functions
+    function startTimer() {
+      if (isTimerActive) return;
+      
+      isTimerActive = true;
+      document.getElementById('quizTimer').style.display = 'block';
+      
+      quizTimer = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay();
+        
+        if (timeRemaining <= 0) {
+          clearInterval(quizTimer);
+          timeUpHandler();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timeRemaining / 60);
+      const seconds = timeRemaining % 60;
+      const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      const timerElement = document.getElementById('timerDisplay');
+      const timerContainer = document.getElementById('quizTimer');
+      
+      timerElement.textContent = display;
+      
+      // Add warning styling when time is low
+      if (timeRemaining <= 30) {
+        timerElement.classList.add('timer-warning');
+        timerContainer.classList.add('warning');
+      } else {
+        timerElement.classList.remove('timer-warning');
+        timerContainer.classList.remove('warning');
+      }
+    }
+
+    function timeUpHandler() {
+      isTimerActive = false;
+      showNotification('⏰ Time\'s up! Quiz will be submitted automatically.', 'warning');
+      setTimeout(() => {
+        submitQuiz();
+      }, 2000);
+    }
+
+    // Scoring Functions
+    function updateScoreDisplay() {
+      document.getElementById('currentScore').textContent = quizScore;
+      document.getElementById('correctCount').textContent = correctAnswers;
+      document.getElementById('streakCount').textContent = currentStreak;
+      
+      // Show streak display if streak > 2
+      if (currentStreak > 2) {
+        document.getElementById('streakDisplay').style.display = 'block';
+        document.getElementById('streakNumber').textContent = currentStreak;
+      } else {
+        document.getElementById('streakDisplay').style.display = 'none';
+      }
+    }
+
+    function calculateQuestionScore(isCorrect, timeBonus = true) {
+      let baseScore = 100;
+      
+      // Difficulty multiplier
+      const difficulty = window.currentQuizData.metadata.difficulty || 'medium';
+      const difficultyMultiplier = { easy: 1, medium: 1.5, hard: 2 };
+      
+      // Time bonus (if answered quickly)
+      let timeMultiplier = 1;
+      if (timeBonus && timeRemaining > 0) {
+        const timeSpent = 60 - (timeRemaining % 60);
+        if (timeSpent < 30) timeMultiplier = 1.2;
+      }
+      
+      // Streak bonus
+      let streakMultiplier = 1 + (currentStreak * 0.1);
+      
+      // Lifeline penalty
+      let lifelinePenalty = 1;
+      if (lifelinesUsed.fiftyFifty) lifelinePenalty -= 0.2;
+      if (lifelinesUsed.hint) lifelinePenalty -= 0.3;
+      
+      return Math.round(baseScore * difficultyMultiplier[difficulty] * timeMultiplier * streakMultiplier * lifelinePenalty);
+    }
+
+    // Lifeline Functions
+    function updateLifelineButtons() {
+      document.getElementById('fiftyFiftyBtn').disabled = lifelinesUsed.fiftyFifty;
+      document.getElementById('hintBtn').disabled = lifelinesUsed.hint;
+      document.getElementById('skipBtn').disabled = lifelinesUsed.skip;
+    }
+
+    function useFiftyFifty() {
+      if (lifelinesUsed.fiftyFifty) return;
+      
+      const question = quizQuestions[currentQuestionIndex];
+      if (question.options.length < 4) {
+        showNotification('50:50 can only be used on multiple choice questions with 4 options.', 'warning');
+        return;
+      }
+      
+      lifelinesUsed.fiftyFifty = true;
+      updateLifelineButtons();
+      
+      // Find correct answer index
+      let correctIndex = -1;
+      question.options.forEach((option, index) => {
+        const optionLetter = String.fromCharCode(65 + index);
+        if (question.correct.startsWith(optionLetter)) {
+          correctIndex = index;
+        }
+      });
+      
+      // Eliminate 2 wrong answers
+      const wrongIndices = [];
+      for (let i = 0; i < question.options.length; i++) {
+        if (i !== correctIndex) wrongIndices.push(i);
+      }
+      
+      // Randomly select 2 wrong answers to eliminate
+      const toEliminate = wrongIndices.sort(() => 0.5 - Math.random()).slice(0, 2);
+      eliminatedOptions[currentQuestionIndex] = toEliminate;
+      
+      // Re-render question
+      updateQuizDisplay();
+      showNotification('🎯 50:50 used! Two incorrect options eliminated.', 'success');
+    }
+
+    async function useHint() {
+      if (lifelinesUsed.hint) return;
+      
+      lifelinesUsed.hint = true;
+      updateLifelineButtons();
+      
+      const question = quizQuestions[currentQuestionIndex];
+      
+      try {
+        showNotification('💡 Getting AI hint...', 'info');
+        
+        // Use the existing Q&A API to get a hint
+        const response = await fetch('/api/qa', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            question: `Give me a helpful hint for this question without revealing the answer: ${question.question}`,
+            context: window.currentQuizData.title
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          document.getElementById('hintText').textContent = data.answer;
+          document.getElementById('hintDisplay').classList.add('show');
+          showNotification('💡 Hint revealed!', 'success');
+        } else {
+          showNotification('❌ Could not get hint. Try again.', 'error');
+          lifelinesUsed.hint = false;
+          updateLifelineButtons();
+        }
+      } catch (error) {
+        showNotification('❌ Could not get hint. Try again.', 'error');
+        lifelinesUsed.hint = false;
+        updateLifelineButtons();
+      }
+    }
+
+    function skipQuestion() {
+      if (lifelinesUsed.skip) return;
+      
+      lifelinesUsed.skip = true;
+      updateLifelineButtons();
+      
+      // Mark as skipped and move to next
+      userAnswers[currentQuestionIndex] = '[SKIPPED]';
+      showNotification('⏭️ Question skipped!', 'info');
+      
+      if (currentQuestionIndex < quizQuestions.length - 1) {
+        setTimeout(() => {
+          nextQuestion();
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          submitQuiz();
+        }, 1000);
+      }
+    }
+
+    // Notification System
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = 'achievement-popup';
+      notification.innerHTML = `
+        <div style="font-weight: bold; margin-bottom: 5px;">${message}</div>
+      `;
+      
+      // Set color based on type
+      const colors = {
+        success: '#28a745',
+        warning: '#ffc107',
+        error: '#dc3545',
+        info: '#007bff'
+      };
+      
+      notification.style.borderColor = colors[type] || colors.info;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideInRight 0.5s ease reverse';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 500);
+      }, 3000);
     }
 
     function updateNavigation() {
@@ -975,6 +1790,12 @@
     }
 
     function submitQuiz() {
+      // Stop timer
+      if (quizTimer) {
+        clearInterval(quizTimer);
+        isTimerActive = false;
+      }
+      
       const score = calculateScore();
       displayResults(score);
       
@@ -986,51 +1807,80 @@
       let correct = 0;
       let total = quizQuestions.length;
       const results = [];
+      let finalScore = 0;
+      let currentStreakCount = 0;
+      let maxStreakCount = 0;
 
       quizQuestions.forEach((question, index) => {
         const userAnswer = userAnswers[index];
         const correctAnswer = question.correct;
         
         let isCorrect = false;
+        let wasSkipped = userAnswer === '[SKIPPED]';
         
-        if (question.type === 'multiple-choice') {
-          // For multiple choice, check if the selected option matches the correct answer
-          if (userAnswer && correctAnswer) {
-            const userOption = userAnswer.charAt(0).toUpperCase(); // Get A, B, C, or D
-            const correctOption = correctAnswer.charAt(0).toUpperCase();
-            isCorrect = userOption === correctOption;
-          }
-        } else if (question.type === 'true-false') {
-          // Direct comparison for true/false
-          isCorrect = userAnswer && correctAnswer && 
-                     userAnswer.toLowerCase() === correctAnswer.toLowerCase();
-        } else {
-          // For fill-in-the-blank or short answer, use flexible matching
-          if (userAnswer && correctAnswer) {
-            const userAnswerClean = userAnswer.toLowerCase().trim();
-            const correctAnswerClean = correctAnswer.toLowerCase().trim();
-            
-            // Check for exact match first
-            if (userAnswerClean === correctAnswerClean) {
-              isCorrect = true;
-            } else {
-              // Check for partial matches (contains)
-              const userWords = userAnswerClean.split(/\s+/);
-              const correctWords = correctAnswerClean.split(/\s+/);
+        if (!wasSkipped) {
+          if (question.type === 'multiple-choice') {
+            // For multiple choice, check if the selected option matches the correct answer
+            if (userAnswer && correctAnswer) {
+              const userOption = userAnswer.charAt(0).toUpperCase(); // Get A, B, C, or D
+              const correctOption = correctAnswer.charAt(0).toUpperCase();
+              isCorrect = userOption === correctOption;
+            }
+          } else if (question.type === 'true-false') {
+            // Direct comparison for true/false
+            isCorrect = userAnswer && correctAnswer && 
+                       userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+          } else {
+            // For fill-in-the-blank or short answer, use flexible matching
+            if (userAnswer && correctAnswer) {
+              const userAnswerClean = userAnswer.toLowerCase().trim();
+              const correctAnswerClean = correctAnswer.toLowerCase().trim();
               
-              // If the correct answer is contained in user answer or vice versa
-              isCorrect = userWords.some(word => correctWords.includes(word)) ||
-                         correctWords.some(word => userWords.includes(word));
+              // Check for exact match first
+              if (userAnswerClean === correctAnswerClean) {
+                isCorrect = true;
+              } else {
+                // Check for partial matches (contains)
+                const userWords = userAnswerClean.split(/\s+/);
+                const correctWords = correctAnswerClean.split(/\s+/);
+                
+                // If the correct answer is contained in user answer or vice versa
+                isCorrect = userWords.some(word => correctWords.includes(word)) ||
+                           correctWords.some(word => userWords.includes(word));
+              }
             }
           }
         }
 
-        if (isCorrect) correct++;
+        if (isCorrect) {
+          correct++;
+          currentStreakCount++;
+          maxStreakCount = Math.max(maxStreakCount, currentStreakCount);
+          
+          // Calculate score for this question
+          finalScore += calculateQuestionScore(true);
+        } else {
+          currentStreakCount = 0;
+          if (!wasSkipped) {
+            // Small penalty for wrong answers
+            finalScore = Math.max(0, finalScore - 10);
+          }
+        }
         
         results.push({
           question: question.question,
-          userAnswer: userAnswer || 'No answer',
+          userAnswer: wasSkipped ? 'Skipped' : (userAnswer || 'No answer'),
           correctAnswer: correctAnswer,
+          explanation: question.explanation || 'No explanation available.',
+          isCorrect: isCorrect,
+          wasSkipped: wasSkipped
+        });
+        
+        // Debug logging
+        console.log(`Question ${index + 1} result:`, {
+          userAnswer: wasSkipped ? 'Skipped' : (userAnswer || 'No answer'),
+          correctAnswer: correctAnswer,
+          explanation: question.explanation,
           isCorrect: isCorrect
         });
       });
@@ -1039,54 +1889,122 @@
         correct: correct,
         total: total,
         percentage: Math.round((correct / total) * 100),
-        results: results
+        finalScore: finalScore,
+        maxStreak: maxStreakCount,
+        results: results,
+        timeBonus: timeRemaining > 0 ? Math.round(timeRemaining / 10) : 0
       };
     }
 
     function displayResults(score) {
       const scoreDiv = document.getElementById('quizScore');
-      const scoreDisplay = document.getElementById('scoreDisplay');
+      const scoreDisplay = document.getElementById('finalScoreDisplay');
       const detailedResults = document.getElementById('detailedResults');
       
       // Get score color and message
       let scoreColor = '#28a745'; // Green
-      let scoreMessage = 'Excellent!';
+      let scoreMessage = 'Excellent! 🏆';
+      let achievement = '';
       
       if (score.percentage < 60) {
         scoreColor = '#dc3545'; // Red
-        scoreMessage = 'Keep studying!';
+        scoreMessage = 'Keep studying! 📚';
       } else if (score.percentage < 80) {
         scoreColor = '#ffc107'; // Yellow
-        scoreMessage = 'Good job!';
+        scoreMessage = 'Good job! 👍';
       }
       
+      // Check for achievements
+      if (score.percentage === 100) {
+        achievement = '🏆 Perfect Score!';
+      } else if (score.maxStreak === score.total && score.percentage > 80) {
+        achievement = '🔥 Flawless Victory!';
+      } else if (score.maxStreak >= 5) {
+        achievement = '⚡ Streak Master!';
+      } else if (score.timeBonus > 100) {
+        achievement = '⚡ Speed Demon!';
+      }
+      
+      // Calculate final grade
+      let grade = 'F';
+      if (score.percentage >= 90) grade = 'A+';
+      else if (score.percentage >= 80) grade = 'A';
+      else if (score.percentage >= 70) grade = 'B';
+      else if (score.percentage >= 60) grade = 'C';
+      else if (score.percentage >= 50) grade = 'D';
+      
       scoreDisplay.innerHTML = `
-        <div style="text-align: center; font-size: 1.5em; color: ${scoreColor}; margin-bottom: 10px;">
-          🎯 Your Score: ${score.correct}/${score.total} (${score.percentage}%)
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div style="font-size: 3em; color: ${scoreColor}; margin-bottom: 10px;">${grade}</div>
+          <div style="font-size: 1.5em; color: ${scoreColor}; margin-bottom: 10px;">
+            ${score.correct}/${score.total} Correct (${score.percentage}%)
+          </div>
+          <div style="font-size: 1.2em; color: ${scoreColor}; font-weight: bold; margin-bottom: 10px;">
+            ${scoreMessage}
+          </div>
+          ${achievement ? `<div style="font-size: 1.1em; color: #ff6b35; font-weight: bold; margin-bottom: 15px;">${achievement}</div>` : ''}
         </div>
-        <div style="text-align: center; font-size: 1.2em; color: ${scoreColor}; font-weight: bold;">
-          ${scoreMessage}
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; text-align: center; margin-bottom: 20px;">
+          <div style="background: var(--tertiary-bg); padding: 15px; border-radius: 8px;">
+            <div style="font-size: 1.5em; font-weight: bold; color: var(--accent-primary);">${score.finalScore}</div>
+            <div style="font-size: 0.9em; color: var(--text-secondary);">Total Points</div>
+          </div>
+          <div style="background: var(--tertiary-bg); padding: 15px; border-radius: 8px;">
+            <div style="font-size: 1.5em; font-weight: bold; color: var(--warning-color);">${score.maxStreak}</div>
+            <div style="font-size: 0.9em; color: var(--text-secondary);">Max Streak</div>
+          </div>
+          <div style="background: var(--tertiary-bg); padding: 15px; border-radius: 8px;">
+            <div style="font-size: 1.5em; font-weight: bold; color: var(--success-color);">${score.timeBonus}</div>
+            <div style="font-size: 0.9em; color: var(--text-secondary);">Time Bonus</div>
+          </div>
         </div>
       `;
       
-      // Show detailed results
-      let detailedHtml = '<h4>📋 Detailed Results:</h4>';
+      // Show detailed results with explanations
+      let detailedHtml = '<h4 style="margin-bottom: 20px;">📋 Detailed Review:</h4>';
       score.results.forEach((result, index) => {
-        const icon = result.isCorrect ? '✅' : '❌';
-        const color = result.isCorrect ? '#28a745' : '#dc3545';
+        const icon = result.wasSkipped ? '⏭️' : (result.isCorrect ? '✅' : '❌');
+        let color = result.wasSkipped ? '#6c757d' : (result.isCorrect ? '#28a745' : '#dc3545');
+        let bgColor = result.wasSkipped ? '#f8f9fa' : (result.isCorrect ? '#d4edda' : '#f8d7da');
         
         detailedHtml += `
-          <div style="margin-bottom: 15px; padding: 10px; border-left: 4px solid ${color}; background: ${result.isCorrect ? '#d4edda' : '#f8d7da'};">
-            <div style="font-weight: bold; color: ${color};">${icon} Question ${index + 1}</div>
-            <div style="margin: 5px 0; font-size: 0.9em;">${result.question}</div>
-            <div style="margin: 5px 0; font-size: 0.9em;"><strong>Your Answer:</strong> ${result.userAnswer}</div>
-            <div style="margin: 5px 0; font-size: 0.9em;"><strong>Correct Answer:</strong> ${result.correctAnswer}</div>
+          <div style="margin-bottom: 20px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid ${color};">
+            <div style="background: ${bgColor}; padding: 15px; border-bottom: 1px solid ${color};">
+              <div style="font-weight: bold; color: ${color}; display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <span style="font-size: 1.2em;">${icon}</span>
+                <span>Question ${index + 1}</span>
+              </div>
+              <div style="margin-bottom: 10px; font-size: 1em; line-height: 1.4;">${result.question}</div>
+              
+              <div style="display: grid; gap: 8px; font-size: 0.9em;">
+                <div><strong>Your Answer:</strong> <span style="color: ${color};">${result.userAnswer}</span></div>
+                <div><strong>Correct Answer:</strong> <span style="color: #28a745;">${result.correctAnswer}</span></div>
+              </div>
+            </div>
+            
+            ${result.explanation ? `
+              <div style="background: var(--surface-bg); padding: 15px;">
+                <div style="font-weight: bold; color: var(--accent-secondary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                  <span>💡</span>
+                  <span>Explanation:</span>
+                </div>
+                <div style="color: var(--text-secondary); line-height: 1.4;">${result.explanation}</div>
+              </div>
+            ` : ''}
           </div>
         `;
       });
       
       detailedResults.innerHTML = detailedHtml;
       scoreDiv.style.display = 'block';
+      
+      // Show achievement notification if any
+      if (achievement) {
+        setTimeout(() => {
+          showNotification(achievement, 'success');
+        }, 1000);
+      }
     }
 
     function reviewAnswers() {
@@ -1097,12 +2015,33 @@
     }
 
     function retakeQuiz() {
-      // Reset user answers and start over
+      // Reset all game state
       userAnswers = {};
       currentQuestionIndex = 0;
+      quizScore = 0;
+      correctAnswers = 0;
+      currentStreak = 0;
+      maxStreak = 0;
+      lifelinesUsed = { fiftyFifty: false, hint: false, skip: false };
+      eliminatedOptions = {};
+      
+      // Reset timer
+      if (quizTimer) {
+        clearInterval(quizTimer);
+      }
+      timeRemaining = quizQuestions.length * 60;
+      isTimerActive = false;
+      
+      // Hide results and show quiz
       document.getElementById('quizScore').style.display = 'none';
       switchToTakeMode();
+      
+      // Update displays
+      updateScoreDisplay();
+      updateLifelineButtons();
       updateQuizDisplay();
+      
+      showNotification('🔄 Quiz reset! Good luck!', 'info');
     }
 
     // Mobile Navigation Toggle

@@ -109,14 +109,64 @@ COMPREHENSIVE ANALYSIS REQUIREMENTS:
 `;
           break;
         case 'structured':
-          prompt += `FORMAT: Present the comprehensive summary with clear headings and detailed sections:
-- Use descriptive headings for each major topic and subtopic
+          prompt += `FORMAT: Present the comprehensive summary with clear headings and detailed sections using this enhanced structure:
+
+REQUIRED FORMAT STRUCTURE:
+📝 Summary
+[Main Topic]: Comprehensive Summary
+
+[Primary Category Heading]
+• Key Point: Detailed information
+• Key Point: Detailed information
+
+[Secondary Category Heading]  
+• Key Point: Detailed information
+○ Sub-detail with specific context
+○ Sub-detail with specific context
+• Key Point: Detailed information
+○ Sub-detail with specific context
+
+[Additional Category Headings as needed]
+• Comprehensive details with context
+• Include ALL relevant facts, dates, names, numbers
+• Provide explanations and implications
+
+EXAMPLE FORMAT (adapt to your content):
+📝 Summary
+John Smith: Comprehensive Summary
+
+Biographical Overview
+• Identity: American scientist and researcher
+• Position: Professor of Biology at University
+
+Professional Background
+• Education: PhD in Biology from Harvard University (1985)
+○ Specialized in molecular genetics
+○ Dissertation on cellular metabolism
+• Career: 30+ years in academic research
+○ Published 150+ peer-reviewed papers
+○ Led groundbreaking studies on gene expression
+
+Major Contributions
+• Research Focus: Genetic engineering applications
+○ Developed new CRISPR techniques (2010-2015)
+○ Advanced understanding of DNA repair mechanisms
+• Awards: Nobel Prize recipient (2020)
+○ Recognition for contributions to genetic medicine
+○ International acclaim for breakthrough discoveries
+
+Use this exact format:
+- Start with "📝 Summary" emoji and heading
+- Use descriptive main headings for major topics
+- Use bullet points (•) for main points under each heading  
+- Use circle bullets (○) for sub-details and elaborations
 - Include comprehensive, detailed content under each heading
 - Cover ALL aspects of the original text with appropriate headings
 - Use subheadings for complex topics and detailed breakdowns
 - Include specific details, examples, data, and context in each section
 - Ensure logical organization and complete coverage
 - Make each section substantive and informative
+- Organize information hierarchically from general to specific
 
 `;
           break;
@@ -254,6 +304,35 @@ COMPREHENSIVE ANALYSIS REQUIREMENTS:
 - Include ALL supporting evidence, examples, and contextual information
 - Verify that all key concepts, facts, and relationships are covered
 - Ensure the summary serves as a complete substitute for the original text
+
+FORMATTING INSTRUCTIONS:
+- Use simple HTML tags for structure.
+- Use <h2> for main headings and <h3> for subheadings.
+- Use <strong> for bold text and <em> for italics.
+- Use <ul> and <li> for bullet points.
+- Do NOT use Markdown syntax like '##' or '**'.
+- Avoid long, unbroken paragraphs of more than 5-7 sentences.
+- Do not use complex or nested sentence structures unless necessary.
+- Break down information into scannable chunks for better readability.
+- Use clear topic sentences and logical paragraph organization.
+- Include proper spacing between sections and concepts.
+- Structure content with appropriate headings to guide the reader.
+- Make lists when presenting multiple related items or concepts.
+- Use emphasis (bold/italics) strategically to highlight key information.
+
+READABILITY ENHANCEMENT:
+1. Leverage User-Facing Options for Readability and Quality:
+   - Structure content based on the summary type for optimal scanning
+   - Break information into digestible sections with clear headings
+   - Use bullet points for lists of facts, features, or key points
+   - Emphasize important terms and concepts with <strong> tags
+   
+2. Enhanced Frontend Rendering Considerations:
+   - Output clean HTML that renders properly without additional parsing
+   - Use semantic HTML tags that work well with CSS styling
+   - Ensure proper hierarchy with heading levels (h2, h3)
+   - Include spacing elements naturally in the content structure
+   - Make quotations stand out with proper HTML formatting
 
 TEXT TO SUMMARIZE:
 ${contentToSummarize}

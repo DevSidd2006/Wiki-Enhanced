@@ -107,6 +107,7 @@ B) [Option B]
 C) [Option C]
 D) [Option D]
 Answer: [Correct letter]
+Explanation: [Brief reason why the answer is correct]
 
 `;
     }
@@ -115,6 +116,7 @@ Answer: [Correct letter]
       prompt += `\nFormat each true/false question as:
 Q1: [Statement]
 Answer: True/False
+Explanation: [Brief reason why the answer is correct]
 
 `;
     }
@@ -123,6 +125,7 @@ Answer: True/False
       prompt += `\nFormat each fill-in-the-blank question as:
 Q1: [Statement with ______ for missing word(s)]
 Answer: [Correct word(s)]
+Explanation: [Brief reason why this is the correct answer]
 
 `;
     }
@@ -131,15 +134,16 @@ Answer: [Correct word(s)]
       prompt += `\nFormat each short answer question as:
 Q1: [Question]
 Answer: [Expected answer in 1-2 sentences]
+Explanation: [Brief justification for this answer]
 
 `;
     }
     
-    prompt += `\n(Repeat for each question)`;
+    prompt += `\n(Repeat for each question)
     
-    const questions = await callOpenRouter(prompt);
-    
-    return res.status(200).json({ 
+IMPORTANT: For each question, provide a concise "Explanation:" that helps the user understand why the answer is correct. This will be used for learning and review purposes.`;
+
+    const questions = await callOpenRouter(prompt);    return res.status(200).json({ 
       questions,
       metadata: {
         difficulty: difficulty || 'medium',

@@ -50,48 +50,57 @@ export default async function handler(req, res) {
     let prompt;
     
     if (chatMode === 'general') {
-      // General AI chatbot mode
-      prompt = `You are a helpful AI assistant. Provide a comprehensive and accurate answer to the following question:
+      // Enhanced general AI chatbot mode with structured markdown output
+      prompt = `You are a helpful and knowledgeable AI assistant. Your goal is to provide clear, accurate, and easy-to-understand answers.
 
-Question: ${question}
+**Instructions for your response:**
+1. **Directly Answer:** Start with a direct answer to the user's question.
+2. **Explain Simply:** Break down complex topics into simple, digestible points. Use analogies if helpful.
+3. **Use Markdown:** Structure your answer with Markdown for readability.
+   * Use headings (\`##\`, \`###\`) for different sections.
+   * Use bullet points (\`*\` or \`-\`) for lists.
+   * Use bold text (\`**text**\`) to highlight key terms.
+4. **Provide Examples:** If the topic allows, include a relevant example to illustrate your point.
+5. **Be Conversational:** Maintain a friendly, engaging tone while being informative.
 
-Please provide a detailed answer that:
-1. Directly addresses the question
-2. Is factually accurate and up-to-date
-3. Is well-structured and easy to understand
-4. Includes relevant examples or explanations when helpful
-5. Is conversational and engaging
+**Question:** ${question}
 
-Answer:`;
+**Answer:**`;
     } else if (context) {
-      // Context-aware mode (Wikipedia article or custom context)
-      prompt = `Based on the following context and general knowledge, provide a comprehensive and accurate answer to the question:
+      // Enhanced context-aware mode with structured markdown output
+      prompt = `You are an expert AI assistant tasked with answering questions based on the provided context and your knowledge.
 
-Context: ${context}
+**Instructions for your response:**
+1. **Synthesize, Don't Copy:** Your primary goal is to synthesize information from the context to form a clear answer. Avoid quoting long passages directly.
+2. **Use Markdown:** Structure your answer with Markdown for readability (headings, bullet points, bold text).
+3. **Structure the Answer:**
+   * **Direct Answer:** Begin with a concise, direct answer.
+   * **Key Points:** Follow up with a bulleted list of the most important details from the context that support your answer.
+   * **Additional Context:** If helpful, add relevant information from your general knowledge.
+4. **Cite Information:** When using specific information from the context, mention "according to the article" or similar phrasing.
+5. **Be Comprehensive:** Provide a thorough answer that fully addresses the question.
 
-Question: ${question}
+**Context:** """${context}"""
 
-Please provide a detailed answer that:
-1. Directly addresses the question
-2. Uses information from the context when relevant
-3. Supplements with additional knowledge when helpful
-4. Is clear and well-structured
-5. Cites specific information from the context when applicable
+**Question:** ${question}
 
-Answer:`;
+**Answer:**`;
     } else {
-      // Default mode
-      prompt = `Provide a comprehensive and accurate answer to the following question based on your knowledge:
+      // Enhanced default mode with structured markdown output
+      prompt = `You are a knowledgeable AI assistant. Provide a comprehensive and well-structured answer to the following question.
 
-Question: ${question}
+**Instructions for your response:**
+1. **Direct Answer:** Start with a clear, direct answer to the question.
+2. **Use Markdown:** Structure your response with proper Markdown formatting:
+   * Use headings (\`##\`, \`###\`) to organize sections.
+   * Use bullet points (\`*\` or \`-\`) for lists.
+   * Use bold text (\`**text**\`) for emphasis.
+3. **Explain Thoroughly:** Provide detailed explanations with examples when helpful.
+4. **Ensure Accuracy:** Make sure all information is factually correct and up-to-date.
 
-Please provide a detailed answer that:
-1. Directly addresses the question
-2. Is factually accurate
-3. Is well-structured and easy to understand
-4. Includes relevant examples or explanations when helpful
+**Question:** ${question}
 
-Answer:`;
+**Answer:**`;
     }
 
     const answer = await callOpenRouter(prompt);
