@@ -2,18 +2,15 @@ import dotenv from 'dotenv';
 
 // Load environment variables
 dotenv.config();
-
-async function callOpenRouter(prompt) {
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+async function callGroq(prompt) {
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      "HTTP-Referer": "http://localhost:3000",
-      "X-Title": "Wikipedia Enhanced",
+      "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      "model": "deepseek/deepseek-r1:free",
+      "model": "llama-3.1-8b-instant",
       "messages": [
         {
           "role": "user",
@@ -24,7 +21,7 @@ async function callOpenRouter(prompt) {
   });
 
   if (!response.ok) {
-    throw new Error(`OpenRouter API error: ${response.status}`);
+    throw new Error(`Groq API error: ${response.status}`);
   }
 
   const data = await response.json();
@@ -103,11 +100,10 @@ export default async function handler(req, res) {
 **Answer:**`;
     }
 
-    const answer = await callOpenRouter(prompt);
-
+    const answer = await callGroq(prompt);
     return res.status(200).json({ answer });
   } catch (error) {
-    console.error("OpenRouter Error:", error);
+    console.error("Groq API Error:", error);
     return res.status(500).json({
       error: "Failed to get response from AI service",
       details: error.message,

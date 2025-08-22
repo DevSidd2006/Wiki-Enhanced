@@ -3,17 +3,15 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
-async function callOpenRouter(prompt) {
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+async function callGroq(prompt) {
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      "HTTP-Referer": "http://localhost:3000",
-      "X-Title": "Wikipedia Enhanced",
+      "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      "model": "deepseek/deepseek-r1:free",
+      "model": "llama-3.1-8b-instant",
       "messages": [
         {
           "role": "user",
@@ -24,7 +22,7 @@ async function callOpenRouter(prompt) {
   });
 
   if (!response.ok) {
-    throw new Error(`OpenRouter API error: ${response.status}`);
+    throw new Error(`Groq API error: ${response.status}`);
   }
 
   const data = await response.json();
@@ -49,7 +47,7 @@ export default async function handler(req, res) {
     let difficultyInstruction = '';
     switch (difficulty) {
       case 'easy':
-        difficultyInstruction = 'Generate easy questions that focus on basic facts and main concepts. Use simple language and straightforward answers.';
+        difficultyInstruction = 'Generate easy questions that test basic recall and understanding.';
         break;
       case 'medium':
         difficultyInstruction = 'Generate medium difficulty questions that require some understanding of the content. Include questions about relationships and explanations.';
@@ -143,7 +141,7 @@ Explanation: [Brief justification for this answer]
     
 IMPORTANT: For each question, provide a concise "Explanation:" that helps the user understand why the answer is correct. This will be used for learning and review purposes.`;
 
-    const questions = await callOpenRouter(prompt);    return res.status(200).json({ 
+  const questions = await callGroq(prompt);    return res.status(200).json({ 
       questions,
       metadata: {
         difficulty: difficulty || 'medium',
@@ -154,7 +152,7 @@ IMPORTANT: For each question, provide a concise "Explanation:" that helps the us
       }
     });
   } catch (error) {
-    console.error("OpenRouter Error (Quiz):", error);
+  console.error("Groq API Error (Quiz):", error);
     return res.status(500).json({ error: 'Failed to generate quiz', details: error.message });
   }
 }

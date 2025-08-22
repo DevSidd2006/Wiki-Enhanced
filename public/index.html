@@ -61,15 +61,21 @@
     
     .featured-image-container {
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
     
     .featured-image {
       max-width: 100%;
+      width: 100%;
+      max-width: 400px;
       height: auto;
       border: 1px solid #a2a9b1;
+      border-radius: 6px;
       cursor: pointer;
       transition: opacity 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: block;
+      margin: 0 auto;
     }
     
     .featured-image:hover {
@@ -78,9 +84,10 @@
     
     .image-credit {
       font-size: 0.85em;
-      color: #555;
-      margin-top: 5px;
+      color: #666;
+      margin-bottom: 12px;
       text-align: center;
+      font-style: italic;
     }
     
     .featured-description {
@@ -1981,12 +1988,9 @@
 
     // Helper function to generate image hash for Wikipedia Commons URLs
     function getImageHash(filename) {
-      // Clean filename and create a simple hash path
-      const clean = filename.replace(/ /g, '_');
-      // Use first 2 characters for the path structure
-      const firstChar = clean.charAt(0).toUpperCase();
-      const secondChar = clean.length > 1 ? clean.charAt(1).toUpperCase() : firstChar;
-      return `${firstChar}/${firstChar}${secondChar}`;
+      // For simplicity, use direct URLs without complex hashing
+      // Wikipedia Commons allows direct access to many images
+      return "direct";
     }
 
     // Featured Picture of the Day
@@ -2006,46 +2010,53 @@
         let imageTitle = null;
         let fallbackImages = [
           {
-            title: "Southern scrub robin",
-            filename: "Drymodes_brunneopygia_-_Nombinnie.jpg",
-            description: "The southern scrub robin (Drymodes brunneopygia) is a species of bird in the family Petroicidae, the Australasian robins. It is endemic to Australia, where it occurs in mallee and heathland in the semi-arid southern parts of the continent. Its range includes several disjoint regions from central New South Wales through western Victoria and southern South Australia, through to the southwestern area of Western Australia.",
-            photographer: "JJ Harrison"
-          },
-          {
             title: "Great red spot",
-            filename: "Jupiter_by_Cassini-Huygens.jpg",
+            imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Jupiter_by_Cassini-Huygens.jpg/400px-Jupiter_by_Cassini-Huygens.jpg",
+            fullImageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e2/Jupiter_by_Cassini-Huygens.jpg",
             description: "Jupiter is the fifth planet from the Sun and the largest in the Solar System. It is a gas giant with a mass one-thousandth that of the Sun, but two-and-a-half times that of all the other planets in the Solar System combined. This image shows Jupiter's Great Red Spot, a persistent anticyclonic storm located 22° south of the equator.",
             photographer: "NASA/JPL/Space Science Institute"
           },
           {
-            title: "Lake Bled",
-            filename: "Lake_Bled_from_Vintgar_gorge.jpg",
-            description: "Lake Bled is a lake in the Julian Alps of the Upper Carniolan region of northwestern Slovenia, where it adjoins the town of Bled. The area is a tourist destination. The lake is 35 kilometres (22 mi) from Ljubljana International Airport and 55 kilometres (34 mi) from the capital city, Ljubljana.",
-            photographer: "Janez Novak"
+            title: "Earth from space",
+            imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/The_Earth_seen_from_Apollo_17.jpg/400px-The_Earth_seen_from_Apollo_17.jpg",
+            fullImageUrl: "https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg",
+            description: "The Blue Marble is an image of Earth taken on December 7, 1972, by the Apollo 17 crew Harrison Schmitt and Ron Evans from a distance of about 29,000 kilometers from Earth's surface. It shows Africa, Antarctica, and the Arabian Peninsula.",
+            photographer: "NASA/Apollo 17 crew"
+          },
+          {
+            title: "Mona Lisa",
+            imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/400px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
+            fullImageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
+            description: "The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci. Considered an archetypal masterpiece of the Italian Renaissance, it has been described as 'the best known, the most visited, the most written about, the most sung about, the most parodied work of art in the world'.",
+            photographer: "Leonardo da Vinci"
           },
           {
             title: "Northern lights",
-            filename: "Aurora_Borealis_over_Lyngenfjord.jpg",
+            imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Polarlicht_2.jpg/400px-Polarlicht_2.jpg",
+            fullImageUrl: "https://upload.wikimedia.org/wikipedia/commons/a/aa/Polarlicht_2.jpg",
             description: "The aurora borealis, commonly known as the northern lights, is a natural light display in Earth's sky, predominantly seen in high-latitude regions around the Arctic and Antarctic. Auroras display dynamic patterns of brilliant lights that appear as curtains, rays, spirals, or dynamic flickers covering the entire sky.",
             photographer: "Bjørn Christian Tørrissen"
           },
           {
-            title: "Cherry blossoms",
-            filename: "Cherry_Blossoms_and_the_Washington_Monument.jpg",
-            description: "The cherry blossoms in Washington, D.C., are a major tourist attraction and a symbol of the friendship between Japan and the United States. The National Cherry Blossom Festival is held each spring to celebrate the 1912 gift of 3,000 cherry trees from Tokyo to Washington, D.C.",
-            photographer: "AgnosticPreachersKid"
+            title: "Sunflower field",
+            imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Sunflower_sky_backdrop.jpg/400px-Sunflower_sky_backdrop.jpg",
+            fullImageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/40/Sunflower_sky_backdrop.jpg",
+            description: "The sunflower (Helianthus annuus) is a large annual forb of the genus Helianthus grown as a crop for its edible oil and seeds. This image shows a field of sunflowers against a dramatic sky backdrop.",
+            photographer: "Alvesgaspar"
           },
           {
-            title: "Sunset over ocean",
-            filename: "Sunset_over_the_Pacific_Ocean.jpg",
-            description: "A sunset is the daily disappearance of the Sun below the horizon due to Earth's rotation. The time of sunset is defined in astronomy as the moment when the upper limb of the Sun disappears below the horizon. This spectacular sunset was captured over the Pacific Ocean.",
-            photographer: "Unknown photographer"
+            title: "Milky Way galaxy",
+            imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/ESO-VLT-Laser-phot-33a-07.jpg/400px-ESO-VLT-Laser-phot-33a-07.jpg",
+            fullImageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/43/ESO-VLT-Laser-phot-33a-07.jpg",
+            description: "The Milky Way is the galaxy that includes our Solar System, with the name describing the galaxy's appearance from Earth: a hazy band of light seen in the night sky formed from stars that cannot be individually distinguished by the naked eye.",
+            photographer: "European Southern Observatory"
           },
           {
             title: "Mountain landscape",
-            filename: "Mount_McKinley_wonder_lake.jpg",
-            description: "Denali, also known as Mount McKinley, is the highest mountain peak in North America, with a summit elevation of 20,310 feet (6,190 m) above sea level. The mountain is located in Alaska's Denali National Park and Preserve.",
-            photographer: "National Park Service"
+            imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg/400px-Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+            fullImageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg",
+            description: "Mount Everest is Earth's highest mountain above sea level, located in the Mahalangur Himal sub-range of the Himalayas. The China–Nepal border runs across its summit point. This view shows the north face of Everest toward Base Camp in Tibet.",
+            photographer: "Luca Galuzzi"
           }
         ];
         
@@ -2053,21 +2064,22 @@
         const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
         const selectedImage = fallbackImages[dayOfYear % fallbackImages.length];
         
-        // Create the featured picture content
-        const imageFilename = selectedImage.filename;
-        const hash = getImageHash(imageFilename);
-        const imageUrl = `https://upload.wikimedia.org/wikipedia/commons/thumb/${hash}/${imageFilename}/400px-${imageFilename}`;
-        const fullImageUrl = `https://upload.wikimedia.org/wikipedia/commons/${hash}/${imageFilename}`;
+        // Use the direct URLs from the selected image
+        const imageUrl = selectedImage.imageUrl;
+        const fullImageUrl = selectedImage.fullImageUrl;
         
         container.innerHTML = `
-          <div class="featured-image-container">
+          <div class="featured-image-container" style="margin-bottom: 12px;">
             <img src="${imageUrl}" 
                  alt="${selectedImage.title}" 
                  class="featured-image"
                  onclick="openFeaturedImageModal('${fullImageUrl}', '${selectedImage.title}', '${selectedImage.photographer}')"
-                 onerror="this.src='https://via.placeholder.com/400x300/f0f0f0/666?text=Featured+Picture+Loading...'">
+                 onerror="this.src='https://via.placeholder.com/400x300/f0f0f0/666?text=Featured+Picture+Loading...'"
+                 style="width: 100%; height: auto; max-width: 400px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: block; margin: 0 auto;">
           </div>
-          <div class="image-credit">Photograph credit: ${selectedImage.photographer}</div>
+          <div class="image-credit" style="text-align: center; font-size: 0.85em; color: #666; margin-bottom: 12px; font-style: italic;">
+            Photograph credit: ${selectedImage.photographer}
+          </div>
           <div class="featured-description">
             <p>The <a href="#" onclick="showArticleModal('${selectedImage.title}'); return false;" class="featured-title">${selectedImage.title}</a> ${selectedImage.description}</p>
             <div class="featured-links">

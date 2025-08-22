@@ -337,19 +337,18 @@ READABILITY ENHANCEMENT:
 TEXT TO SUMMARIZE:
 ${contentToSummarize}
 
+
 Begin your comprehensive, detailed summary now:`;
 
-    // Make request to OpenRouter API
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    // Make request to Groq API
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': process.env.SITE_URL || 'http://localhost:3000',
-        'X-Title': 'Wiki Enhanced'
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'deepseek/deepseek-r1:free',
+        model: 'llama3-70b-8192',
         messages: [
           {
             role: 'user',
@@ -363,7 +362,7 @@ Begin your comprehensive, detailed summary now:`;
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      console.error('OpenRouter API Error:', response.status, errorData);
+  console.error('Groq API Error:', response.status, errorData);
       
       if (response.status === 429) {
         return res.status(429).json({ 
@@ -387,7 +386,7 @@ Begin your comprehensive, detailed summary now:`;
     const summary = data.choices?.[0]?.message?.content;
 
     if (!summary) {
-      console.error('Invalid OpenRouter response:', data);
+  console.error('Invalid Groq response:', data);
       return res.status(500).json({ 
         error: 'Failed to generate summary. Please try again.',
         details: 'Invalid response format'
@@ -408,7 +407,7 @@ Begin your comprehensive, detailed summary now:`;
       }
     });
   } catch (error) {
-    console.error("OpenRouter Error (Summarize):", error);
+  console.error("Groq API Error (Summarize):", error);
     
     if (error.name === 'AbortError') {
       return res.status(408).json({ 
@@ -421,5 +420,6 @@ Begin your comprehensive, detailed summary now:`;
       error: 'Summarization service error. Please try again.',
       details: error.message 
     });
+ 
   }
 }
