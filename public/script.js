@@ -305,7 +305,11 @@ function initTheme() {
       const wikiData = await wikiResponse.json();
 
       if (!wikiData.extract) {
-        contentDiv.innerHTML = `<div class="error-message">❌ No article found for "${query}". Try a different topic.</div>`;
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = `❌ No article found for "${query}". Try a different topic.`;
+        contentDiv.innerHTML = '';
+        contentDiv.appendChild(errorDiv);
         return;
       }
 

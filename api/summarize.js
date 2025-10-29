@@ -15,8 +15,12 @@ export default async function handler(req, res) {
     const contentToSummarize = text || articleText;
     if (!contentToSummarize) return res.status(400).json({ error: 'Missing required field: text or articleText' });
     
+    // Validate and normalize comprehensiveMode
+    const validComprehensiveModes = ['standard', 'comprehensive', 'exhaustive'];
+    const normalizedMode = validComprehensiveModes.includes(comprehensiveMode) ? comprehensiveMode : 'standard';
+    
     // Build optimized prompt for summarization
-    let prompt = `You are an expert summarizer. Create a ${comprehensiveMode || 'standard'} summary capturing key information.
+    let prompt = `You are an expert summarizer. Create a ${normalizedMode} summary capturing key information.
 
 CORE REQUIREMENTS:
 - Include all important facts, dates, names, and concepts
@@ -25,7 +29,7 @@ CORE REQUIREMENTS:
 - Include specific details, data, and evidence
 `;
 
-    // Add format instructions
+    // Add format instructions with validation
     const formatInstructions = {
       'bullet': 'FORMAT: Use hierarchical bullet points (• for main, ○ for sub-points)',
       'paragraph': 'FORMAT: Well-structured paragraphs with clear topic sentences',
@@ -41,11 +45,12 @@ CORE REQUIREMENTS:
       'keypoints': 'FORMAT: Focus on main themes with detailed explanations'
     };
     
-    if (summaryType && formatInstructions[summaryType]) {
-      prompt += `\n${formatInstructions[summaryType]}\n`;
+    if (summaryType) {
+      const formatInstruction = formatInstructions[summaryType] || formatInstructions['paragraph'];
+      prompt += `\n${formatInstruction}\n`;
     }
 
-    // Add length guidance
+    // Add length guidance with validation
     const lengthGuide = {
       'brief': 'LENGTH: Brief (1 paragraph, essential points only)',
       'short': 'LENGTH: Short (1-2 paragraphs)',
@@ -53,8 +58,9 @@ CORE REQUIREMENTS:
       'detailed': 'LENGTH: Detailed (comprehensive coverage)'
     };
     
-    if (length && lengthGuide[length]) {
-      prompt += `${lengthGuide[length]}\n`;
+    if (length) {
+      const lengthInstruction = lengthGuide[length] || lengthGuide['medium'];
+      prompt += `${lengthInstruction}\n`;
     }
 
     // Add focus area
