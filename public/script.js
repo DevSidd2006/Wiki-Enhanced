@@ -1,3 +1,25 @@
+// Utility: Debounce function to limit API calls
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Cache for DOM elements to avoid repeated queries
+const domCache = {};
+function getCachedElement(id) {
+  if (!domCache[id]) {
+    domCache[id] = document.getElementById(id);
+  }
+  return domCache[id];
+}
+
 // Theme handling
 function initTheme() {
     const themeToggle = document.createElement('button');
@@ -84,12 +106,26 @@ function initTheme() {
   }
   
   // Update the searchWikipedia function to redirect overlay results to Wikipedia pages
+  // Cache for search results to avoid redundant API calls
+  const searchCache = new Map();
+  const MAX_CACHE_SIZE = 50;
+  
   function searchWikipedia() {
-    const query = document.getElementById("searchInput").value.trim();
+    const searchInput = getCachedElement("searchInput");
+    if (!searchInput) return;
+    
+    const query = searchInput.value.trim();
     if (!query) {
         showSearchResultsModal('<p>Please enter a search term.</p>');
         return;
     }
+    
+    // Check cache first
+    if (searchCache.has(query)) {
+      showSearchResultsModal(searchCache.get(query));
+      return;
+    }
+    
     const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*`;
     fetch(url)
         .then(response => response.json())
@@ -108,6 +144,15 @@ function initTheme() {
                     </div>
                 `;
             }).join('');
+            
+            // Store in cache
+            if (searchCache.size >= MAX_CACHE_SIZE) {
+              // Remove oldest entry when cache is full
+              const firstKey = searchCache.keys().next().value;
+              searchCache.delete(firstKey);
+            }
+            searchCache.set(query, resultsHtml);
+            
             showSearchResultsModal(resultsHtml);
         })
         .catch(error => {
@@ -116,12 +161,24 @@ function initTheme() {
         });
   }
   
+  // Debounced version for input events
+  const debouncedSearch = debounce(searchWikipedia, 300);
+  
   // Scrolling Animations
+  let scrollObserver = null; // Store observer reference for cleanup
+  
   function initScrollAnimations() {
-    const observer = new IntersectionObserver((entries) => {
+    // Disconnect existing observer if any
+    if (scrollObserver) {
+      scrollObserver.disconnect();
+    }
+    
+    scrollObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          // Unobserve after animation to reduce overhead
+          scrollObserver.unobserve(entry.target);
         }
       });
     }, {
@@ -132,7 +189,7 @@ function initTheme() {
     const elements = document.querySelectorAll('.content > *');
     elements.forEach(element => {
       element.classList.add('visible'); // Ensure visibility by default
-      observer.observe(element);
+      scrollObserver.observe(element);
     });
   
     // Fallback: Ensure all elements are visible after a short delay
@@ -200,19 +257,23 @@ function initTheme() {
   
   // Article Summarizer
   async function fetchAndSummarize() {
-    const query = document.getElementById("summarizerInput").value.trim();
-    const contentDiv = document.getElementById("articleContent");
-    const summaryDiv = document.getElementById("articleSummary");
-  
+    const summarizerInput = getCachedElement("summarizerInput");
+    const contentDiv = getCachedElement("articleContent");
+    const summaryDiv = getCachedElement("articleSummary");
+    
+    if (!summarizerInput || !contentDiv || !summaryDiv) return;
+    
+    const query = summarizerInput.value.trim();
+
     // Clear previous results
     contentDiv.innerHTML = "";
     summaryDiv.innerHTML = "";
-  
+
     if (!query) {
       contentDiv.innerHTML = '<div class="error-message">❌ Please enter a topic to summarize.</div>';
       return;
     }
-  
+
     try {
       // Show loading state for article fetch
       contentDiv.innerHTML = '<div class="loading">⏳ Fetching article from Wikipedia...</div>';
@@ -226,12 +287,12 @@ function initTheme() {
       }
       
       const wikiData = await wikiResponse.json();
-  
+
       if (!wikiData.extract) {
         contentDiv.innerHTML = `<div class="error-message">❌ No article found for "${query}". Try a different topic.</div>`;
         return;
       }
-  
+
       // Display the article content
       contentDiv.innerHTML = `
         <h3>📄 Article Content</h3>
@@ -242,10 +303,10 @@ function initTheme() {
           </a>
         </div>
       `;
-  
+
       // Show loading state for summarization
       summaryDiv.innerHTML = '<div class="loading">⏳ Generating summary...</div>';
-  
+
       // Send to our serverless function for summarization
       const response = await fetch('/api/summarize', {
         method: 'POST',
@@ -256,13 +317,13 @@ function initTheme() {
           articleText: wikiData.extract
         })
       });
-  
+
       if (!response.ok) {
         throw new Error(`Summarization API error: ${response.status}`);
       }
-  
+
       const data = await response.json();
-  
+
       // Display the summary with proper HTML rendering
       summaryDiv.innerHTML = `
         <h3>📝 Summary</h3>
@@ -270,7 +331,7 @@ function initTheme() {
         <div class="summary-meta">
         </div>
       `;
-  
+
     } catch (error) {
       console.error("Summarization error:", error);
       const errorMessage = error.message.includes("API error") 
@@ -283,23 +344,25 @@ function initTheme() {
   
   // Update the Q&A function
   async function askQuestion() {
-    const questionInput = document.getElementById("questionInput");
+    const questionInput = getCachedElement("questionInput");
+    if (!questionInput) return;
+    
     const question = questionInput.value.trim();
     
     if (!question) {
       showMessage("Please enter a question.", "bot");
       return;
     }
-  
+
     if (!articleText) {
       showMessage("Please search for an article first.", "bot");
       return;
     }
-  
+
     showMessage(question, "user");
     questionInput.value = "";
     showMessage("Thinking...", "bot", true);
-  
+
     try {
       const response = await fetch('/api/qa', {
         method: 'POST',
@@ -312,16 +375,18 @@ function initTheme() {
           question: question
         })
       });
-  
+
       if (!response.ok) {
         throw new Error(`Q&A API error: ${response.status}`);
       }
-  
+
       const data = await response.json();
       
       // Remove the loading message
-      const chatContainer = document.getElementById("chatContainer");
-      chatContainer.removeChild(chatContainer.lastChild);
+      const chatContainer = getCachedElement("chatContainer");
+      if (chatContainer && chatContainer.lastChild) {
+        chatContainer.removeChild(chatContainer.lastChild);
+      }
       
       showMessage(data.answer, "bot");
       generateSuggestedQuestions();
@@ -333,16 +398,20 @@ function initTheme() {
   
   // Update the quiz generation function
   async function generateQuiz() {
-    const numQuestions = document.getElementById("numQuestions").value;
-    const quizDiv = document.getElementById("quiz");
+    const numQuestionsSelect = getCachedElement("numQuestions");
+    const quizDiv = getCachedElement("quiz");
+    
+    if (!numQuestionsSelect || !quizDiv) return;
+    
+    const numQuestions = numQuestionsSelect.value;
     
     if (!articleText) {
       quizDiv.innerHTML = '<div class="error-message">❌ Please search for an article first.</div>';
       return;
     }
-  
+
     quizDiv.innerHTML = '<div class="loading">⏳ Generating quiz...</div>';
-  
+
     try {
       const response = await fetch('/api/quiz', {
         method: 'POST',
@@ -355,11 +424,11 @@ function initTheme() {
           numQuestions: parseInt(numQuestions)
         })
       });
-  
+
       if (!response.ok) {
         throw new Error(`Quiz API error: ${response.status}`);
       }
-  
+
       const data = await response.json();
       displayQuiz(data.questions);
     } catch (error) {
@@ -375,10 +444,19 @@ function initTheme() {
     initProgressiveDisclosure();
     loadRecommendations();
     
-    // Add event listener for Enter key in summarizer input
-    document.getElementById('summarizerInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        fetchAndSummarize();
-      }
-    });
+    // Add event listener for Enter key in summarizer input with null check
+    const summarizerInput = document.getElementById('summarizerInput');
+    if (summarizerInput) {
+      summarizerInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          fetchAndSummarize();
+        }
+      });
+    }
+    
+    // Add debounced search for search input if it exists
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', debouncedSearch);
+    }
   });

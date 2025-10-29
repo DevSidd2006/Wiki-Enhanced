@@ -60,15 +60,33 @@ export default async function handler(req, res) {
       queryParams.append('category', category);
     }
 
-    const response = await fetch(`${apiUrl}?${queryParams}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
     
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`News API error: ${response.status} - ${errorText}`);
-      throw new Error(`News API error: ${response.status}`);
-    }
+    let data;
+    try {
+      const response = await fetch(`${apiUrl}?${queryParams}`, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`News API error: ${response.status} - ${errorText}`);
+        throw new Error(`News API error: ${response.status}`);
+      }
 
-    const data = await response.json();
+      data = await response.json();
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError.name === 'AbortError') {
+        console.error('News API timeout');
+        return res.status(200).json({
+          articles: getMockNews(),
+          source: 'mock',
+          error: 'News API timeout - using fallback data'
+        });
+      }
+      throw fetchError;
+    }
     
     // Log the API response for debugging
     console.log(`NewsAPI request: ${apiUrl}?${queryParams}`);

@@ -340,29 +340,46 @@ ${contentToSummarize}
 
 Begin your comprehensive, detailed summary now:`;
 
-    // Make request to Groq API
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'llama3-70b-8192',
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.2,
-        max_tokens: 2000
-      })
-    });
+    // Make request to Groq API with timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+    
+    let response;
+    try {
+      response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'llama3-70b-8192',
+          messages: [
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.2,
+          max_tokens: 2000
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      if (fetchError.name === 'AbortError') {
+        return res.status(408).json({ 
+          error: 'Request timeout. The request took too long to complete.',
+          details: 'Request timed out after 30 seconds'
+        });
+      }
+      throw fetchError;
+    }
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-  console.error('Groq API Error:', response.status, errorData);
+      console.error('Groq API Error:', response.status, errorData);
       
       if (response.status === 429) {
         return res.status(429).json({ 
