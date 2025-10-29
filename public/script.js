@@ -1,4 +1,11 @@
-// Utility: Debounce function to limit API calls
+/**
+ * Utility: Debounce function to limit API calls
+ * Delays function execution until after a specified wait time has elapsed
+ * since the last time the function was invoked.
+ * @param {Function} func - The function to debounce
+ * @param {number} wait - The delay in milliseconds
+ * @returns {Function} The debounced function
+ */
 function debounce(func, wait) {
   let timeout;
   return function executedFunction(...args) {
@@ -11,8 +18,17 @@ function debounce(func, wait) {
   };
 }
 
-// Cache for DOM elements to avoid repeated queries
+/**
+ * Cache for DOM elements to avoid repeated queries
+ * Improves performance by storing references to frequently accessed elements
+ */
 const domCache = {};
+
+/**
+ * Get a cached DOM element reference
+ * @param {string} id - The element ID to retrieve
+ * @returns {HTMLElement|null} The cached element or null if not found
+ */
 function getCachedElement(id) {
   if (!domCache[id]) {
     domCache[id] = document.getElementById(id);
